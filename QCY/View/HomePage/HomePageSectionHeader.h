@@ -10,7 +10,9 @@
 
 typedef void(^ClickMoreBlock)(void);
 @interface HomePageSectionHeader : UITableViewHeaderFooterView
+
+@property (nonatomic, strong)UILabel *titleLabel;
 @property (nonatomic, copy)ClickMoreBlock clickMoreBlock;
-+ (instancetype)headerWithTableView:(UITableView *)tableView leftTitle:(NSString *)leftTitle;
++ (instancetype)headerWithTableView:(UITableView *)tableView;
 
 @end

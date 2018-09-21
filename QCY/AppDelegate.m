@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "TabbarVC.h"
+#import <IQKeyboardManager.h>
 
 @interface AppDelegate ()
 
@@ -15,10 +16,10 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     //初始化
     [self initWindow];
+    [self initThirdParty];
     
     return YES;
 }
@@ -32,6 +33,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     
 }
+
 
 //从后台回到前台
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -48,21 +50,21 @@
     
 }
 
-
 #pragma mark - 初始化
 - (void)initWindow {
     //初始化window
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
-    
     //加载根视图视图
     TabbarVC *rootVC = [[TabbarVC alloc] init];
     rootVC.selectedIndex = 0;
     self.window.rootViewController = rootVC;
+    [self.window makeKeyAndVisible];
 }
 
-
+- (void)initThirdParty {
+    [IQKeyboardManager sharedManager].enable = YES;
+}
 
 
 

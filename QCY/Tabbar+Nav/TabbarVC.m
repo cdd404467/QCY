@@ -12,6 +12,7 @@
 #import "HeadLineVC.h"
 #import "MessageVC.h"
 #import "MineVC.h"
+#import "BaseNavigationController.h"
 
 
 @interface TabbarVC ()<UITabBarDelegate, UITabBarControllerDelegate>
@@ -54,8 +55,8 @@
 //添加childViewController
 - (void)addChildViewController:(UIViewController *)vc tabTitle:(NSString *)tabTitle normalImage:(NSString *)normalImage selectedImage:(NSString *)selectedImage {
     
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    nav.navigationBar.translucent = NO;
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:vc];
+//    nav.navigationBar.translucent = NO;
     nav.tabBarItem.title = tabTitle;
     vc.navigationItem.title = tabTitle;
     //调整每个bar title的位置

@@ -13,7 +13,6 @@
 		3A412020213E1B46003191F1 /* HomePageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A41201F213E1B46003191F1 /* HomePageVC.m */; };
 		3A412023213E1CF7003191F1 /* HeadLineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A412022213E1CF7003191F1 /* HeadLineVC.m */; };
 		3A412026213E1D44003191F1 /* MessageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A412025213E1D44003191F1 /* MessageVC.m */; };
-		3A412029213E1D88003191F1 /* MineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A412028213E1D88003191F1 /* MineVC.m */; };
 		3A41202D213F850A003191F1 /* HomePageHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A41202C213F850A003191F1 /* HomePageHeaderView.m */; };
 		3ACD0FE62138CADF00E83D3C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD0FE52138CADF00E83D3C /* AppDelegate.m */; };
 		3ACD0FE92138CADF00E83D3C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD0FE82138CADF00E83D3C /* ViewController.m */; };
@@ -28,6 +27,25 @@
 		FC17E0722140F6CD00219452 /* ClassTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FC17E0712140F6CD00219452 /* ClassTool.m */; };
 		FC17E0792141143900219452 /* PromotionsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC17E0782141143900219452 /* PromotionsCell.m */; };
 		FC17E07C21425ACB00219452 /* AskToBuyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC17E07B21425ACB00219452 /* AskToBuyCell.m */; };
+		FC33C318214B807800D26C97 /* OpenMallCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C317214B807800D26C97 /* OpenMallCollectionCell.m */; };
+		FC33C31C214BA66400D26C97 /* BaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C31B214BA66400D26C97 /* BaseNavigationController.m */; };
+		FC33C32D214F65FA00D26C97 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C32C214F65FA00D26C97 /* BaseViewController.m */; };
+		FC33C330214F667C00D26C97 /* OpenMallVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C32F214F667C00D26C97 /* OpenMallVC.m */; };
+		FC33C334214F72C800D26C97 /* OpenMallVC_Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C333214F72C800D26C97 /* OpenMallVC_Cell.m */; };
+		FC7E10AA2150CFFC006FCDEF /* UIButton+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10A02150CFFB006FCDEF /* UIButton+HYBImageCliped.m */; };
+		FC7E10AB2150CFFC006FCDEF /* UIImage+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10A12150CFFB006FCDEF /* UIImage+HYBImageCliped.m */; };
+		FC7E10AC2150CFFC006FCDEF /* HYBImageClipedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10A52150CFFB006FCDEF /* HYBImageClipedManager.m */; };
+		FC7E10AD2150CFFC006FCDEF /* UIImageView+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10A72150CFFB006FCDEF /* UIImageView+HYBImageCliped.m */; };
+		FC7E10AE2150CFFC006FCDEF /* UIView+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10A82150CFFC006FCDEF /* UIView+HYBImageCliped.m */; };
+		FC7E10B12150DB22006FCDEF /* HelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10B02150DB22006FCDEF /* HelperTool.m */; };
+		FC7E10BA2150DF9C006FCDEF /* MineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10B92150DF9C006FCDEF /* MineVC.m */; };
+		FC7E10BD2151F05C006FCDEF /* UIFont+Runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10BC2151F05B006FCDEF /* UIFont+Runtime.m */; };
+		FC7E10C0215241FB006FCDEF /* UIImageView+CornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10BF215241FB006FCDEF /* UIImageView+CornerRadius.m */; };
+		FC7E10C421535444006FCDEF /* LoginVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10C321535444006FCDEF /* LoginVC.m */; };
+		FC854D3B2150B45300D4E39C /* WRNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FC854D382150B45300D4E39C /* WRNavigationBar.m */; };
+		FC854D3C2150B45300D4E39C /* WRCustomNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FC854D392150B45300D4E39C /* WRCustomNavigationBar.m */; };
+		FCD19DEA214A0D1F00DBC908 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD19DE9214A0D1F00DBC908 /* UIImage+Color.m */; };
+		FCD19DED214A41F100DBC908 /* TodaysNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD19DEC214A41F100DBC908 /* TodaysNewsCell.m */; };
 		FCDA5A1A21462EA7005438E1 /* OpenMallCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCDA5A1921462EA7005438E1 /* OpenMallCell.m */; };
 /* End PBXBuildFile section */
 
@@ -62,8 +80,6 @@
 		3A412022213E1CF7003191F1 /* HeadLineVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeadLineVC.m; sourceTree = "<group>"; };
 		3A412024213E1D44003191F1 /* MessageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageVC.h; sourceTree = "<group>"; };
 		3A412025213E1D44003191F1 /* MessageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageVC.m; sourceTree = "<group>"; };
-		3A412027213E1D88003191F1 /* MineVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MineVC.h; sourceTree = "<group>"; };
-		3A412028213E1D88003191F1 /* MineVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MineVC.m; sourceTree = "<group>"; };
 		3A41202B213F850A003191F1 /* HomePageHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomePageHeaderView.h; sourceTree = "<group>"; };
 		3A41202C213F850A003191F1 /* HomePageHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomePageHeaderView.m; sourceTree = "<group>"; };
 		3ACD0FE12138CADF00E83D3C /* QCY.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QCY.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +110,45 @@
 		FC17E0782141143900219452 /* PromotionsCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PromotionsCell.m; sourceTree = "<group>"; };
 		FC17E07A21425ACB00219452 /* AskToBuyCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AskToBuyCell.h; sourceTree = "<group>"; };
 		FC17E07B21425ACB00219452 /* AskToBuyCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AskToBuyCell.m; sourceTree = "<group>"; };
+		FC33C316214B807800D26C97 /* OpenMallCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenMallCollectionCell.h; sourceTree = "<group>"; };
+		FC33C317214B807800D26C97 /* OpenMallCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenMallCollectionCell.m; sourceTree = "<group>"; };
+		FC33C31A214BA66400D26C97 /* BaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseNavigationController.h; sourceTree = "<group>"; };
+		FC33C31B214BA66400D26C97 /* BaseNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseNavigationController.m; sourceTree = "<group>"; };
+		FC33C32B214F65FA00D26C97 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		FC33C32C214F65FA00D26C97 /* BaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
+		FC33C32E214F667C00D26C97 /* OpenMallVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenMallVC.h; sourceTree = "<group>"; };
+		FC33C32F214F667C00D26C97 /* OpenMallVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenMallVC.m; sourceTree = "<group>"; };
+		FC33C332214F72C800D26C97 /* OpenMallVC_Cell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenMallVC_Cell.h; sourceTree = "<group>"; };
+		FC33C333214F72C800D26C97 /* OpenMallVC_Cell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenMallVC_Cell.m; sourceTree = "<group>"; };
+		FC7E109F2150CFFB006FCDEF /* HYBImageClipedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYBImageClipedManager.h; sourceTree = "<group>"; };
+		FC7E10A02150CFFB006FCDEF /* UIButton+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+HYBImageCliped.m"; sourceTree = "<group>"; };
+		FC7E10A12150CFFB006FCDEF /* UIImage+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+HYBImageCliped.m"; sourceTree = "<group>"; };
+		FC7E10A22150CFFB006FCDEF /* UIView+HYBImageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+HYBImageCliped.h"; sourceTree = "<group>"; };
+		FC7E10A32150CFFB006FCDEF /* HYBImageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYBImageCliped.h; sourceTree = "<group>"; };
+		FC7E10A42150CFFB006FCDEF /* UIImage+HYBmageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+HYBmageCliped.h"; sourceTree = "<group>"; };
+		FC7E10A52150CFFB006FCDEF /* HYBImageClipedManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYBImageClipedManager.m; sourceTree = "<group>"; };
+		FC7E10A62150CFFB006FCDEF /* UIImageView+HYBImageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+HYBImageCliped.h"; sourceTree = "<group>"; };
+		FC7E10A72150CFFB006FCDEF /* UIImageView+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+HYBImageCliped.m"; sourceTree = "<group>"; };
+		FC7E10A82150CFFC006FCDEF /* UIView+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+HYBImageCliped.m"; sourceTree = "<group>"; };
+		FC7E10A92150CFFC006FCDEF /* UIButton+HYBImageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+HYBImageCliped.h"; sourceTree = "<group>"; };
+		FC7E10AF2150DB22006FCDEF /* HelperTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelperTool.h; sourceTree = "<group>"; };
+		FC7E10B02150DB22006FCDEF /* HelperTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HelperTool.m; sourceTree = "<group>"; };
+		FC7E10B82150DF9C006FCDEF /* MineVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MineVC.h; sourceTree = "<group>"; };
+		FC7E10B92150DF9C006FCDEF /* MineVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MineVC.m; sourceTree = "<group>"; };
+		FC7E10BB2151F05B006FCDEF /* UIFont+Runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIFont+Runtime.h"; sourceTree = "<group>"; };
+		FC7E10BC2151F05B006FCDEF /* UIFont+Runtime.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIFont+Runtime.m"; sourceTree = "<group>"; };
+		FC7E10BE215241FB006FCDEF /* UIImageView+CornerRadius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+CornerRadius.h"; sourceTree = "<group>"; };
+		FC7E10BF215241FB006FCDEF /* UIImageView+CornerRadius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+CornerRadius.m"; sourceTree = "<group>"; };
+		FC7E10C221535444006FCDEF /* LoginVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginVC.h; sourceTree = "<group>"; };
+		FC7E10C321535444006FCDEF /* LoginVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginVC.m; sourceTree = "<group>"; };
+		FC854D372150B45300D4E39C /* WRNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRNavigationBar.h; sourceTree = "<group>"; };
+		FC854D382150B45300D4E39C /* WRNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRNavigationBar.m; sourceTree = "<group>"; };
+		FC854D392150B45300D4E39C /* WRCustomNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRCustomNavigationBar.m; sourceTree = "<group>"; };
+		FC854D3A2150B45300D4E39C /* WRCustomNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRCustomNavigationBar.h; sourceTree = "<group>"; };
+		FCD19DE8214A0D1F00DBC908 /* UIImage+Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
+		FCD19DE9214A0D1F00DBC908 /* UIImage+Color.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
+		FCD19DEB214A41F100DBC908 /* TodaysNewsCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodaysNewsCell.h; sourceTree = "<group>"; };
+		FCD19DEC214A41F100DBC908 /* TodaysNewsCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodaysNewsCell.m; sourceTree = "<group>"; };
 		FCDA5A1821462EA7005438E1 /* OpenMallCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenMallCell.h; sourceTree = "<group>"; };
 		FCDA5A1921462EA7005438E1 /* OpenMallCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenMallCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -170,6 +225,8 @@
 		3A412003213CDD21003191F1 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				FC33C327214EB23E00D26C97 /* ThirdParty */,
+				FC33C326214EB22B00D26C97 /* Custom */,
 				3A412012213D0FAD003191F1 /* Tools */,
 				3A412011213D0F8F003191F1 /* Category */,
 			);
@@ -179,10 +236,16 @@
 		3A412011213D0F8F003191F1 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				FC7E10BE215241FB006FCDEF /* UIImageView+CornerRadius.h */,
+				FC7E10BF215241FB006FCDEF /* UIImageView+CornerRadius.m */,
 				3A412013213D1181003191F1 /* UIColor+Hex.h */,
 				3A412014213D1181003191F1 /* UIColor+Hex.m */,
 				3A412016213E13C3003191F1 /* UITextField+Limit.h */,
 				3A412017213E13C3003191F1 /* UITextField+Limit.m */,
+				FCD19DE8214A0D1F00DBC908 /* UIImage+Color.h */,
+				FCD19DE9214A0D1F00DBC908 /* UIImage+Color.m */,
+				FC7E10BB2151F05B006FCDEF /* UIFont+Runtime.h */,
+				FC7E10BC2151F05B006FCDEF /* UIFont+Runtime.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -194,6 +257,8 @@
 				FC17E0732140F7CD00219452 /* NetWorkingPort.h */,
 				FC17E0702140F6CD00219452 /* ClassTool.h */,
 				FC17E0712140F6CD00219452 /* ClassTool.m */,
+				FC7E10AF2150DB22006FCDEF /* HelperTool.h */,
+				FC7E10B02150DB22006FCDEF /* HelperTool.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -203,6 +268,8 @@
 			children = (
 				3A41201E213E1B46003191F1 /* HomePageVC.h */,
 				3A41201F213E1B46003191F1 /* HomePageVC.m */,
+				FC33C32E214F667C00D26C97 /* OpenMallVC.h */,
+				FC33C32F214F667C00D26C97 /* OpenMallVC.m */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -210,8 +277,9 @@
 		3A41201A213E155F003191F1 /* Mine */ = {
 			isa = PBXGroup;
 			children = (
-				3A412027213E1D88003191F1 /* MineVC.h */,
-				3A412028213E1D88003191F1 /* MineVC.m */,
+				FC7E10C121535405006FCDEF /* 登陆注册 */,
+				FC7E10B82150DF9C006FCDEF /* MineVC.h */,
+				FC7E10B92150DF9C006FCDEF /* MineVC.m */,
 			);
 			path = Mine;
 			sourceTree = "<group>";
@@ -237,16 +305,21 @@
 		3A41202A213F8411003191F1 /* HomePage */ = {
 			isa = PBXGroup;
 			children = (
+				FC33C331214F725700D26C97 /* OpenMall */,
 				3A41202B213F850A003191F1 /* HomePageHeaderView.h */,
 				3A41202C213F850A003191F1 /* HomePageHeaderView.m */,
 				FC17E06D2140F60B00219452 /* HomePageSectionHeader.h */,
 				FC17E06E2140F60B00219452 /* HomePageSectionHeader.m */,
 				FC17E0772141143900219452 /* PromotionsCell.h */,
 				FC17E0782141143900219452 /* PromotionsCell.m */,
+				FCD19DEB214A41F100DBC908 /* TodaysNewsCell.h */,
+				FCD19DEC214A41F100DBC908 /* TodaysNewsCell.m */,
 				FC17E07A21425ACB00219452 /* AskToBuyCell.h */,
 				FC17E07B21425ACB00219452 /* AskToBuyCell.m */,
 				FCDA5A1821462EA7005438E1 /* OpenMallCell.h */,
 				FCDA5A1921462EA7005438E1 /* OpenMallCell.m */,
+				FC33C316214B807800D26C97 /* OpenMallCollectionCell.h */,
+				FC33C317214B807800D26C97 /* OpenMallCollectionCell.m */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -276,6 +349,7 @@
 		3ACD0FE32138CADF00E83D3C /* QCY */ = {
 			isa = PBXGroup;
 			children = (
+				FC33C319214BA63C00D26C97 /* Base */,
 				3A412000213CBFDD003191F1 /* Model */,
 				3A412001213CBFF5003191F1 /* View */,
 				3A412002213CBFFD003191F1 /* Controller */,
@@ -329,6 +403,80 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		FC33C319214BA63C00D26C97 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				FC33C31A214BA66400D26C97 /* BaseNavigationController.h */,
+				FC33C31B214BA66400D26C97 /* BaseNavigationController.m */,
+				FC33C32B214F65FA00D26C97 /* BaseViewController.h */,
+				FC33C32C214F65FA00D26C97 /* BaseViewController.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		FC33C326214EB22B00D26C97 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
+		FC33C327214EB23E00D26C97 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				FC854D362150B42C00D4E39C /* WRNavigationBar */,
+				FC7F3281215006DE008E43F9 /* HYBImageCliped */,
+			);
+			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		FC33C331214F725700D26C97 /* OpenMall */ = {
+			isa = PBXGroup;
+			children = (
+				FC33C332214F72C800D26C97 /* OpenMallVC_Cell.h */,
+				FC33C333214F72C800D26C97 /* OpenMallVC_Cell.m */,
+			);
+			path = OpenMall;
+			sourceTree = "<group>";
+		};
+		FC7E10C121535405006FCDEF /* 登陆注册 */ = {
+			isa = PBXGroup;
+			children = (
+				FC7E10C221535444006FCDEF /* LoginVC.h */,
+				FC7E10C321535444006FCDEF /* LoginVC.m */,
+			);
+			path = "登陆注册";
+			sourceTree = "<group>";
+		};
+		FC7F3281215006DE008E43F9 /* HYBImageCliped */ = {
+			isa = PBXGroup;
+			children = (
+				FC7E10A32150CFFB006FCDEF /* HYBImageCliped.h */,
+				FC7E109F2150CFFB006FCDEF /* HYBImageClipedManager.h */,
+				FC7E10A52150CFFB006FCDEF /* HYBImageClipedManager.m */,
+				FC7E10A92150CFFC006FCDEF /* UIButton+HYBImageCliped.h */,
+				FC7E10A02150CFFB006FCDEF /* UIButton+HYBImageCliped.m */,
+				FC7E10A12150CFFB006FCDEF /* UIImage+HYBImageCliped.m */,
+				FC7E10A42150CFFB006FCDEF /* UIImage+HYBmageCliped.h */,
+				FC7E10A62150CFFB006FCDEF /* UIImageView+HYBImageCliped.h */,
+				FC7E10A72150CFFB006FCDEF /* UIImageView+HYBImageCliped.m */,
+				FC7E10A22150CFFB006FCDEF /* UIView+HYBImageCliped.h */,
+				FC7E10A82150CFFC006FCDEF /* UIView+HYBImageCliped.m */,
+			);
+			path = HYBImageCliped;
+			sourceTree = "<group>";
+		};
+		FC854D362150B42C00D4E39C /* WRNavigationBar */ = {
+			isa = PBXGroup;
+			children = (
+				FC854D3A2150B45300D4E39C /* WRCustomNavigationBar.h */,
+				FC854D392150B45300D4E39C /* WRCustomNavigationBar.m */,
+				FC854D372150B45300D4E39C /* WRNavigationBar.h */,
+				FC854D382150B45300D4E39C /* WRNavigationBar.m */,
+			);
+			path = WRNavigationBar;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -340,6 +488,7 @@
 				3ACD0FDD2138CADF00E83D3C /* Sources */,
 				3ACD0FDE2138CADF00E83D3C /* Frameworks */,
 				3ACD0FDF2138CADF00E83D3C /* Resources */,
+				A8069894D44A19AD9FBB4C53 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -474,6 +623,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		A8069894D44A19AD9FBB4C53 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-QCY/Pods-QCY-resources.sh",
+				"${PODS_ROOT}/IQKeyboardManager/IQKeyboardManager/Resources/IQKeyboardManager.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IQKeyboardManager.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QCY/Pods-QCY-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -481,22 +652,40 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCD19DED214A41F100DBC908 /* TodaysNewsCell.m in Sources */,
 				3A412023213E1CF7003191F1 /* HeadLineVC.m in Sources */,
+				FC7E10C0215241FB006FCDEF /* UIImageView+CornerRadius.m in Sources */,
 				FCDA5A1A21462EA7005438E1 /* OpenMallCell.m in Sources */,
 				3ACD0FE92138CADF00E83D3C /* ViewController.m in Sources */,
+				FC7E10AA2150CFFC006FCDEF /* UIButton+HYBImageCliped.m in Sources */,
+				FC33C31C214BA66400D26C97 /* BaseNavigationController.m in Sources */,
+				FCD19DEA214A0D1F00DBC908 /* UIImage+Color.m in Sources */,
 				3A412020213E1B46003191F1 /* HomePageVC.m in Sources */,
+				FC7E10AB2150CFFC006FCDEF /* UIImage+HYBImageCliped.m in Sources */,
 				3A41202D213F850A003191F1 /* HomePageHeaderView.m in Sources */,
 				3ACD0FF42138CAE000E83D3C /* main.m in Sources */,
-				3A412029213E1D88003191F1 /* MineVC.m in Sources */,
+				FC33C318214B807800D26C97 /* OpenMallCollectionCell.m in Sources */,
+				FC7E10AC2150CFFC006FCDEF /* HYBImageClipedManager.m in Sources */,
+				FC33C334214F72C800D26C97 /* OpenMallVC_Cell.m in Sources */,
 				FC17E0722140F6CD00219452 /* ClassTool.m in Sources */,
+				FC7E10BD2151F05C006FCDEF /* UIFont+Runtime.m in Sources */,
 				3A412018213E13C3003191F1 /* UITextField+Limit.m in Sources */,
+				FC7E10AD2150CFFC006FCDEF /* UIImageView+HYBImageCliped.m in Sources */,
+				FC854D3C2150B45300D4E39C /* WRCustomNavigationBar.m in Sources */,
 				3A412026213E1D44003191F1 /* MessageVC.m in Sources */,
 				FC17E0792141143900219452 /* PromotionsCell.m in Sources */,
+				FC7E10C421535444006FCDEF /* LoginVC.m in Sources */,
+				FC854D3B2150B45300D4E39C /* WRNavigationBar.m in Sources */,
+				FC33C330214F667C00D26C97 /* OpenMallVC.m in Sources */,
 				3A412015213D1181003191F1 /* UIColor+Hex.m in Sources */,
 				3A411FFF213CBFCD003191F1 /* TabbarVC.m in Sources */,
+				FC7E10BA2150DF9C006FCDEF /* MineVC.m in Sources */,
 				FC17E07C21425ACB00219452 /* AskToBuyCell.m in Sources */,
+				FC7E10B12150DB22006FCDEF /* HelperTool.m in Sources */,
 				FC17E06F2140F60B00219452 /* HomePageSectionHeader.m in Sources */,
 				3ACD0FE62138CADF00E83D3C /* AppDelegate.m in Sources */,
+				FC33C32D214F65FA00D26C97 /* BaseViewController.m in Sources */,
+				FC7E10AE2150CFFC006FCDEF /* UIView+HYBImageCliped.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -665,9 +854,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B60C453541C10CCC87895DD4 /* Pods-QCY.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4MX3HR2F5C;
+				DEVELOPMENT_TEAM = C7ECPUDY72;
 				INFOPLIST_FILE = QCY/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -677,6 +867,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -684,9 +875,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DFD5C88E6912B0A3E15441EC /* Pods-QCY.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4MX3HR2F5C;
+				DEVELOPMENT_TEAM = C7ECPUDY72;
 				INFOPLIST_FILE = QCY/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -696,6 +888,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};

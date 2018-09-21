@@ -8,4 +8,5 @@ target 'QCY' do
 	pod 'SDCycleScrollView', '~> 1.75'
 	pod 'YYWebImage', '~> 1.0.5'
 	pod 'YYText', '~> 1.0.7'
+	pod 'IQKeyboardManager', '~> 6.1.1'
 end

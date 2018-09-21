@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^TapIconsBlock)(NSInteger tag);
 @interface HomePageHeaderView : UIView
 
+@property (nonatomic, copy)TapIconsBlock tapIconsBlock;
 @end

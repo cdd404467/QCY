@@ -32,9 +32,21 @@
 - (void)setupUI {
     NSURL *url = [NSURL URLWithString:@"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3107510826,3774805506&fm=11&gp=0.jpg"];
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_H(140));
+    imageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_H(110));
     [imageView yy_setImageWithURL:url options:YYWebImageOptionSetImageWithFadeAnimation];
     [self.contentView addSubview:imageView];
+    //文字描述
+    UILabel *desText = [[UILabel alloc] init];
+    desText.text = @"夏季大促销！更多优惠等你来，我是活动描述~";
+    desText.font = [UIFont systemFontOfSize:12];
+    desText.textColor = [UIColor colorWithHexString:@"#3C3C3C"];
+    desText.textAlignment = NSTextAlignmentCenter;
+    [self.contentView addSubview:desText];
+    [desText mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(@(30 * Scale_H));
+        make.left.right.mas_equalTo(@0);
+        make.top.mas_equalTo(imageView.mas_bottom).offset(0);
+    }];
 }
 
 + (instancetype)cellWithTableView:(UITableView *)tableView {
@@ -46,5 +58,5 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
-///
+
 @end

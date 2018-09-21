@@ -11,10 +11,6 @@
 
 @interface ClassTool : NSObject
 
-// 添加点击手势
-+ (void)addTapGesture:(UIView *)view withTarget:(id)target andSEL:(SEL)sel;
-
-
-
-
++ (UIButton *)customBackBtn;
++ (void)addLayer:(UIView *)view frame:(CGRect)frame;
 @end
