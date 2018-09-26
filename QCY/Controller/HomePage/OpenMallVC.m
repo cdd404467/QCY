@@ -10,10 +10,10 @@
 #import "MacroHeader.h"
 #import "OpenMallVC_Cell.h"
 #import "WRNavigationBar.h"
-#import <objc/runtime.h>
 
 @interface OpenMallVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
+
 @end
 
 @implementation OpenMallVC

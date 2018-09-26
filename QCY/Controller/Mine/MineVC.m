@@ -12,8 +12,10 @@
 #import "HelperTool.h"
 #import <Masonry.h>
 #import "BaseNavigationController.h"
+
 //跳转的页面
 #import "LoginVC.h"
+
 
 
 @interface MineVC ()
@@ -24,8 +26,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
     [self setupNav];
     [self setupUI];
     
@@ -33,13 +33,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     UIImageView *lineImageView = [HelperTool findNavLine:self.navigationController.navigationBar];
     lineImageView.hidden = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    //如果不想让其他页面的导航栏变为透明 需要重置
+    [super viewWillDisappear:animated];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)setupNav {
@@ -47,10 +48,14 @@
     self.extendedLayoutIncludesOpaqueBars = YES;
     //根视图延展
     self.edgesForExtendedLayout = UIRectEdgeAll;
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self wr_setNavBarBackgroundAlpha:0];
     [self wr_setNavBarTitleColor:[UIColor whiteColor]];
    
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 - (void)setupUI {

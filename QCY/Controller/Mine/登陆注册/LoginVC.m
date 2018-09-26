@@ -10,6 +10,7 @@
 #import "MacroHeader.h"
 #import "ClassTool.h"
 #import <Masonry.h>
+#import "RegisterVC.h"
 
 
 @interface LoginVC ()<UITextFieldDelegate>
@@ -18,18 +19,48 @@
 @property (nonatomic, strong)UITextField *checkCodeTF;
 @end
 
-@implementation LoginVC
+@implementation LoginVC {
+    UIButton *_backBtn;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"登陆";
     self.navigationController.navigationBar.translucent = NO;
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     UIButton *backBtn = [ClassTool customBackBtn];
     [backBtn addTarget:self action:@selector(disMiss) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationController.navigationBar addSubview:backBtn];
+    _backBtn = backBtn;
     [self setupUI];
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+     _backBtn.hidden = YES;
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+   
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    _backBtn.hidden = NO;
+}
+
+- (void)jumpToRegisterVC {
+    RegisterVC *vc = [[RegisterVC alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+
 
 - (void)setupUI {
     //app图标
@@ -163,6 +194,7 @@
     [registerBtn setTitle:@"立即注册" forState:UIControlStateNormal];
     registerBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [registerBtn setTitleColor:HEXColor(@"#B6B6B6", 1) forState:UIControlStateNormal];
+    [registerBtn addTarget:self action:@selector(jumpToRegisterVC) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:registerBtn];
     [registerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(loginBtn.mas_left);
@@ -259,6 +291,7 @@
 }
 
 - (void)disMiss {
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

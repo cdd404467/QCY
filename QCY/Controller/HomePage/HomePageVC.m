@@ -14,10 +14,9 @@
 #import "AskToBuyCell.h"
 #import "OpenMallCell.h"
 #import "TodaysNewsCell.h"
-
-
 /** 跳转的页面 **/
 #import "OpenMallVC.h"
+#import "ProductMallVC.h"
 
 @interface HomePageVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
@@ -62,8 +61,10 @@
     DDWeakSelf;
     headerView.tapIconsBlock = ^(NSInteger tag) {
         switch (tag) {
-            case 0:
-                NSLog(@"0");
+            case 0: {
+                ProductMallVC *vc = [[ProductMallVC alloc] init];
+                [weakself.navigationController pushViewController:vc animated:YES];
+            }
                 break;
             case 1:
                 NSLog(@"1");

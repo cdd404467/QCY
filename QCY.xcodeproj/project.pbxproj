@@ -42,6 +42,12 @@
 		FC7E10BD2151F05C006FCDEF /* UIFont+Runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10BC2151F05B006FCDEF /* UIFont+Runtime.m */; };
 		FC7E10C0215241FB006FCDEF /* UIImageView+CornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10BF215241FB006FCDEF /* UIImageView+CornerRadius.m */; };
 		FC7E10C421535444006FCDEF /* LoginVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10C321535444006FCDEF /* LoginVC.m */; };
+		FC7E10CD2154B95E006FCDEF /* RegisterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10CC2154B95E006FCDEF /* RegisterVC.m */; };
+		FC7E10D02154C415006FCDEF /* XPRootNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10CF2154C415006FCDEF /* XPRootNavigationController.m */; };
+		FC7E11122159F5CE006FCDEF /* ProductMallVC_Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E11112159F5CE006FCDEF /* ProductMallVC_Cell.m */; };
+		FC7E11152159F9A4006FCDEF /* ProductMallVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E11142159F9A4006FCDEF /* ProductMallVC.m */; };
+		FC7E1118215A1A2F006FCDEF /* ProductDetailsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E1117215A1A2F006FCDEF /* ProductDetailsVC.m */; };
+		FC7E111B215A26C0006FCDEF /* ProductDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E111A215A26C0006FCDEF /* ProductDetailsView.m */; };
 		FC854D3B2150B45300D4E39C /* WRNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FC854D382150B45300D4E39C /* WRNavigationBar.m */; };
 		FC854D3C2150B45300D4E39C /* WRCustomNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FC854D392150B45300D4E39C /* WRCustomNavigationBar.m */; };
 		FCD19DEA214A0D1F00DBC908 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD19DE9214A0D1F00DBC908 /* UIImage+Color.m */; };
@@ -141,6 +147,18 @@
 		FC7E10BF215241FB006FCDEF /* UIImageView+CornerRadius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+CornerRadius.m"; sourceTree = "<group>"; };
 		FC7E10C221535444006FCDEF /* LoginVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginVC.h; sourceTree = "<group>"; };
 		FC7E10C321535444006FCDEF /* LoginVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginVC.m; sourceTree = "<group>"; };
+		FC7E10CB2154B95E006FCDEF /* RegisterVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RegisterVC.h; sourceTree = "<group>"; };
+		FC7E10CC2154B95E006FCDEF /* RegisterVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RegisterVC.m; sourceTree = "<group>"; };
+		FC7E10CE2154C415006FCDEF /* XPRootNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPRootNavigationController.h; sourceTree = "<group>"; };
+		FC7E10CF2154C415006FCDEF /* XPRootNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPRootNavigationController.m; sourceTree = "<group>"; };
+		FC7E11102159F5CE006FCDEF /* ProductMallVC_Cell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductMallVC_Cell.h; sourceTree = "<group>"; };
+		FC7E11112159F5CE006FCDEF /* ProductMallVC_Cell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductMallVC_Cell.m; sourceTree = "<group>"; };
+		FC7E11132159F9A4006FCDEF /* ProductMallVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductMallVC.h; sourceTree = "<group>"; };
+		FC7E11142159F9A4006FCDEF /* ProductMallVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductMallVC.m; sourceTree = "<group>"; };
+		FC7E1116215A1A2F006FCDEF /* ProductDetailsVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductDetailsVC.h; sourceTree = "<group>"; };
+		FC7E1117215A1A2F006FCDEF /* ProductDetailsVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductDetailsVC.m; sourceTree = "<group>"; };
+		FC7E1119215A26C0006FCDEF /* ProductDetailsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductDetailsView.h; sourceTree = "<group>"; };
+		FC7E111A215A26C0006FCDEF /* ProductDetailsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductDetailsView.m; sourceTree = "<group>"; };
 		FC854D372150B45300D4E39C /* WRNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRNavigationBar.h; sourceTree = "<group>"; };
 		FC854D382150B45300D4E39C /* WRNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRNavigationBar.m; sourceTree = "<group>"; };
 		FC854D392150B45300D4E39C /* WRCustomNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRCustomNavigationBar.m; sourceTree = "<group>"; };
@@ -270,6 +288,10 @@
 				3A41201F213E1B46003191F1 /* HomePageVC.m */,
 				FC33C32E214F667C00D26C97 /* OpenMallVC.h */,
 				FC33C32F214F667C00D26C97 /* OpenMallVC.m */,
+				FC7E11132159F9A4006FCDEF /* ProductMallVC.h */,
+				FC7E11142159F9A4006FCDEF /* ProductMallVC.m */,
+				FC7E1116215A1A2F006FCDEF /* ProductDetailsVC.h */,
+				FC7E1117215A1A2F006FCDEF /* ProductDetailsVC.m */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -305,6 +327,7 @@
 		3A41202A213F8411003191F1 /* HomePage */ = {
 			isa = PBXGroup;
 			children = (
+				FC7E110C2159F55E006FCDEF /* ProductMall */,
 				FC33C331214F725700D26C97 /* OpenMall */,
 				3A41202B213F850A003191F1 /* HomePageHeaderView.h */,
 				3A41202C213F850A003191F1 /* HomePageHeaderView.m */,
@@ -417,6 +440,8 @@
 		FC33C326214EB22B00D26C97 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				FC7E10CE2154C415006FCDEF /* XPRootNavigationController.h */,
+				FC7E10CF2154C415006FCDEF /* XPRootNavigationController.m */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -444,8 +469,21 @@
 			children = (
 				FC7E10C221535444006FCDEF /* LoginVC.h */,
 				FC7E10C321535444006FCDEF /* LoginVC.m */,
+				FC7E10CB2154B95E006FCDEF /* RegisterVC.h */,
+				FC7E10CC2154B95E006FCDEF /* RegisterVC.m */,
 			);
 			path = "登陆注册";
+			sourceTree = "<group>";
+		};
+		FC7E110C2159F55E006FCDEF /* ProductMall */ = {
+			isa = PBXGroup;
+			children = (
+				FC7E11102159F5CE006FCDEF /* ProductMallVC_Cell.h */,
+				FC7E11112159F5CE006FCDEF /* ProductMallVC_Cell.m */,
+				FC7E1119215A26C0006FCDEF /* ProductDetailsView.h */,
+				FC7E111A215A26C0006FCDEF /* ProductDetailsView.m */,
+			);
+			path = ProductMall;
 			sourceTree = "<group>";
 		};
 		FC7F3281215006DE008E43F9 /* HYBImageCliped */ = {
@@ -654,10 +692,13 @@
 			files = (
 				FCD19DED214A41F100DBC908 /* TodaysNewsCell.m in Sources */,
 				3A412023213E1CF7003191F1 /* HeadLineVC.m in Sources */,
+				FC7E10CD2154B95E006FCDEF /* RegisterVC.m in Sources */,
+				FC7E10D02154C415006FCDEF /* XPRootNavigationController.m in Sources */,
 				FC7E10C0215241FB006FCDEF /* UIImageView+CornerRadius.m in Sources */,
 				FCDA5A1A21462EA7005438E1 /* OpenMallCell.m in Sources */,
 				3ACD0FE92138CADF00E83D3C /* ViewController.m in Sources */,
 				FC7E10AA2150CFFC006FCDEF /* UIButton+HYBImageCliped.m in Sources */,
+				FC7E11152159F9A4006FCDEF /* ProductMallVC.m in Sources */,
 				FC33C31C214BA66400D26C97 /* BaseNavigationController.m in Sources */,
 				FCD19DEA214A0D1F00DBC908 /* UIImage+Color.m in Sources */,
 				3A412020213E1B46003191F1 /* HomePageVC.m in Sources */,
@@ -675,12 +716,15 @@
 				3A412026213E1D44003191F1 /* MessageVC.m in Sources */,
 				FC17E0792141143900219452 /* PromotionsCell.m in Sources */,
 				FC7E10C421535444006FCDEF /* LoginVC.m in Sources */,
+				FC7E1118215A1A2F006FCDEF /* ProductDetailsVC.m in Sources */,
 				FC854D3B2150B45300D4E39C /* WRNavigationBar.m in Sources */,
 				FC33C330214F667C00D26C97 /* OpenMallVC.m in Sources */,
 				3A412015213D1181003191F1 /* UIColor+Hex.m in Sources */,
 				3A411FFF213CBFCD003191F1 /* TabbarVC.m in Sources */,
 				FC7E10BA2150DF9C006FCDEF /* MineVC.m in Sources */,
 				FC17E07C21425ACB00219452 /* AskToBuyCell.m in Sources */,
+				FC7E111B215A26C0006FCDEF /* ProductDetailsView.m in Sources */,
+				FC7E11122159F5CE006FCDEF /* ProductMallVC_Cell.m in Sources */,
 				FC7E10B12150DB22006FCDEF /* HelperTool.m in Sources */,
 				FC17E06F2140F60B00219452 /* HomePageSectionHeader.m in Sources */,
 				3ACD0FE62138CADF00E83D3C /* AppDelegate.m in Sources */,

@@ -38,16 +38,16 @@
 - (void)initTabbar {
     
     HomePageVC *vc_1 = [[HomePageVC alloc] init];
-    [self addChildViewController:vc_1 tabTitle:@"首页" normalImage:@"icon1" selectedImage:@"icon1-1"];
+    [self addChildViewController:vc_1 tabTitle:@"首页" normalImage:@"tabbar_1" selectedImage:@"tabbar_1_selected"];
     
     HeadLineVC *vc_2 = [[HeadLineVC alloc] init];
-    [self addChildViewController:vc_2 tabTitle:@"头条" normalImage:@"icon2" selectedImage:@"icon2-1"];
+    [self addChildViewController:vc_2 tabTitle:@"头条" normalImage:@"tabbar_2" selectedImage:@"tabbar_2_selected"];
     
     MessageVC *vc_3 = [[MessageVC alloc] init];
-    [self addChildViewController:vc_3 tabTitle:@"消息" normalImage:@"icon3" selectedImage:@"icon3-1"];
+    [self addChildViewController:vc_3 tabTitle:@"消息" normalImage:@"tabbar_3" selectedImage:@"tabbar_3_selected"];
     
     MineVC *vc_4 = [[MineVC alloc] init];
-    [self addChildViewController:vc_4 tabTitle:@"我的" normalImage:@"icon3" selectedImage:@"icon3-1"];
+    [self addChildViewController:vc_4 tabTitle:@"我的" normalImage:@"tabbar_4" selectedImage:@"tabbar_4_selected"];
 }
 
 

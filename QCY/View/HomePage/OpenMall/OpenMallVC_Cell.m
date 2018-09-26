@@ -41,7 +41,7 @@
     UIView *bgView = [[UIView alloc] init];
     bgView.backgroundColor = [UIColor whiteColor];
     bgView.frame = CGRectMake(KFit_W(9), 5, SCREEN_WIDTH - KFit_W(9) * 2, 120);
-    [HelperTool setRound:bgView corner:UIRectCornerAllCorners radiu:10];
+    [HelperTool setRound:bgView corner:UIRectCornerAllCorners radiu:6];
     [self.contentView addSubview:bgView];
     
     //图片的灰色背景
@@ -49,7 +49,7 @@
     imageBgView.frame = CGRectMake(0, 0, 120, 120);
     imageBgView.backgroundColor = HEXColor(@"#F5F5F5", 1);
     [bgView addSubview:imageBgView];
-    [HelperTool setRound:imageBgView corner:UIRectCornerTopLeft | UIRectCornerBottomLeft radiu:10];
+    [HelperTool setRound:imageBgView corner:UIRectCornerTopLeft | UIRectCornerBottomLeft radiu:6];
     _imageBgView = imageBgView;
     
     //图片
@@ -68,9 +68,9 @@
     [bgView addSubview:nameLabel];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(imageBgView.mas_right).offset(KFit_W(15));
-        make.top.mas_equalTo(@17);
-        make.height.mas_equalTo(@(14 * Scale_H));
-        make.right.mas_equalTo(@(-15 * Scale_W));
+        make.top.mas_equalTo(17);
+        make.height.mas_equalTo(KFit_H(14));
+        make.right.mas_equalTo(KFit_W(-15));
     }];
     _nameLabel = nameLabel;
     
@@ -81,8 +81,8 @@
     [line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel.mas_left);
         make.top.mas_equalTo(nameLabel.mas_bottom).offset(5);
-        make.right.mas_equalTo(@(-35 * Scale_W));
-        make.height.mas_equalTo(@1);
+        make.right.mas_equalTo(KFit_W(-35));
+        make.height.mas_equalTo(1);
     }];
     
     //联系方式
@@ -92,24 +92,24 @@
     contactLabel.textColor = HEXColor(@"#868686", 1);
     [bgView addSubview:contactLabel];
     [contactLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(nameLabel.mas_left);
+        make.left.equalTo(nameLabel);
         make.top.mas_equalTo(line.mas_bottom).offset(10);
-        make.right.mas_equalTo(nameLabel.mas_right);
-        make.height.mas_equalTo(@12);
+        make.right.equalTo(nameLabel);
+        make.height.mas_equalTo(12);
     }];
     _contactLabel = contactLabel;
     
     //所在地区
     UILabel *areaLabel = [[UILabel alloc] init];
-    areaLabel.text = @"联系方式：051265583242";
+    areaLabel.text = @"所在地区：江苏省徐州市";
     areaLabel.font = [UIFont systemFontOfSize:12];
     areaLabel.textColor = HEXColor(@"#868686", 1);
     [bgView addSubview:areaLabel];
     [areaLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel.mas_left);
         make.top.mas_equalTo(contactLabel.mas_bottom).offset(4);
-        make.right.mas_equalTo(nameLabel.mas_right);
-        make.height.mas_equalTo(@12);
+        make.right.equalTo(nameLabel);
+        make.height.mas_equalTo(12);
     }];
     _areaLabel = areaLabel;
 }

@@ -86,7 +86,7 @@
     //一键呼叫按钮
     UIButton *callBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [callBtn addTarget:self action:@selector(callPhone) forControlEvents:UIControlEventTouchUpInside];
-    [callBtn setImage:[UIImage imageNamed:@"call_btn"] forState:UIControlStateNormal];
+    [callBtn setImage:[UIImage imageNamed:@"call_btn_110x25"] forState:UIControlStateNormal];
     [bgView addSubview:callBtn];
     [callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(nameLabel.mas_top);

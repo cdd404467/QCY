@@ -60,6 +60,7 @@
     rootVC.selectedIndex = 0;
     self.window.rootViewController = rootVC;
     [self.window makeKeyAndVisible];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)initThirdParty {
