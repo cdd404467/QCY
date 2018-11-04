@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+@class ProductInfoModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ProductMallVC_Cell : UITableViewCell
+
+@property (nonatomic, strong)ProductInfoModel *model;
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 @end
 

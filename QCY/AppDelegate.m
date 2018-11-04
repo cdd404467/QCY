@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "TabbarVC.h"
 #import <IQKeyboardManager.h>
+#import "NSString+Class.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +18,7 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [NSThread sleepForTimeInterval:1];
     //初始化
     [self initWindow];
     [self initThirdParty];
@@ -40,6 +42,37 @@
     
 }
 
+
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    
+    if (!url) {
+        return NO;
+    }
+    
+    //接收到的字符串
+//    NSString *urlString = [url absoluteString];
+//    NSLog(@"urlh --   %@ --- %@",url.host,url.query);
+//    NSString *classString = [urlString componentsSeparatedByString:@"togo="].lastObject;
+//    NSDictionary *dict = @{@"className":classString};
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"urlJump" object:nil userInfo:dict];
+    
+//    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    UIViewController *vc = [classString stringToClass:classString];
+//    [appDelegate.rootViewController.navigationController pushViewController:viewController animated:NO];
+    
+    return YES;
+}
+
+//- (void)appJumpToPage:(NSInteger)type andParagam:(id)obj,...{
+////    [AppDelegate di];
+//    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+////    Class class = [self pageTransferClassDict][@(type)];
+////    [appDelegate.rootViewController setSelectedIndex:0];
+//    UIViewController *viewController = [[class alloc]init];
+//    viewController.params = obj;
+//    [appDelegate.rootViewController.navigationController pushViewController:viewController animated:NO];
+//}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     
@@ -69,4 +102,11 @@
 
 
 
+@end
+
+@implementation NSURLRequest(DataController)
++ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host
+{
+    return YES;
+}
 @end

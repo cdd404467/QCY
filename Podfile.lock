@@ -14,15 +14,23 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
+  - BRPickerView (2.2.1)
   - IQKeyboardManager (6.1.1)
-  - JXCategoryView (1.0.9)
   - Masonry (1.1.0)
+  - MBProgressHUD (1.1.0)
   - MJExtension (3.0.15.1)
+  - MJRefresh (3.1.15.7)
+  - SAMKeychain (1.5.3)
+  - SDAutoLayout (2.2.1)
   - SDCycleScrollView (1.75):
     - SDWebImage (>= 4.0.0)
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
   - SDWebImage/Core (4.4.2)
+  - SGPagingView (1.5.5)
+  - SVProgressHUD (2.2.5)
+  - "UITableView+FDTemplateLayoutCell (1.6)"
+  - YNPageViewController (0.2.3)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -34,24 +42,40 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.2.1)
+  - BRPickerView (~> 2.2.1)
   - IQKeyboardManager (~> 6.1.1)
-  - JXCategoryView (~> 1.0.9)
   - Masonry (~> 1.1.0)
+  - MBProgressHUD (~> 1.1.0)
   - MJExtension (~> 3.0.15.1)
+  - MJRefresh (~> 3.1.15.7)
+  - SAMKeychain (~> 1.5.3)
+  - SDAutoLayout (~> 2.2.1)
   - SDCycleScrollView (~> 1.75)
   - SDWebImage (~> 4.4.2)
+  - SGPagingView (~> 1.5.5)
+  - SVProgressHUD (~> 2.2.5)
+  - "UITableView+FDTemplateLayoutCell (~> 1.6)"
+  - YNPageViewController (~> 0.2.3)
   - YYText (~> 1.0.7)
   - YYWebImage (~> 1.0.5)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - BRPickerView
     - IQKeyboardManager
-    - JXCategoryView
     - Masonry
+    - MBProgressHUD
     - MJExtension
+    - MJRefresh
+    - SAMKeychain
+    - SDAutoLayout
     - SDCycleScrollView
     - SDWebImage
+    - SGPagingView
+    - SVProgressHUD
+    - "UITableView+FDTemplateLayoutCell"
+    - YNPageViewController
     - YYCache
     - YYImage
     - YYText
@@ -59,17 +83,25 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  BRPickerView: 0590a8c5de9bd98c6b4e4f117a3dff6de287d5b2
   IQKeyboardManager: 79c57795f5c2408d259d37b9da2ed07efcbb5225
-  JXCategoryView: b04d90ff1786d9ebd0fbc37715a622d07075418b
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
+  MJRefresh: 697f8ec75ebdbe9207767bb682cf0f51b0d8a41f
+  SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
+  SDAutoLayout: 8bf6b3bbc8b01f775d4defbb4fda2ace805461be
   SDCycleScrollView: 884b88f0266dd4708a0e1934975c69cb971707b1
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
+  SGPagingView: 8054435c0149cf907ad3d515bc75e0ee9575216c
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  "UITableView+FDTemplateLayoutCell": 5c949b4a5059c404b442926c0e80f81d10a2d66f
+  YNPageViewController: c2dde62b14b492aee87966c7faf638e99dadad5e
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
 
-PODFILE CHECKSUM: 98b9aca82a7a336fc2023955497a6817e0791f2c
+PODFILE CHECKSUM: 0b31aa68cdf224a46b16d39d8d8282a29362c791
 
 COCOAPODS: 1.5.3

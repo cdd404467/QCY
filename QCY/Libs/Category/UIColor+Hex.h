@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface UIColor (Hex)
-+ (UIColor *) colorWithHexString:(NSString *) stringToConvert;
++ (UIColor * _Nonnull) colorWithHexString:(NSString * _Nonnull) stringToConvert;
 
 /**
  十二进制颜色
@@ -17,6 +17,6 @@
  @param alpha 透明度
  @return 颜色
  */
-+ (UIColor *) colorWithHexString: (NSString *) stringToConvert andAlpha:(CGFloat)alpha;
++ (UIColor * _Nonnull) colorWithHexString: (NSString * _Nonnull) stringToConvert andAlpha:(CGFloat)alpha;
 
 @end

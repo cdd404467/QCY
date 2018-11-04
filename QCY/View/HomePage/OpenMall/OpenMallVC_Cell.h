@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class OpenMallModel;
 
 @interface OpenMallVC_Cell : UITableViewCell
+@property (nonatomic, strong)OpenMallModel *model;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 @end

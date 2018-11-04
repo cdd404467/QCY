@@ -11,27 +11,28 @@
 #import "ClassTool.h"
 #import <Masonry.h>
 #import "RegisterVC.h"
-
+#import "CommonNav.h"
+#import "FindPasswordVC.h"
+#import "NetWorkingPort.h"
+#import "UIDevice+UUID.h"
+#import "AES128.h"
+#import "CddHUD.h"
 
 @interface LoginVC ()<UITextFieldDelegate>
 @property (nonatomic, strong)UITextField *userNameTF;
 @property (nonatomic, strong)UITextField *passwdTF;
 @property (nonatomic, strong)UITextField *checkCodeTF;
+@property (nonatomic,strong) UIImageView *checkImage;
 @end
 
-@implementation LoginVC {
-    UIButton *_backBtn;
-}
+@implementation LoginVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"登陆";
-    self.navigationController.navigationBar.translucent = NO;
-    UIButton *backBtn = [ClassTool customBackBtn];
-    [backBtn addTarget:self action:@selector(disMiss) forControlEvents:UIControlEventTouchUpInside];
-    [self.navigationController.navigationBar addSubview:backBtn];
-    _backBtn = backBtn;
+    self.navigationController.navigationBar.hidden = YES;
+    [self setupNav];
     [self setupUI];
+    [self requestImageCode];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -42,17 +43,9 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-     _backBtn.hidden = YES;
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-   
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    _backBtn.hidden = NO;
+    
+//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)jumpToRegisterVC {
@@ -60,7 +53,89 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)jumpToFindPassVC {
+    FindPasswordVC *vc = [[FindPasswordVC alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
+- (void)setupNav {
+    CommonNav *nav = [[CommonNav alloc] init];
+    nav.titleLabel.text = @"登陆";
+    [nav.backBtn addTarget:self action:@selector(disMiss) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:nav];
+}
+
+#pragma mark - 网络请求
+//图形验证码
+- (void)requestImageCode {
+    DDWeakSelf;
+    NSString *urlString = [NSString stringWithFormat:URL_IMG_CODE,[UIDevice getDeviceID]];
+    [ClassTool getRequestWithStream:urlString Params:nil Success:^(id json) {
+        weakself.checkImage.image = [UIImage imageWithData:json];
+    } Failure:^(NSError *error) {
+        NSLog(@"error");
+    }];
+}
+
+//登陆
+- (void)requestLogin {
+    [self.view endEditing:YES];
+    DDWeakSelf;
+    NSDictionary *dict = @{@"username":_userNameTF.text,
+                           @"aesPass":[AES128 AES128Encrypt:_passwdTF.text],
+                           @"captcha":_checkCodeTF.text,
+                           @"deviceNo":[UIDevice getDeviceID]
+                           };
+    [CddHUD showWithText:@"登陆中..."];
+    [ClassTool postRequest:URL_USER_LOGIN Params:[dict mutableCopy] Success:^(id json) {
+//        NSLog(@"----- %@",json);
+        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            //用户信息存入字典
+            NSString *companyName = [NSString string];
+            if ([json[@"data"][@"isCompany"] boolValue] == YES) {
+                companyName = json[@"data"][@"companyName"];
+            } else {
+                companyName = @"";
+            }
+            
+            NSDictionary *userDict = @{@"userName":json[@"data"][@"loginName"],
+//                                       @"userHeaderImage":json[@"data"][@"photo"],
+                                       @"token":json[@"data"][@"token"],
+                                       @"companyName":companyName,
+                                       @"isCompany":json[@"data"][@"isCompany"]
+                                       };
+            NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:userDict];
+            
+            if isRightData(To_String(json[@"data"][@"photo"])) {
+                [mDict setObject:json[@"data"][@"photo"] forKey:@"userHeaderImage"];
+            }
+            
+            [UserDefault setObject:[mDict copy] forKey:@"userInfo"];
+            
+            [self refreshMainData_notifi];
+            [weakself disMiss];
+            UITabBarController *tb=(UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+            if (weakself.isJump == YES) {
+                tb.selectedIndex = 3;
+            }
+            
+            [CddHUD hideHUD];
+        }else if ([json[@"code"] isEqualToString:@"CAPTCHA_ERROR"]) {
+            sLog(@" 验证码错误");
+        } else if ([json[@"code"] isEqualToString:@"LOGIN_ERROR"]){
+            sLog(@"用户名或密码错误");
+        }
+        
+    } Failure:^(NSError *error) {
+        
+    }];
+}
+
+/*** 通知主页刷新数据 ***/
+- (void)refreshMainData_notifi {
+    NSString *notiName = @"refreshMainData";
+    [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:@"exitLogin" userInfo:nil];
+}
 
 - (void)setupUI {
     //app图标
@@ -71,7 +146,7 @@
     [self.view addSubview:appHeader];
     [appHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view.mas_centerX);
-        make.top.mas_equalTo(@(37 * Scale_H));
+        make.top.mas_equalTo(37 * Scale_H + NAV_HEIGHT);
         make.width.height.mas_equalTo(@(87 * Scale_W));
     }];
     
@@ -159,10 +234,12 @@
         make.width.mas_equalTo(@(65 * Scale_W));
         make.centerY.mas_equalTo(sLine.mas_centerY);
     }];
+    _checkImage = checkImage;
     
     //换一张按钮
     UIButton *changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [changeBtn setImage:[UIImage imageNamed:@"change_next"] forState:UIControlStateNormal];
+    [changeBtn addTarget:self action:@selector(requestImageCode) forControlEvents:UIControlEventTouchUpInside];
     [tfView addSubview:changeBtn];
     [changeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(checkImage.mas_right);
@@ -181,6 +258,7 @@
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateHighlighted];
     loginBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+    [loginBtn addTarget:self action:@selector(requestLogin) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:loginBtn];
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(tfView.mas_left);
@@ -207,6 +285,7 @@
     [forgetpwBtn setTitle:@"忘记密码?" forState:UIControlStateNormal];
     forgetpwBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [forgetpwBtn setTitleColor:HEXColor(@"#B6B6B6", 1) forState:UIControlStateNormal];
+    [forgetpwBtn addTarget:self action:@selector(jumpToFindPassVC) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:forgetpwBtn];
     [forgetpwBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(loginBtn.mas_right);
@@ -267,10 +346,12 @@
         tf.placeholder = @"请输入用户名";
     } else if ([tf isEqual:_passwdTF]) {
         imageName = @"tf_icon2";
+        tf.secureTextEntry = YES;
         tf.placeholder = @"请输入密码";
     } else {
         imageName = @"tf_icon3";
         tf.placeholder = @"请输入验证码";
+        tf.keyboardType = UIKeyboardTypeNumberPad;
     }
     //添加leftView
     UIImageView *leftView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, KFit_W(50), KFit_H(50))];

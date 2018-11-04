@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+@class AskToBuyModel;
 
 @interface AskToBuyCell : UITableViewCell
+
+@property (nonatomic, strong) AskToBuyModel *model;
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 
 @end

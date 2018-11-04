@@ -10,4 +10,5 @@
 
 @interface BaseViewController : UIViewController
 
+- (void)jumpToLogin;
 @end

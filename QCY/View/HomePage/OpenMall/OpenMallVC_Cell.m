@@ -11,6 +11,10 @@
 #import "MacroHeader.h"
 #import "HelperTool.h"
 #import "UIImageView+CornerRadius.h"
+#import "OpenMallModel.h"
+#import "LXTagsView.h"
+#import <YYWebImage.h>
+#import <UIImageView+WebCache.h>
 
 @implementation OpenMallVC_Cell {
     UIView *_imageBgView;
@@ -18,6 +22,7 @@
     UILabel *_nameLabel;
     UILabel *_contactLabel;
     UILabel *_areaLabel;
+    LXTagsView *_tagsView;
 }
 
 - (void)awakeFromNib {
@@ -54,7 +59,6 @@
     
     //图片
     UIImageView *headerImageView = [[UIImageView alloc] init];
-    headerImageView.image = [UIImage imageNamed:@"test1"];
     headerImageView.frame = CGRectMake(0, 0, KFit_W(73), KFit_W(73));
     headerImageView.center = imageBgView.center;
     [imageBgView addSubview:headerImageView];
@@ -62,15 +66,14 @@
     
     //公司名称
     UILabel *nameLabel = [[UILabel alloc] init];
-    nameLabel.text = @"徐州开达精细化工有限公司";
     nameLabel.font = [UIFont boldSystemFontOfSize:14];
     nameLabel.textColor = [UIColor blackColor];
     [bgView addSubview:nameLabel];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(imageBgView.mas_right).offset(KFit_W(15));
+        make.left.mas_equalTo(imageBgView.mas_right).offset(15);
         make.top.mas_equalTo(17);
-        make.height.mas_equalTo(KFit_H(14));
-        make.right.mas_equalTo(KFit_W(-15));
+        make.height.mas_equalTo(14);
+        make.right.mas_equalTo(-15);
     }];
     _nameLabel = nameLabel;
     
@@ -81,13 +84,12 @@
     [line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel.mas_left);
         make.top.mas_equalTo(nameLabel.mas_bottom).offset(5);
-        make.right.mas_equalTo(KFit_W(-35));
+        make.right.mas_equalTo(KFit_W(-30));
         make.height.mas_equalTo(1);
     }];
     
     //联系方式
     UILabel *contactLabel = [[UILabel alloc] init];
-    contactLabel.text = @"联系方式：051265583242";
     contactLabel.font = [UIFont systemFontOfSize:12];
     contactLabel.textColor = HEXColor(@"#868686", 1);
     [bgView addSubview:contactLabel];
@@ -101,7 +103,6 @@
     
     //所在地区
     UILabel *areaLabel = [[UILabel alloc] init];
-    areaLabel.text = @"所在地区：江苏省徐州市";
     areaLabel.font = [UIFont systemFontOfSize:12];
     areaLabel.textColor = HEXColor(@"#868686", 1);
     [bgView addSubview:areaLabel];
@@ -112,6 +113,54 @@
         make.height.mas_equalTo(12);
     }];
     _areaLabel = areaLabel;
+    
+    //流水标签
+    LXTagsView *tagsView = [[LXTagsView alloc]init];
+    tagsView.allWidth = SCREEN_WIDTH - 150;
+    tagsView.backgroundColor = [UIColor redColor];
+    [bgView addSubview:tagsView];
+    [tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(areaLabel.mas_bottom).with.offset(6);
+        make.left.right.mas_equalTo(areaLabel.mas_left);
+        make.bottom.mas_equalTo(-2);
+    }];
+    _tagsView = tagsView;
+    
+}
+
+- (void)setModel:(OpenMallModel *)model {
+    _model = model;
+    //公司头像
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",Photo_URL,model.logo]];
+    [_headerImageView yy_setImageWithURL:url options:YYWebImageOptionSetImageWithFadeAnimation];
+
+    //公司名字
+    _nameLabel.text = model.company.companyName;
+    //联系方式
+    if isRightData(model.company.tel) {
+        _contactLabel.text = [NSString stringWithFormat:@"联系方式：%@",model.company.tel];
+    } else {
+        _contactLabel.text = [NSString stringWithFormat:@"联系方式：暂无"];
+    }
+    //所在地区
+    if isRightData(model.company.provinceName) {
+        if (isRightData(model.company.cityName)) {
+            _areaLabel.text = [NSString stringWithFormat:@"所在地区：%@%@",model.company.provinceName,model.company.cityName];
+        } else {
+            _areaLabel.text = [NSString stringWithFormat:@"所在地区：%@",model.company.provinceName];
+        }
+    } else {
+        _areaLabel.text = [NSString stringWithFormat:@"所在地区：暂无"];
+    }
+    
+    NSMutableArray *mArr = [NSMutableArray arrayWithCapacity:0];
+    for (BusinessList *m in model.businessList) {
+        [mArr addObject:m.value];
+    }
+
+//    NSArray *array = @[@"将军",@"haha",@"xi",@"将军",@"ha",@"xi",@"将军",@"haha",@"xi"];
+    _tagsView.dataA = mArr;
+    
 }
 
 

@@ -10,12 +10,12 @@
 
 @implementation UIColor (Hex)
 
-+ (UIColor *) colorWithHexString:(NSString *) stringToConvert
++ (UIColor * _Nonnull) colorWithHexString:(NSString * _Nonnull) stringToConvert
 {
     return [UIColor colorWithHexString:stringToConvert andAlpha:1.0];
 }
 
-+ (UIColor *) colorWithHexString: (NSString *) stringToConvert andAlpha:(CGFloat)alpha {
++ (UIColor * _Nonnull) colorWithHexString: (NSString * _Nonnull) stringToConvert andAlpha:(CGFloat)alpha {
     
     NSString *cString = [[stringToConvert stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
     

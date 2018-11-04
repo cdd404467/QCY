@@ -10,7 +10,7 @@
 
 @implementation UIImage (Color)
 
-+ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size {
++ (UIImage * _Nonnull)imageWithColor:(UIColor * _Nonnull)color size:(CGSize)size {
     
     if (!color || size.width <=0 || size.height <=0) return nil;
     
@@ -30,6 +30,11 @@
     
     return image;
     
+}
+
++ (UIImage * _Nonnull)imageWithColor:(UIColor * _Nonnull)color {
+    
+    return [self imageWithColor:color size:CGSizeMake(1.f, 1.f)];
 }
 
 @end

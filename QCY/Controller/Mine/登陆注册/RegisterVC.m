@@ -10,6 +10,8 @@
 #import <Masonry.h>
 #import "MacroHeader.h"
 #import "ClassTool.h"
+#import "CommonNav.h"
+#import <YYText.h>
 
 @interface RegisterVC ()<UITextFieldDelegate>
 @property (nonatomic, strong)UITextField *phoneTF;
@@ -24,16 +26,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"欢迎注册";
+    [self setupNav];
     [self setupUI];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.translucent = NO;
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-//    self.navigationController.navigationBar.barTintColor = [UIColor redColor];
 
+}
+
+- (void)setupNav {
+    CommonNav *nav = [[CommonNav alloc] init];
+    nav.titleLabel.text = @"欢迎注册";
+    [ClassTool addLayer:nav frame:nav.frame];
+    nav.titleLabel.textColor = [UIColor whiteColor];
+    nav.bottomLine.hidden = YES;
+    [nav.backBtn setImage:[UIImage imageNamed:@"back_white"] forState:UIControlStateNormal];
+    [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:nav];
 }
 
 - (void)setupUI {
@@ -41,7 +52,7 @@
     UITextField *phoneTF = [[UITextField alloc] init];
     [self.view addSubview:phoneTF];
     [phoneTF mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(@(KFit_H(42)));
+        make.top.mas_equalTo(KFit_H(42) + NAV_HEIGHT);
         make.height.mas_equalTo(@(50 * Scale_H));
         make.left.mas_equalTo(@(KFit_W(38)));
         make.right.mas_equalTo(@(KFit_W(-38)));
@@ -204,6 +215,23 @@
         make.height.mas_equalTo(@49);
         make.top.mas_equalTo(setPassAgainTF.mas_bottom).offset(KFit_H(18));
     }];
+    //协议
+    YYLabel *agreementLabel = [[YYLabel alloc] init];
+    [self.view addSubview:agreementLabel];
+    [agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(registerBtn.mas_bottom).offset(20);
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+    }];
+    
+    NSString *text = @"注册即代表您已阅读并同意《七彩云协议》";
+    NSMutableAttributedString *mText = [[NSMutableAttributedString alloc] initWithString:text];
+    mText.yy_font = [UIFont systemFontOfSize:15];
+    mText.yy_color = HEXColor(@"#B6B6B6", 1);
+    [mText yy_setTextHighlightRange:NSMakeRange(12, 7) color:MainColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        
+    }];
+    agreementLabel.attributedText = mText;
+    
 }
 
 //设置textfield
@@ -236,7 +264,6 @@
         tf.layer.cornerRadius = 3;
         tf.layer.borderColor = HEXColor(@"#D7D7D7", 1).CGColor;
     }
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

@@ -17,7 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated

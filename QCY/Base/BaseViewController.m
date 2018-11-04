@@ -7,6 +7,10 @@
 //
 
 #import "BaseViewController.h"
+#import "CddHUD.h"
+#import "CommonNav.h"
+#import "LoginVC.h"
+#import "BaseNavigationController.h"
 
 @interface BaseViewController ()
 
@@ -17,6 +21,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    [CddHUD hideHUD];
+}
+
+- (void)jumpToLogin {
+    LoginVC *vc = [[LoginVC alloc] init];
+    vc.isJump = NO;
+    BaseNavigationController *navVC = [[BaseNavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:navVC animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {

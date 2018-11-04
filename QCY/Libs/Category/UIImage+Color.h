@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface UIImage (Color)
-+ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
-
++ (UIImage * _Nonnull)imageWithColor:(UIColor * _Nonnull)color size:(CGSize)size;
++ (UIImage * _Nonnull)imageWithColor:(UIColor * _Nonnull)color;
 @end

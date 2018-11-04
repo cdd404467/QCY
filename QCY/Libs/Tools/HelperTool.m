@@ -32,7 +32,7 @@
 }
 
 //圆角
-+ (void)setRound:(UIView *)view corner:(UIRectCorner)corner radiu:(CGFloat)radius {
++ (void)setRound:(UIView * _Nonnull)view corner:(UIRectCorner)corner radiu:(CGFloat)radius {
     [view layoutIfNeeded];
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(radius, radius)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];

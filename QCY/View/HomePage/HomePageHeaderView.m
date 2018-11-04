@@ -54,41 +54,37 @@
     [iconBg mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(@0);
         make.top.mas_equalTo(self.bannerView.mas_bottom).offset(0);
-        make.height.mas_equalTo(@(90 * Scale_H));
+        make.height.mas_equalTo(@(65 * Scale_H));
     }];
     
-    CGFloat leftGap = KFit_W(13.f);
-    CGFloat imageWidth = KFit_W(47.f), imageHeight = KFit_W(47.f);
+    CGFloat leftGap = KFit_W(8.f);
+    CGFloat imageWidth = KFit_W(60.f), imageHeight = KFit_H(50.f);
     CGFloat centerGap = (SCREEN_WIDTH - leftGap * 2 - imageWidth * 4) / 3;
     NSArray *titleArr = @[@"产品大厅",@"求购大厅",@"开放商城",@"产业资讯"];
+    
     for (uint8_t i = 0; i < 4; i ++) {
-        //图片
-        UIImage *iconImage = [UIImage imageNamed:[NSString stringWithFormat:@"image%d",i]];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:iconImage];
-        [HelperTool addTapGesture:imageView withTarget:self andSEL:@selector(tapImageView:)];
-        imageView.tag = i;
-        imageView.frame = CGRectMake(leftGap + i * (centerGap + imageWidth), KFit_H(10), imageWidth, imageHeight);
-        [iconBg addSubview:imageView];
-        //文字
-        UILabel *iconTitle = [[UILabel alloc] init];
-        iconTitle.text = titleArr[i];
-        iconTitle.font = [UIFont systemFontOfSize:12];
-        iconTitle.textColor = [UIColor colorWithHexString:@"#3C3C3C"];
-        iconTitle.textAlignment = NSTextAlignmentCenter;
-        [iconBg addSubview:iconTitle];
-        [iconTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(imageView.mas_centerX);
-            make.top.mas_equalTo(imageView.mas_bottom).offset(7 * Scale_H);
-        }];
+        UIButton *iconbtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        iconbtn.frame = CGRectMake(leftGap + i * (centerGap + imageWidth), KFit_H(10), imageWidth, imageHeight);
+        [iconbtn setImage:[UIImage imageNamed:[NSString stringWithFormat:@"image%d",i]] forState:UIControlStateNormal];
+        [iconbtn setTitle:titleArr[i] forState:UIControlStateNormal];
+        iconbtn.tag = i;
+        [iconbtn addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
+        iconbtn.titleLabel.font = [UIFont systemFontOfSize:12];
+        [iconbtn setTitleColor:HEXColor(@"#3C3C3C", 1) forState:UIControlStateNormal];
+        iconbtn.titleEdgeInsets = UIEdgeInsetsMake(iconbtn.imageView.frame.size.height + KFit_H(4), -iconbtn.imageView.frame.size.width, KFit_H(-4), 0);
+        iconbtn.imageEdgeInsets = UIEdgeInsetsMake(-iconbtn.imageView.frame.size.height, 0, 0, -iconbtn.titleLabel.bounds.size.width);
+        //去掉按下时的高亮
+        iconbtn.adjustsImageWhenHighlighted = NO;
+        [iconBg addSubview:iconbtn];
     }
 }
 
 //点击事件
-- (void)tapImageView:(id)sender {
+- (void)tapBtn:(UIButton *)sender {
     if (self.tapIconsBlock) {
-        UITapGestureRecognizer *tap = (UITapGestureRecognizer *)sender;
-        UIView *view = (UIView *)tap.view;
-        self.tapIconsBlock(view.tag);
+//        UITapGestureRecognizer *tap = (UITapGestureRecognizer *)sender;
+//        UIView *view = (UIView *)tap.view;
+        self.tapIconsBlock(sender.tag);
     }
 }
 

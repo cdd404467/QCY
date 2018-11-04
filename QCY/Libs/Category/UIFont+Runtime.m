@@ -31,51 +31,81 @@
 
 
 //systemFontOfSize
-+ (UIFont *)adjustFont:(CGFloat)fontSize {
++ (UIFont * _Nonnull)adjustFont:(CGFloat)fontSize {
     UIFont *newFont = nil;
-    //4寸 和 4.7寸
-    if (SCREEN_HEIGHT <= 667.f && SCREEN_WIDTH <= 375.f && (fontSize * SCREEN_HEIGHT / 667.f) < 12.f) {
+    if (fontSize >= 12.f && (fontSize * Scale_W) < 12.f) {
         newFont = [UIFont adjustFont:12.f];
         return newFont;
-    } else {
-        newFont = [UIFont adjustFont:fontSize * SCREEN_WIDTH / 375];
+    } else if(fontSize < 12.f && SCREEN_WIDTH > 375.f) {
+        newFont = [UIFont adjustFont:fontSize * Scale_W];
+        return newFont;
+    } else if(fontSize < 12.f && SCREEN_WIDTH <= 375.f) {
+        newFont = [UIFont adjustFont:fontSize];
+        return newFont;
+    } else if (fontSize == 15.1f) {
+        newFont = [UIFont adjustFont:fontSize];
+        return newFont;
+    }else {
+        newFont = [UIFont adjustFont:fontSize * Scale_W];
         return newFont;
     }
 }
 
 //boldSystemFontOfSize
-+ (UIFont *)adjustBoldFont:(CGFloat)fontSize {
++ (UIFont * _Nonnull)adjustBoldFont:(CGFloat)fontSize {
     UIFont *newFont = nil;
-    if (SCREEN_HEIGHT <= 667.f && SCREEN_WIDTH <= 375.f && (fontSize * SCREEN_HEIGHT / 667.f) < 12.f) {
+    if (fontSize >= 12.f && (fontSize * Scale_W) < 12.f) {
         newFont = [UIFont adjustBoldFont:12.f];
         return newFont;
+    } else if(fontSize < 12.f && SCREEN_WIDTH > 375.f) {
+        newFont = [UIFont adjustBoldFont:fontSize * Scale_W];
+        return newFont;
+    } else if(fontSize < 12.f && SCREEN_WIDTH <= 375.f) {
+        newFont = [UIFont adjustBoldFont:fontSize];
+        return newFont;
+        //导航栏字体
+    } else if (fontSize == 17.f) {
+        newFont = [UIFont adjustBoldFont:fontSize];
+        return newFont;
     } else {
-        newFont = [UIFont adjustBoldFont:fontSize * SCREEN_WIDTH / 375];
+        newFont = [UIFont adjustBoldFont:fontSize * Scale_W];
         return newFont;
     }
 }
 
 //adjustFontOfWeight
-+ (UIFont *)adjustFontOfWeight:(CGFloat)fontSize weight:(CGFloat)weight
++ (UIFont * _Nonnull)adjustFontOfWeight:(CGFloat)fontSize weight:(CGFloat)weight
 {
     UIFont *newFont = nil;
-    if (SCREEN_HEIGHT <= 667.f && SCREEN_WIDTH <= 375.f && (fontSize * SCREEN_HEIGHT / 667.f) < 12.f) {
+    if (fontSize >= 12.f && (fontSize * Scale_W) < 12.f) {
         newFont = [UIFont adjustFontOfWeight:12.f weight:weight];
         return newFont;
+    } else if(fontSize < 12.f && SCREEN_WIDTH > 375.f) {
+        newFont = [UIFont adjustFontOfWeight:fontSize * Scale_W weight:weight];
+        return newFont;
+    } else if(fontSize < 12.f && SCREEN_WIDTH <= 375.f) {
+        newFont = [UIFont adjustFontOfWeight:fontSize weight:weight];
+        return newFont;
     } else {
-        newFont = [UIFont adjustFontOfWeight:fontSize * SCREEN_WIDTH / 375 weight:weight];
+        newFont = [UIFont adjustFontOfWeight:fontSize * Scale_W weight:weight];
         return newFont;
     }
 }
 
 //italicSystemFontOfSize - 倾斜字体
-+ (UIFont *)adjustItalicFont:(CGFloat)fontSize {
++ (UIFont * _Nonnull)adjustItalicFont:(CGFloat)fontSize {
     UIFont *newFont = nil;
-    if (SCREEN_HEIGHT <= 667.f && SCREEN_WIDTH <= 375.f && (fontSize * SCREEN_HEIGHT / 667.f) < 12.f) {
+    if (fontSize >= 12.f && (fontSize * Scale_W) < 12.f) {
         newFont = [UIFont adjustItalicFont:12.f];
         return newFont;
+    } else if(fontSize < 12.f && SCREEN_WIDTH > 375.f) {
+        newFont = [UIFont adjustItalicFont:fontSize * Scale_W];
+        return newFont;
+    } else if(fontSize < 12.f && SCREEN_WIDTH <= 375.f) {
+        newFont = [UIFont adjustItalicFont:fontSize];
+        return newFont;
     } else {
-        newFont = [UIFont adjustItalicFont:fontSize * SCREEN_WIDTH / 375];
+        newFont = [UIFont adjustItalicFont:fontSize * Scale_W];
         return newFont;
     }
 }

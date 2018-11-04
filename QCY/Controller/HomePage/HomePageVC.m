@@ -12,11 +12,19 @@
 #import "HomePageSectionHeader.h"
 #import "PromotionsCell.h"
 #import "AskToBuyCell.h"
-#import "OpenMallCell.h"
-#import "TodaysNewsCell.h"
+#import "OpenMallVC_Cell.h"
+#import "ClassTool.h"
+#import "UIDevice+UUID.h"
+#import "NSString+Class.h"
 /** 跳转的页面 **/
 #import "OpenMallVC.h"
 #import "ProductMallVC.h"
+#import "AskToBuyVC.h"
+#import "NetWorkingPort.h"
+#import "IndustryInformationVC.h"
+#import "GroupBuyingVC.h"
+
+
 
 @interface HomePageVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
@@ -27,11 +35,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.navigationBar.translucent = NO;
-//    UIImage *navLine = [UIImage imageWithColor:[UIColor redColor] size:CGSizeMake(SCREEN_WIDTH, 1)];
-//    [self.navigationController.navigationBar setShadowImage:navLine];
-    [self.view addSubview:self.tableView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(urlAwake:) name:@"urlJump" object:nil];
     
+    
+    self.navigationController.navigationBar.translucent = NO;
+    [self.view addSubview:self.tableView];
 }
 
 //懒加载tableView
@@ -55,7 +63,7 @@
 
 //创建自定义的tableView headerView
 - (HomePageHeaderView *)addHeaderView {
-    CGFloat headerHeight = 8 + 144 + 90;
+    CGFloat headerHeight = 8 + 144 + 67;
     HomePageHeaderView *headerView = [[HomePageHeaderView alloc] init];
     headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, headerHeight * Scale_H);
     DDWeakSelf;
@@ -66,16 +74,20 @@
                 [weakself.navigationController pushViewController:vc animated:YES];
             }
                 break;
-            case 1:
-                NSLog(@"1");
+            case 1: {
+                AskToBuyVC *vc = [[AskToBuyVC alloc] init];
+                [weakself.navigationController pushViewController:vc animated:YES];
+            }
                 break;
             case 2: {
                 OpenMallVC *vc = [[OpenMallVC alloc] init];
                 [weakself.navigationController pushViewController:vc animated:YES];
             }
                 break;
-            case 3:
-                NSLog(@"3");
+            case 3: {
+                IndustryInformationVC *vc = [[IndustryInformationVC alloc] init];
+                [weakself.navigationController pushViewController:vc animated:YES];
+            }
                 break;
             default:
                 break;
@@ -88,7 +100,7 @@
 //header不悬停
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if(scrollView == self.tableView) {
-        CGFloat sectionHeaderHeight = 41 * Scale_H; //header高度
+        CGFloat sectionHeaderHeight = 36; //header高度
         if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
             scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
         } else if (scrollView.contentOffset.y>sectionHeaderHeight) {
@@ -102,7 +114,7 @@
 #pragma mark - tableView代理方法
 //分区数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 4;
+    return 3;
 }
 
 //每组的cell个数
@@ -110,30 +122,26 @@
     if (section == 0) {
         return 1;
     } else if (section == 1) {
-        return 10;
-    } else if (section == 2) {
         return 8;
     } else {
-        return 1;
+        return 8;
     }
 }
 
 //cell的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return KFit_H(140);
+        return KFit_H(110) + 30 + 6;
     } else if (indexPath.section == 1){
-        return KFit_H(40);
-    } else if (indexPath.section == 2){
-        return 88;
+        return 86;
     } else {
-        return KFit_H(125);
+        return 125;
     }
 }
 
 //section header的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return KFit_H(42.f);
+    return 36;
 }
 
 //section footer的高度
@@ -143,20 +151,15 @@
 
 //自定义的section header
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    NSArray *titleArr = @[@"促销活动",@"今日头条",@"求购大厅",@"开放商城"];
+    NSArray *titleArr = @[@"促销活动",@"求购大厅",@"开放商城"];
     HomePageSectionHeader *header = [ HomePageSectionHeader headerWithTableView:tableView];
     header.titleLabel.text = titleArr[section];
     if (section == 0) {
         header.clickMoreBlock = ^{
-            NSLog(@"促销活动");
+//            NSLog(@"促销活动");
         };
         return header;
     } else if (section == 1) {
-        header.clickMoreBlock = ^{
-            NSLog(@"今日头条");
-        };
-        return header;
-    } else if (section == 2) {
         header.clickMoreBlock = ^{
             NSLog(@"求购大厅");
         };
@@ -170,33 +173,45 @@
     
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        GroupBuyingVC *vc = [[GroupBuyingVC alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
 //数据源
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         PromotionsCell *cell = [PromotionsCell cellWithTableView:tableView];
         return cell;
     } else if (indexPath.section == 1) {
-        TodaysNewsCell *cell = [TodaysNewsCell cellWithTableView:tableView];
-        cell.countLabel.text = [NSString stringWithFormat:@"%ld",(long)indexPath.row + 1];
-        return cell;
-    } else if (indexPath.section == 2) {
         AskToBuyCell *cell = [AskToBuyCell cellWithTableView:tableView];
         return cell;
-    } else if (indexPath.section == 3) {
-        OpenMallCell *cell = [OpenMallCell cellWithTableView:tableView];
-        return cell;
     } else {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-        }
+        OpenMallVC_Cell *cell = [OpenMallVC_Cell cellWithTableView:tableView];
         return cell;
     }
 }
+#pragma mark 唤起App专用
+-(void)urlAwake:(NSNotification *)notification {
+    NSString *classString = notification.userInfo[@"className"];
+//    Class JumpClass = NSClassFromString(classString);
+    
+    UIViewController *vc = [classString stringToClass:classString];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+
 
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void)dealloc {
+    //移除通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

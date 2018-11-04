@@ -29,32 +29,32 @@
     gradientLayer.locations = @[@0.0, @1.0];
     gradientLayer.startPoint = CGPointMake(0.0, 0.0);
     gradientLayer.endPoint = CGPointMake(0.0,1.0);
-    gradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 11 * Scale_H);
+    gradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 6);
     [self.contentView.layer addSublayer:gradientLayer];
     
     UIView *bgView = [[UIView alloc] init];
     [self.contentView addSubview:bgView];
     [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(@0);
-        make.height.mas_equalTo(@(30 * Scale_H));
-        make.top.mas_equalTo(@(11 * Scale_H));
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(30);
+        make.top.mas_equalTo(6);
     }];
     //淡淡的黑线
     UIView *line = [[UIView alloc] init];
     line.backgroundColor = LineColor;
     [self.contentView addSubview:line];
     [line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(@0);
+        make.left.right.bottom.mas_equalTo(0);
         make.height.mas_equalTo(@0.5);
     }];
     
     //图片
     UIImageView *leftImageView = [[UIImageView alloc] init];
-    leftImageView.image = [UIImage imageNamed:@"laftLine"];
+    leftImageView.image = [UIImage imageNamed:@"leftLine"];
     [self.contentView addSubview:leftImageView];
     [leftImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(bgView.mas_centerY);
-        make.height.mas_equalTo(@(24 * Scale_H));
+        make.height.mas_equalTo(24);
         make.left.mas_equalTo(@(9 * Scale_W));
         make.width.mas_equalTo(@(3));
     }];

@@ -8,6 +8,9 @@
 
 #import "HeadLineVC.h"
 #import "MacroHeader.h"
+#import <MBProgressHUD.h>
+#import "CddHUD.h"
+
 
 @interface HeadLineVC ()
 
@@ -17,16 +20,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-//    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-//    gradientLayer.colors = @[(__bridge id)[UIColor colorWithHexString:@"#f26c27"].CGColor, (__bridge id)[UIColor colorWithHexString:@"#ee2788"].CGColor];
-//    gradientLayer.locations = @[@0.0, @1.0];
-//    gradientLayer.startPoint = CGPointMake(0.0, 0.0);
-//    gradientLayer.endPoint = CGPointMake(1.0,1.0);
-//    gradientLayer.frame = CGRectMake(0, 100, SCREEN_WIDTH, SCREEN_WIDTH);
-//    [self.view.layer addSublayer:gradientLayer];
-    
-    
+  
+//    MBProgressHUD *hud = [CddHUD showWithText:@"登陆中..."];
+//    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [CddHUD showSwitchText:hud text:@"上传成功"];
+//    });
 }
 
 - (void)setupUI {

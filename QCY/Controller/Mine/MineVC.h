@@ -6,11 +6,11 @@
 //  Copyright © 2018年 Shanghai i7colors Ecommerce Co., Ltd. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "BaseViewControllerNav.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MineVC : BaseViewController
+@interface MineVC : BaseViewControllerNav
 
 @end
 
