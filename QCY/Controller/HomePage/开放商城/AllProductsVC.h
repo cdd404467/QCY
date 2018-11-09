@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AllProductsVC : BaseViewController
 
 @property (nonatomic, copy)NSMutableArray *dataSource;
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, copy)NSString *storeID;
 @property (nonatomic, copy)NSArray *tempArr;
 

@@ -79,6 +79,7 @@
         make.right.mas_equalTo(@(-11 * Scale_W));
         make.centerY.mas_equalTo(bgView.mas_centerY);
     }];
+    _moreLabel = moreLabel;
     [HelperTool addTapGesture:moreLabel withTarget:self andSEL:@selector(transmitEvent)];
 }
 

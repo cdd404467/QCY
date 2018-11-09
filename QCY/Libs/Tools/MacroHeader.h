@@ -17,18 +17,24 @@
 //线上测试-图片
 //#define Photo_URL @"http://static1.i7colors.com"
 
+
+
 #define CompanyContact @"4009208599"
 //图片地址
 #define ImgStr(urlStr) [NSString stringWithFormat:@"%@%@",Photo_URL,urlStr]
 #define ImgUrl(urlStr) [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",Photo_URL,urlStr]]
 //占位图片
 #define PlaceHolderImg [UIImage imageNamed:@"placeHolder_Img1"]
-
+#define PlaceHolderImgBanner [UIImage imageNamed:@"placeHolder_Img2"]
 /*** 颜色 ***/
-#define LineColor [UIColor colorWithHexString:@"#e5e5e5"]
-#define MainColor [UIColor colorWithHexString:@"#ef3673"]
-#define View_Color [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1];
+#define LineColor [UIColor colorWithHexString:@"#e5e5e5"]   //全局线条颜色
+#define MainColor [UIColor colorWithHexString:@"#ef3673"]   //全局主题色
+#define View_Color [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1];     //全局view背景色
 #define Main_BgColor RGBA(0, 0, 0, 0.08)
+#define Cell_BGColor  HEXColor(@"#D3D3D3", 1);
+
+
+
 //RGBA
 #define RGBA(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
 //Hex
@@ -84,6 +90,9 @@
 #define To_String(code) [NSString stringWithFormat:@"%@", code]
 //获取 userToken
 #define GET_USER_TOKEN [[UserDefault objectForKey:@"userInfo"] objectForKey:@"token"]
+//高级版自动判断获取usertoken
+#define User_Token ([[UserDefault objectForKey:@"userInfo"] objectForKey:@"token"] ? [[UserDefault objectForKey:@"userInfo"] objectForKey:@"token"] : @"")
+
 
 //获取头像
 #define Get_Header [[UserDefault objectForKey:@"userInfo"] objectForKey:@"userHeaderImage"]

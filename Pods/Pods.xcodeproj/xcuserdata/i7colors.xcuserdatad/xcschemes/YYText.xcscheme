@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1000"
+   LastUpgradeVersion = "1010"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "30BC767547D084A4A02D651DDFACCD36"
+               BlueprintIdentifier = "AB1DC6FC9E6B1B0BAC5F1A4BE990B168"
                BuildableName = "libYYText.a"
                BlueprintName = "YYText"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "30BC767547D084A4A02D651DDFACCD36"
+            BlueprintIdentifier = "AB1DC6FC9E6B1B0BAC5F1A4BE990B168"
             BuildableName = "libYYText.a"
             BlueprintName = "YYText"
             ReferencedContainer = "container:Pods.xcodeproj">

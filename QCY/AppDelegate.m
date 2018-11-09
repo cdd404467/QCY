@@ -11,6 +11,8 @@
 #import <IQKeyboardManager.h>
 #import "NSString+Class.h"
 
+
+
 @interface AppDelegate ()
 
 @end
@@ -89,6 +91,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     //加载根视图视图
+    
     TabbarVC *rootVC = [[TabbarVC alloc] init];
     rootVC.selectedIndex = 0;
     self.window.rootViewController = rootVC;
@@ -98,6 +101,8 @@
 
 - (void)initThirdParty {
     [IQKeyboardManager sharedManager].enable = YES;
+    [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
+    [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
 }
 
 

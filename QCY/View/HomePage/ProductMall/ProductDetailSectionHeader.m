@@ -27,11 +27,11 @@
     headerBg.frame = CGRectMake(KFit_W(13), 11, SCREEN_WIDTH - KFit_W(13) * 2, 40);
     headerBg.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:headerBg];
-    [HelperTool setRound:headerBg corner:UIRectCornerTopLeft | UIRectCornerTopRight radiu:5];
+    [HelperTool setRound:headerBg corner:UIRectCornerTopLeft | UIRectCornerTopRight radiu:10];
     
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = @"基本参数";
-    titleLabel.font = [UIFont systemFontOfSize:12];
+    titleLabel.font = [UIFont systemFontOfSize:14];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [headerBg addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {

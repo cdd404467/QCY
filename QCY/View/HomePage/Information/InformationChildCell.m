@@ -39,7 +39,7 @@
 - (void)setupUI {
     UIView *topView = [[UIView alloc] init];
     topView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 6);
-    topView.backgroundColor = RGBA(0, 0, 0, 0.08);
+    topView.backgroundColor = Cell_BGColor;
     [self.contentView addSubview:topView];
     
     //图片

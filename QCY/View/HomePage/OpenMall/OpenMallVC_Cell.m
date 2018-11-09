@@ -35,7 +35,7 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.contentView.backgroundColor = RGBA(0, 0, 0, 0.1);
+        self.contentView.backgroundColor = Cell_BGColor;
         [self setupUI];
     }
     
@@ -131,8 +131,7 @@
 - (void)setModel:(OpenMallModel *)model {
     _model = model;
     //公司头像
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",Photo_URL,model.logo]];
-    [_headerImageView yy_setImageWithURL:url options:YYWebImageOptionSetImageWithFadeAnimation];
+    [_headerImageView yy_setImageWithURL:[NSURL URLWithString:ImgStr(model.logo)] placeholder:PlaceHolderImg options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
 
     //公司名字
     _nameLabel.text = model.company.companyName;

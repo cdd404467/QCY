@@ -10,8 +10,12 @@
 #import <Masonry.h>
 #import "MacroHeader.h"
 #import <YYWebImage.h>
+#import "HomePageModel.h"
 
-@implementation PromotionsCell
+@implementation PromotionsCell {
+    UIImageView *_imageView;
+    UILabel *_desText;
+}
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -31,11 +35,10 @@
 }
 
 - (void)setupUI {
-    NSURL *url = [NSURL URLWithString:@"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3107510826,3774805506&fm=11&gp=0.jpg"];
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_H(110));
-    [imageView yy_setImageWithURL:url options:YYWebImageOptionSetImageWithFadeAnimation];
     [self.contentView addSubview:imageView];
+    _imageView = imageView;
     //文字描述
     UILabel *desText = [[UILabel alloc] init];
     desText.text = @"夏季大促销！更多优惠等你来，我是活动描述~";
@@ -49,6 +52,13 @@
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(imageView.mas_bottom).offset(0);
     }];
+    _desText = desText;
+}
+
+- (void)setModel:(BannerModel *)model {
+    _model = model;
+    [_imageView yy_setImageWithURL:[NSURL URLWithString:ImgStr(model.ad_image)] placeholder:PlaceHolderImg options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+    
 }
 
 + (instancetype)cellWithTableView:(UITableView *)tableView {

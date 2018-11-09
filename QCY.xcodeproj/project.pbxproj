@@ -63,6 +63,12 @@
 		FC48F46E2186E5DF00C69B49 /* UIColor+LXExpand.m in Sources */ = {isa = PBXBuildFile; fileRef = FC48F46A2186E5DF00C69B49 /* UIColor+LXExpand.m */; };
 		FC48F46F2186E5DF00C69B49 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = FC48F46B2186E5DF00C69B49 /* NSString+Extension.m */; };
 		FC48F4722186EE9900C69B49 /* OpenMallModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FC48F4712186EE9900C69B49 /* OpenMallModel.m */; };
+		FC4B2F9321901E5F00854678 /* BaseParameterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4B2F9221901E5F00854678 /* BaseParameterVC.m */; };
+		FC4B2F9921901EB800854678 /* GroupBuyRecordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4B2F9821901EB800854678 /* GroupBuyRecordVC.m */; };
+		FC4B2F9C219027A100854678 /* GroupBuyDetailBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4B2F9B219027A100854678 /* GroupBuyDetailBaseCell.m */; };
+		FC4B2F9F2192B00600854678 /* GroupBuyNeedKnowVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4B2F9E2192B00600854678 /* GroupBuyNeedKnowVC.m */; };
+		FC4B2FA22192B82900854678 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4B2FA12192B82900854678 /* ImageCell.m */; };
+		FC4B2FA52192D45500854678 /* GroupBuyAlreadyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4B2FA42192D45500854678 /* GroupBuyAlreadyCell.m */; };
 		FC7E10AA2150CFFC006FCDEF /* UIButton+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10A02150CFFB006FCDEF /* UIButton+HYBImageCliped.m */; };
 		FC7E10AB2150CFFC006FCDEF /* UIImage+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10A12150CFFB006FCDEF /* UIImage+HYBImageCliped.m */; };
 		FC7E10AC2150CFFC006FCDEF /* HYBImageClipedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10A52150CFFB006FCDEF /* HYBImageClipedManager.m */; };
@@ -87,6 +93,15 @@
 		FC9F33F521801C2E00B11D6D /* SettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9F33F421801C2E00B11D6D /* SettingVC.m */; };
 		FC9F33F82180228000B11D6D /* Alert.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9F33F72180228000B11D6D /* Alert.m */; };
 		FC9F33FB218041A300B11D6D /* SwitchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9F33FA218041A300B11D6D /* SwitchVC.m */; };
+		FC9FB9BF219343EA0008A90E /* GoToGroupBuyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9BE219343EA0008A90E /* GoToGroupBuyVC.m */; };
+		FC9FB9CD2194132B0008A90E /* PYSearchConst.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9C22194132A0008A90E /* PYSearchConst.m */; };
+		FC9FB9CE2194132B0008A90E /* PYSearch.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FC9FB9C42194132A0008A90E /* PYSearch.bundle */; };
+		FC9FB9CF2194132B0008A90E /* PYSearchSuggestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9C62194132A0008A90E /* PYSearchSuggestionViewController.m */; };
+		FC9FB9D02194132B0008A90E /* PYSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9C72194132A0008A90E /* PYSearchViewController.m */; };
+		FC9FB9D12194132B0008A90E /* UIColor+PYExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9CA2194132B0008A90E /* UIColor+PYExtension.m */; };
+		FC9FB9D22194132B0008A90E /* UIView+PYExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9CC2194132B0008A90E /* UIView+PYExtension.m */; };
+		FC9FB9D62194413D0008A90E /* TestVC1.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9D52194413D0008A90E /* TestVC1.m */; };
+		FC9FB9D92194414F0008A90E /* TestVC2.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9D82194414F0008A90E /* TestVC2.m */; };
 		FCB9E414217258460039AE04 /* UIDevice+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB9E413217258460039AE04 /* UIDevice+UUID.m */; };
 		FCB9E41B2174F58B0039AE04 /* AskToBuyDetailsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB9E41A2174F58B0039AE04 /* AskToBuyDetailsVC.m */; };
 		FCB9E41E217573C10039AE04 /* PostBuyingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB9E41D217573C10039AE04 /* PostBuyingVC.m */; };
@@ -258,6 +273,18 @@
 		FC48F46C2186E5DF00C69B49 /* NSString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extension.h"; sourceTree = "<group>"; };
 		FC48F4702186EE9900C69B49 /* OpenMallModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenMallModel.h; sourceTree = "<group>"; };
 		FC48F4712186EE9900C69B49 /* OpenMallModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenMallModel.m; sourceTree = "<group>"; };
+		FC4B2F9121901E5F00854678 /* BaseParameterVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseParameterVC.h; sourceTree = "<group>"; };
+		FC4B2F9221901E5F00854678 /* BaseParameterVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseParameterVC.m; sourceTree = "<group>"; };
+		FC4B2F9721901EB800854678 /* GroupBuyRecordVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupBuyRecordVC.h; sourceTree = "<group>"; };
+		FC4B2F9821901EB800854678 /* GroupBuyRecordVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupBuyRecordVC.m; sourceTree = "<group>"; };
+		FC4B2F9A219027A100854678 /* GroupBuyDetailBaseCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupBuyDetailBaseCell.h; sourceTree = "<group>"; };
+		FC4B2F9B219027A100854678 /* GroupBuyDetailBaseCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupBuyDetailBaseCell.m; sourceTree = "<group>"; };
+		FC4B2F9D2192B00600854678 /* GroupBuyNeedKnowVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupBuyNeedKnowVC.h; sourceTree = "<group>"; };
+		FC4B2F9E2192B00600854678 /* GroupBuyNeedKnowVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupBuyNeedKnowVC.m; sourceTree = "<group>"; };
+		FC4B2FA02192B82900854678 /* ImageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCell.h; sourceTree = "<group>"; };
+		FC4B2FA12192B82900854678 /* ImageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageCell.m; sourceTree = "<group>"; };
+		FC4B2FA32192D45500854678 /* GroupBuyAlreadyCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupBuyAlreadyCell.h; sourceTree = "<group>"; };
+		FC4B2FA42192D45500854678 /* GroupBuyAlreadyCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupBuyAlreadyCell.m; sourceTree = "<group>"; };
 		FC7E109F2150CFFB006FCDEF /* HYBImageClipedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYBImageClipedManager.h; sourceTree = "<group>"; };
 		FC7E10A02150CFFB006FCDEF /* UIButton+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+HYBImageCliped.m"; sourceTree = "<group>"; };
 		FC7E10A12150CFFB006FCDEF /* UIImage+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+HYBImageCliped.m"; sourceTree = "<group>"; };
@@ -307,6 +334,24 @@
 		FC9F33F72180228000B11D6D /* Alert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Alert.m; sourceTree = "<group>"; };
 		FC9F33F9218041A300B11D6D /* SwitchVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwitchVC.h; sourceTree = "<group>"; };
 		FC9F33FA218041A300B11D6D /* SwitchVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwitchVC.m; sourceTree = "<group>"; };
+		FC9FB9BD219343EA0008A90E /* GoToGroupBuyVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoToGroupBuyVC.h; sourceTree = "<group>"; };
+		FC9FB9BE219343EA0008A90E /* GoToGroupBuyVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GoToGroupBuyVC.m; sourceTree = "<group>"; };
+		FC9FB9C12194132A0008A90E /* PYSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYSearchViewController.h; sourceTree = "<group>"; };
+		FC9FB9C22194132A0008A90E /* PYSearchConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYSearchConst.m; sourceTree = "<group>"; };
+		FC9FB9C32194132A0008A90E /* PYSearchConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYSearchConst.h; sourceTree = "<group>"; };
+		FC9FB9C42194132A0008A90E /* PYSearch.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = PYSearch.bundle; sourceTree = "<group>"; };
+		FC9FB9C52194132A0008A90E /* UIView+PYExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+PYExtension.h"; sourceTree = "<group>"; };
+		FC9FB9C62194132A0008A90E /* PYSearchSuggestionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYSearchSuggestionViewController.m; sourceTree = "<group>"; };
+		FC9FB9C72194132A0008A90E /* PYSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYSearchViewController.m; sourceTree = "<group>"; };
+		FC9FB9C82194132B0008A90E /* PYSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYSearch.h; sourceTree = "<group>"; };
+		FC9FB9C92194132B0008A90E /* PYSearchSuggestionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYSearchSuggestionViewController.h; sourceTree = "<group>"; };
+		FC9FB9CA2194132B0008A90E /* UIColor+PYExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+PYExtension.m"; sourceTree = "<group>"; };
+		FC9FB9CB2194132B0008A90E /* UIColor+PYExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+PYExtension.h"; sourceTree = "<group>"; };
+		FC9FB9CC2194132B0008A90E /* UIView+PYExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+PYExtension.m"; sourceTree = "<group>"; };
+		FC9FB9D42194413D0008A90E /* TestVC1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestVC1.h; sourceTree = "<group>"; };
+		FC9FB9D52194413D0008A90E /* TestVC1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestVC1.m; sourceTree = "<group>"; };
+		FC9FB9D72194414F0008A90E /* TestVC2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestVC2.h; sourceTree = "<group>"; };
+		FC9FB9D82194414F0008A90E /* TestVC2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestVC2.m; sourceTree = "<group>"; };
 		FCB9E412217258460039AE04 /* UIDevice+UUID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIDevice+UUID.h"; sourceTree = "<group>"; };
 		FCB9E413217258460039AE04 /* UIDevice+UUID.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+UUID.m"; sourceTree = "<group>"; };
 		FCB9E4192174F58B0039AE04 /* AskToBuyDetailsVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AskToBuyDetailsVC.h; sourceTree = "<group>"; };
@@ -605,6 +650,7 @@
 		3ACD0FE32138CADF00E83D3C /* QCY */ = {
 			isa = PBXGroup;
 			children = (
+				FC9FB9D3219441220008A90E /* Test */,
 				FC33C319214BA63C00D26C97 /* Base */,
 				3A412000213CBFDD003191F1 /* Model */,
 				3A412001213CBFF5003191F1 /* View */,
@@ -746,6 +792,7 @@
 		FC33C327214EB23E00D26C97 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				FC9FB9C0219412A70008A90E /* PYSearch */,
 				FC48F4632186E4AC00C69B49 /* LXTagsView */,
 				FC142AA1217EBAA100E00A47 /* CheckBox */,
 				FC7F3281215006DE008E43F9 /* HYBImageCliped */,
@@ -878,6 +925,36 @@
 			path = Mine;
 			sourceTree = "<group>";
 		};
+		FC9FB9C0219412A70008A90E /* PYSearch */ = {
+			isa = PBXGroup;
+			children = (
+				FC9FB9C42194132A0008A90E /* PYSearch.bundle */,
+				FC9FB9C82194132B0008A90E /* PYSearch.h */,
+				FC9FB9C32194132A0008A90E /* PYSearchConst.h */,
+				FC9FB9C22194132A0008A90E /* PYSearchConst.m */,
+				FC9FB9C92194132B0008A90E /* PYSearchSuggestionViewController.h */,
+				FC9FB9C62194132A0008A90E /* PYSearchSuggestionViewController.m */,
+				FC9FB9C12194132A0008A90E /* PYSearchViewController.h */,
+				FC9FB9C72194132A0008A90E /* PYSearchViewController.m */,
+				FC9FB9CB2194132B0008A90E /* UIColor+PYExtension.h */,
+				FC9FB9CA2194132B0008A90E /* UIColor+PYExtension.m */,
+				FC9FB9C52194132A0008A90E /* UIView+PYExtension.h */,
+				FC9FB9CC2194132B0008A90E /* UIView+PYExtension.m */,
+			);
+			path = PYSearch;
+			sourceTree = "<group>";
+		};
+		FC9FB9D3219441220008A90E /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				FC9FB9D42194413D0008A90E /* TestVC1.h */,
+				FC9FB9D52194413D0008A90E /* TestVC1.m */,
+				FC9FB9D72194414F0008A90E /* TestVC2.h */,
+				FC9FB9D82194414F0008A90E /* TestVC2.m */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
 		FCB9E4152174F4FA0039AE04 /* 求购大厅 */ = {
 			isa = PBXGroup;
 			children = (
@@ -971,6 +1048,14 @@
 				FC05CBDC216DE38C005F666B /* GroupBuyingVC.m */,
 				FCF7C71F218C3120009F5140 /* GroupBuyingDetailVC.h */,
 				FCF7C720218C3120009F5140 /* GroupBuyingDetailVC.m */,
+				FC4B2F9121901E5F00854678 /* BaseParameterVC.h */,
+				FC4B2F9221901E5F00854678 /* BaseParameterVC.m */,
+				FC4B2F9D2192B00600854678 /* GroupBuyNeedKnowVC.h */,
+				FC4B2F9E2192B00600854678 /* GroupBuyNeedKnowVC.m */,
+				FC4B2F9721901EB800854678 /* GroupBuyRecordVC.h */,
+				FC4B2F9821901EB800854678 /* GroupBuyRecordVC.m */,
+				FC9FB9BD219343EA0008A90E /* GoToGroupBuyVC.h */,
+				FC9FB9BE219343EA0008A90E /* GoToGroupBuyVC.m */,
 			);
 			path = "团购";
 			sourceTree = "<group>";
@@ -984,6 +1069,12 @@
 				FCF7C71A218B1C83009F5140 /* GroupBuyingHeaderView.m */,
 				FCF7C725218C33F5009F5140 /* GroupBuyDetailHeaderView.h */,
 				FCF7C726218C33F5009F5140 /* GroupBuyDetailHeaderView.m */,
+				FC4B2F9A219027A100854678 /* GroupBuyDetailBaseCell.h */,
+				FC4B2F9B219027A100854678 /* GroupBuyDetailBaseCell.m */,
+				FC4B2FA02192B82900854678 /* ImageCell.h */,
+				FC4B2FA12192B82900854678 /* ImageCell.m */,
+				FC4B2FA32192D45500854678 /* GroupBuyAlreadyCell.h */,
+				FC4B2FA42192D45500854678 /* GroupBuyAlreadyCell.m */,
 			);
 			path = GroupBuying;
 			sourceTree = "<group>";
@@ -1095,6 +1186,7 @@
 			files = (
 				FCF7C710218ACEA8009F5140 /* ssl.cer in Resources */,
 				3ACD0FEE2138CAE000E83D3C /* Assets.xcassets in Resources */,
+				FC9FB9CE2194132B0008A90E /* PYSearch.bundle in Resources */,
 				3ACD0FEC2138CADF00E83D3C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1172,10 +1264,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				FCF7C6F921899E61009F5140 /* ProductDetailHeaderView.m in Sources */,
+				FC4B2FA52192D45500854678 /* GroupBuyAlreadyCell.m in Sources */,
 				3A412023213E1CF7003191F1 /* HeadLineVC.m in Sources */,
 				FC48F45F2182A37800C69B49 /* MyAcceptedOfferListVC.m in Sources */,
 				FC7E10CD2154B95E006FCDEF /* RegisterVC.m in Sources */,
 				FC05CBDD216DE38C005F666B /* GroupBuyingVC.m in Sources */,
+				FC9FB9D12194132B0008A90E /* UIColor+PYExtension.m in Sources */,
 				FC7E10C0215241FB006FCDEF /* UIImageView+CornerRadius.m in Sources */,
 				FCF7C6FC2189A8EC009F5140 /* ProductDetailBasicParaCell.m in Sources */,
 				FC48F4662186E4DC00C69B49 /* LXTagsView.m in Sources */,
@@ -1190,21 +1284,26 @@
 				FC7E10AA2150CFFC006FCDEF /* UIButton+HYBImageCliped.m in Sources */,
 				FC7E11152159F9A4006FCDEF /* ProductMallVC.m in Sources */,
 				FCB9E43A217607790039AE04 /* supplierQuotationCell.m in Sources */,
+				FC4B2FA22192B82900854678 /* ImageCell.m in Sources */,
 				FCB9E422217590620039AE04 /* AskToBuyBottomView.m in Sources */,
 				FC9F33FB218041A300B11D6D /* SwitchVC.m in Sources */,
+				FC4B2F9321901E5F00854678 /* BaseParameterVC.m in Sources */,
 				FC33C31C214BA66400D26C97 /* BaseNavigationController.m in Sources */,
 				FCF7C70E218AA9C3009F5140 /* InfomationModel.m in Sources */,
 				FCF7C71E218B2C35009F5140 /* GroupBuyingModel.m in Sources */,
 				FC85E4F8217B983B00CA119C /* CddHUD.m in Sources */,
 				FCD19DEA214A0D1F00DBC908 /* UIImage+Color.m in Sources */,
 				FC142A5C217CCE4600E00A47 /* MineHeaderReusableView.m in Sources */,
+				FC9FB9D22194132B0008A90E /* UIView+PYExtension.m in Sources */,
 				FCF7C70B218AA51C009F5140 /* InformationChildCell.m in Sources */,
 				FC142AAD217EBABF00E00A47 /* BEMCheckBox.m in Sources */,
 				3A412020213E1B46003191F1 /* HomePageVC.m in Sources */,
 				FC7E10AB2150CFFC006FCDEF /* UIImage+HYBImageCliped.m in Sources */,
 				FC142B12217F803500E00A47 /* MyOfferPriceClosedVC.m in Sources */,
 				3A41202D213F850A003191F1 /* HomePageHeaderView.m in Sources */,
+				FC9FB9CD2194132B0008A90E /* PYSearchConst.m in Sources */,
 				3ACD0FF42138CAE000E83D3C /* main.m in Sources */,
+				FC9FB9D02194132B0008A90E /* PYSearchViewController.m in Sources */,
 				FC2AACAF216CA40800E443F3 /* CommonNav.m in Sources */,
 				FC9F33F521801C2E00B11D6D /* SettingVC.m in Sources */,
 				FCB9E42B2175BF8B0039AE04 /* AskToBuyDetailsHeaderView.m in Sources */,
@@ -1214,9 +1313,11 @@
 				FC142AB7217EED1800E00A47 /* MyAskToBuyAllVC.m in Sources */,
 				FC142B0F217F7FCD00E00A47 /* MyOfferPriceWorkingVC.m in Sources */,
 				FC33C334214F72C800D26C97 /* OpenMallVC_Cell.m in Sources */,
+				FC9FB9BF219343EA0008A90E /* GoToGroupBuyVC.m in Sources */,
 				FC17E0722140F6CD00219452 /* ClassTool.m in Sources */,
 				FC7E10BD2151F05C006FCDEF /* UIFont+Runtime.m in Sources */,
 				3A412018213E13C3003191F1 /* UITextField+Limit.m in Sources */,
+				FC9FB9D92194414F0008A90E /* TestVC2.m in Sources */,
 				FCC5762A21886FBC004ED61D /* AllProductsVC.m in Sources */,
 				FC142AAB217EBABF00E00A47 /* BEMCheckBoxGroup.m in Sources */,
 				FC05CC2321704C94005F666B /* AES128.m in Sources */,
@@ -1229,13 +1330,17 @@
 				FC17E0792141143900219452 /* PromotionsCell.m in Sources */,
 				FC7E10C421535444006FCDEF /* LoginVC.m in Sources */,
 				FC05CC2621707BB8005F666B /* TimeAbout.m in Sources */,
+				FC9FB9CF2194132B0008A90E /* PYSearchSuggestionViewController.m in Sources */,
 				FCF7C704218A908C009F5140 /* IndustryInformationVC.m in Sources */,
+				FC4B2F9F2192B00600854678 /* GroupBuyNeedKnowVC.m in Sources */,
 				FC48F46F2186E5DF00C69B49 /* NSString+Extension.m in Sources */,
 				FC7E1118215A1A2F006FCDEF /* ProductDetailsVC.m in Sources */,
 				FC33C330214F667C00D26C97 /* OpenMallVC.m in Sources */,
+				FC9FB9D62194413D0008A90E /* TestVC1.m in Sources */,
 				FC142AC6217EF73400E00A47 /* MyAskToBuyCell.m in Sources */,
 				FC7E112B215F0997006FCDEF /* UIView+Border.m in Sources */,
 				FCF7C721218C3120009F5140 /* GroupBuyingDetailVC.m in Sources */,
+				FC4B2F9921901EB800854678 /* GroupBuyRecordVC.m in Sources */,
 				FCF7C6FF2189BDD7009F5140 /* ProductDetailSectionHeader.m in Sources */,
 				3A412015213D1181003191F1 /* UIColor+Hex.m in Sources */,
 				FC05CBDA216DD25C005F666B /* ResetPassword.m in Sources */,
@@ -1256,6 +1361,7 @@
 				FC7E11122159F5CE006FCDEF /* ProductMallVC_Cell.m in Sources */,
 				FCC575DD2188392E004ED61D /* ShopMainPageHeaderView.m in Sources */,
 				FC7E10B12150DB22006FCDEF /* HelperTool.m in Sources */,
+				FC4B2F9C219027A100854678 /* GroupBuyDetailBaseCell.m in Sources */,
 				FC9F33F82180228000B11D6D /* Alert.m in Sources */,
 				FCF7C713218AE46E009F5140 /* InfomationDetailVC.m in Sources */,
 				FC17E06F2140F60B00219452 /* HomePageSectionHeader.m in Sources */,

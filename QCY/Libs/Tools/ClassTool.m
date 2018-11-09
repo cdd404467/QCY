@@ -129,8 +129,8 @@
             success(responseObject);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"Error: %@", error);
         if (failure) {
+            NSLog(@" Error : %@",error);
             failure(error);
         }
     }];
@@ -168,6 +168,7 @@
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 if (failure) {
+                    NSLog(@" Error : %@",error);
                     [ClassTool afnErrorState:error.code];
                     failure(error);
                 }
@@ -184,6 +185,7 @@
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) {
+            NSLog(@" Error : %@",error);
             [ClassTool afnErrorState:error.code];
             failure(error);
         }
@@ -225,6 +227,7 @@
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 if (failure) {
+                    NSLog(@" Error : %@",error);
                     [ClassTool afnErrorState:error.code];
                     failure(error);
                 }
@@ -240,6 +243,7 @@
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) {
+            NSLog(@" Error : %@",error);
             [ClassTool afnErrorState:error.code];
             failure(error);
         }

@@ -13,10 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ProductDetailBasicParaCell : UITableViewCell
 
-@property (nonatomic, strong)UIView *bgView;
+@property (nonatomic, strong)UIView *vLine;
 @property (nonatomic, strong)UILabel *noneLabel;
 @property (nonatomic, strong)PropMap *model;
 + (instancetype)cellWithTableView:(UITableView *)tableView;
+
 @end
 
 NS_ASSUME_NONNULL_END

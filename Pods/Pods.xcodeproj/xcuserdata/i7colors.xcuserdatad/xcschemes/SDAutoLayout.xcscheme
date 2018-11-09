@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1000"
+   LastUpgradeVersion = "1010"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "60C3F3EF449B7E2BD752FC2B393B8497"
+               BlueprintIdentifier = "2746FB0C87B0DE5FCAC2A45AF831BCA2"
                BuildableName = "libSDAutoLayout.a"
                BlueprintName = "SDAutoLayout"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "60C3F3EF449B7E2BD752FC2B393B8497"
+            BlueprintIdentifier = "2746FB0C87B0DE5FCAC2A45AF831BCA2"
             BuildableName = "libSDAutoLayout.a"
             BlueprintName = "SDAutoLayout"
             ReferencedContainer = "container:Pods.xcodeproj">

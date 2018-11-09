@@ -16,6 +16,10 @@
 #import "ClassTool.h"
 #import "UIDevice+UUID.h"
 #import "NSString+Class.h"
+#import "NetWorkingPort.h"
+#import "CddHUD.h"
+#import "HomePageModel.h"
+#import "OpenMallModel.h"
 /** 跳转的页面 **/
 #import "OpenMallVC.h"
 #import "ProductMallVC.h"
@@ -23,12 +27,18 @@
 #import "NetWorkingPort.h"
 #import "IndustryInformationVC.h"
 #import "GroupBuyingVC.h"
+#import "AskToBuyDetailsVC.h"
+#import "ShopMainPageVC.h"
 
 
 
 @interface HomePageVC ()<UITableViewDelegate, UITableViewDataSource>
-@property (nonatomic, strong)UITableView *tableView;
 
+@property (nonatomic, strong)HomePageModel *dataSource;
+@property (nonatomic, strong)UITableView *tableView;
+@property (nonatomic, strong)HomePageHeaderView *headerView;
+@property (nonatomic, strong)NSMutableArray *bannerArray;
+@property (nonatomic, strong)NSMutableArray *salesArray;
 @end
 
 @implementation HomePageVC
@@ -36,9 +46,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(urlAwake:) name:@"urlJump" object:nil];
-    
-    
     self.navigationController.navigationBar.translucent = NO;
+    
+    
+    [self requestMultiData];
     [self.view addSubview:self.tableView];
 }
 
@@ -52,7 +63,7 @@
         //取消垂直滚动条
         _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
-            _tableView.estimatedRowHeight = 0;
+//            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
         }
@@ -60,6 +71,23 @@
     }
     return _tableView;
 }
+
+- (NSMutableArray *)bannerArray {
+    if (!_bannerArray) {
+        _bannerArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    
+    return _bannerArray;
+}
+
+- (NSMutableArray *)salesArray {
+    if (!_salesArray) {
+        _salesArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    
+    return _salesArray;
+}
+
 
 //创建自定义的tableView headerView
 - (HomePageHeaderView *)addHeaderView {
@@ -93,9 +121,84 @@
                 break;
         }
     };
-    
+    _headerView = headerView;
     return headerView;
 }
+
+#pragma mark - 获取列表数据
+- (void)requestMultiData {
+    DDWeakSelf;
+    
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
+    //首页列表
+    dispatch_group_enter(group);
+    dispatch_group_async(group, globalQueue, ^{
+        NSString *urlString = [NSString stringWithFormat:URL_HomePage_List,User_Token];
+        [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+//            NSLog(@"---- %@",json);
+            if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+                weakself.dataSource = [HomePageModel mj_objectWithKeyValues:json[@"data"]];
+                weakself.dataSource.enquiryList = [AskToBuyModel mj_objectArrayWithKeyValuesArray:weakself.dataSource.enquiryList];
+                weakself.dataSource.marketList = [OpenMallModel mj_objectArrayWithKeyValuesArray:weakself.dataSource.marketList];
+                for (OpenMallModel *model in weakself.dataSource.marketList) {
+                    model.businessList = [BusinessList mj_objectArrayWithKeyValuesArray:model.businessList];
+                }
+                [weakself.tableView reloadData];
+                
+            }
+            dispatch_group_leave(group);
+        } Failure:^(NSError *error) {
+            dispatch_group_leave(group);
+        }];
+        
+    });
+    
+    //获取轮播图
+    dispatch_group_enter(group);
+    dispatch_group_async(group, globalQueue, ^{
+        NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"APP_Index_Banner"];
+        [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+            if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+//                                 NSLog(@"---- %@",json);
+                NSArray *bArray = [BannerModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
+                for (BannerModel *model in bArray) {
+                    [weakself.bannerArray addObject:ImgUrl(model.ad_image)];
+                }
+                weakself.headerView.bannerArray = [weakself.bannerArray copy];
+            }
+            dispatch_group_leave(group);
+        } Failure:^(NSError *error) {
+            dispatch_group_leave(group);
+        }];
+    });
+    
+    //活动
+    dispatch_group_enter(group);
+    dispatch_group_async(group, globalQueue, ^{
+        NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"APP_Group_Buy"];
+        [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+            if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+//                                                 NSLog(@"---- %@",json);
+                weakself.salesArray = [BannerModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
+                NSIndexSet *indexSet = [[NSIndexSet alloc] initWithIndex:0];
+                [weakself.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+            }
+            dispatch_group_leave(group);
+        } Failure:^(NSError *error) {
+            dispatch_group_leave(group);
+        }];
+    });
+    
+    //全部任务完成后，就可以在这吊了
+    dispatch_group_notify(group, globalQueue, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+        });
+    });
+    
+}
+
 
 //header不悬停
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -120,11 +223,11 @@
 //每组的cell个数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
-        return 1;
+        return _salesArray.count;
     } else if (section == 1) {
-        return 8;
+        return _dataSource.enquiryList.count;
     } else {
-        return 8;
+        return _dataSource.marketList.count;
     }
 }
 
@@ -133,7 +236,7 @@
     if (indexPath.section == 0) {
         return KFit_H(110) + 30 + 6;
     } else if (indexPath.section == 1){
-        return 86;
+        return 126;
     } else {
         return 125;
     }
@@ -154,19 +257,20 @@
     NSArray *titleArr = @[@"促销活动",@"求购大厅",@"开放商城"];
     HomePageSectionHeader *header = [ HomePageSectionHeader headerWithTableView:tableView];
     header.titleLabel.text = titleArr[section];
+    DDWeakSelf;
     if (section == 0) {
-        header.clickMoreBlock = ^{
-//            NSLog(@"促销活动");
-        };
+        header.moreLabel.hidden = YES;
         return header;
     } else if (section == 1) {
         header.clickMoreBlock = ^{
-            NSLog(@"求购大厅");
+            AskToBuyVC *vc = [[AskToBuyVC alloc] init];
+            [weakself.navigationController pushViewController:vc animated:YES];
         };
         return header;
     } else {
         header.clickMoreBlock = ^{
-            NSLog(@"开放商城");
+            OpenMallVC *vc = [[OpenMallVC alloc] init];
+            [weakself.navigationController pushViewController:vc animated:YES];
         };
         return header;
     }
@@ -177,6 +281,16 @@
     if (indexPath.section == 0) {
         GroupBuyingVC *vc = [[GroupBuyingVC alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
+    } else if (indexPath.section == 1) {
+        AskToBuyDetailsVC *vc = [[AskToBuyDetailsVC alloc] init];
+        AskToBuyModel *model = _dataSource.enquiryList[indexPath.row];
+        vc.buyID = model.buyID;
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (indexPath.section == 2) {
+        ShopMainPageVC *vc = [[ShopMainPageVC alloc] init];
+        OpenMallModel *model = _dataSource.marketList[indexPath.row];
+        vc.storeID = model.storeID;
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
@@ -184,12 +298,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         PromotionsCell *cell = [PromotionsCell cellWithTableView:tableView];
+        cell.model = _salesArray[indexPath.row];
         return cell;
     } else if (indexPath.section == 1) {
         AskToBuyCell *cell = [AskToBuyCell cellWithTableView:tableView];
+        cell.model = _dataSource.enquiryList[indexPath.row];
         return cell;
     } else {
         OpenMallVC_Cell *cell = [OpenMallVC_Cell cellWithTableView:tableView];
+        cell.model = _dataSource.marketList[indexPath.row];
         return cell;
     }
 }

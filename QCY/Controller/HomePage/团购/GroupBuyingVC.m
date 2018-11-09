@@ -32,13 +32,20 @@
 
 @implementation GroupBuyingVC
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _page = 1;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-    _page = 1;
     [self setNavBar];
     [self loadData];
-//    [self.view addSubview:self.tableView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -74,8 +81,8 @@
             _tableView.estimatedSectionFooterHeight = 0;
         }
 
-        GroupBuyingHeaderView *header = [[GroupBuyingHeaderView alloc] init];
-        [header addBanner:[_bannerDataSource copy]];
+        GroupBuyingHeaderView *header = [[GroupBuyingHeaderView alloc] initWithArray:[_bannerDataSource copy]];
+//        [header addBanner:[_bannerDataSource copy]];
         header.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_H(144));
         _tableView.tableHeaderView = header;
         
@@ -116,16 +123,16 @@
     [CddHUD show];
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
-    //第一个线程获取列表
+    //第一个线程获取banner
     dispatch_group_enter(group);
     dispatch_group_async(group, globalQueue, ^{
         NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"XCX_Group_Buy"];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-                 NSLog(@"---- %@",json);
+//                 NSLog(@"---- %@",json);
                 weakself.bannerArr = [GroupBuyingModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
                 for (GroupBuyingModel *model in weakself.bannerArr) {
-                    [weakself.bannerDataSource addObject:model.ad_image];
+                    [weakself.bannerDataSource addObject:ImgUrl(model.ad_image)];
                 }
             }
             dispatch_group_leave(group);
@@ -135,13 +142,13 @@
         }];
     });
     
-    //第二个线程，获取详情
+    //第二个线程，获取列表
     dispatch_group_enter(group);
     dispatch_group_async(group, globalQueue, ^{
         NSString *urlString = [NSString stringWithFormat:URL_GroupBuying_List,weakself.page,Page_Count];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             [CddHUD hideHUD];
-            //                NSLog(@"---- %@",json);
+//                            NSLog(@"---- %@",json);
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
                 weakself.tempArr = [GroupBuyingModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
                 [weakself.dataSource addObjectsFromArray:weakself.tempArr];

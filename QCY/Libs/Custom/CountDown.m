@@ -21,8 +21,8 @@
     if (self) {
         self.dateFormatter=[[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-          NSTimeZone *localTimeZone = [NSTimeZone localTimeZone];
-         [self.dateFormatter setTimeZone:localTimeZone];
+        NSTimeZone *localTimeZone = [NSTimeZone localTimeZone];
+        [self.dateFormatter setTimeZone:localTimeZone];
     }
     return self;
 }
@@ -34,9 +34,8 @@
         if (timeout!=0) {
             dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
-            dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0 * NSEC_PER_SEC, 0); //每秒执行
+            dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
             dispatch_source_set_event_handler(_timer, ^{
-               
                 if(timeout<=0){ //倒计时结束，关闭
                     dispatch_source_cancel(self->_timer);
                     self->_timer = nil;
@@ -44,35 +43,35 @@
                         completeBlock(0,0,0,0);
                     });
                 }else{
-                    int days = (int)(timeout / (3600 * 24));
-                    int hours = (int)((timeout - days * 24 * 3600) / 3600);
-                    int minute = (int)(timeout - days * 24 * 3600 - hours * 3600) / 60;
-                    int second = timeout - days * 24 * 3600 - hours * 3600 - minute * 60;
+                    int days = (int)(timeout/(3600*24));
+                    int hours = (int)((timeout-days*24*3600)/3600);
+                    int minute = (int)(timeout-days*24*3600-hours*3600)/60;
+                    int second = timeout-days*24*3600-hours*3600-minute*60;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         completeBlock(days,hours,minute,second);
                     });
                     timeout--;
                 }
             });
-            dispatch_resume(_timer);
+            dispatch_resume(self->_timer);
         }
     }
 }
 -(void)countDownWithPER_SECBlock:(void (^)(void))PER_SECBlock{
     if (_timer==nil) {
-            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-            _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
-            dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
-            dispatch_source_set_event_handler(_timer, ^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    PER_SECBlock();
-                });
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
+        dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
+        dispatch_source_set_event_handler(_timer, ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                PER_SECBlock();
             });
-            dispatch_resume(_timer);
+        });
+        dispatch_resume(_timer);
     }
 }
 -(NSDate *)dateWithLongLong:(long long)longlongValue{
-    long long value = longlongValue;
+    long long value = longlongValue/1000;
     NSNumber *time = [NSNumber numberWithLongLong:value];
     //转换成NSTimeInterval,用longLongValue，防止溢出
     NSTimeInterval nsTimeInterval = [time longLongValue];
@@ -83,12 +82,12 @@
     if (_timer==nil) {
         NSDate *finishDate = [self dateWithLongLong:finishTimeStamp];
         NSDate *startDate  = [self dateWithLongLong:starTimeStamp];
-        NSTimeInterval timeInterval = [finishDate timeIntervalSinceDate:startDate];
+        NSTimeInterval timeInterval =[finishDate timeIntervalSinceDate:startDate];
         __block int timeout = timeInterval; //倒计时时间
         if (timeout!=0) {
             dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
-            dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0 * NSEC_PER_SEC, 0); //每秒执行
+            dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
             dispatch_source_set_event_handler(_timer, ^{
                 if(timeout<=0){ //倒计时结束，关闭
                     dispatch_source_cancel(self->_timer);
@@ -97,14 +96,15 @@
                         completeBlock(0,0,0,0);
                     });
                 }else{
-                    int days = (int)(timeout / (3600 * 24));
-                    int hours = (int)((timeout - days * 24 * 3600) / 3600);
-                    int minute = (int)(timeout - days * 24 * 3600 - hours * 3600) / 60;
-                    int second = timeout - days * 24 * 3600 - hours * 3600 - minute * 60;
+                    int days = (int)(timeout/(3600*24));
+                    int hours = (int)((timeout-days*24*3600)/3600);
+                    int minute = (int)(timeout-days*24*3600-hours*3600)/60;
+                    int second = timeout-days*24*3600-hours*3600-minute*60;
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        
                         completeBlock(days,hours,minute,second);
                     });
-                    timeout --;
+                    timeout--;
                 }
             });
             dispatch_resume(_timer);
@@ -124,9 +124,8 @@
 }
 /**
  *  主动销毁定时器
- *  格式为年-月-日
+ * 
  */
-
 -(void)destoryTimer{
     if (_timer) {
         dispatch_source_cancel(_timer);
@@ -135,7 +134,7 @@
 }
 
 -(void)dealloc{
-//    NSLog(@"%s dealloc",object_getClassName(self));
-    NSLog(@"定时器被释放");
+    NSLog(@"%s dealloc",object_getClassName(self));
 }
 @end
+

@@ -8,12 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <MJExtension.h>
+@class OpenMallModel;
 
 NS_ASSUME_NONNULL_BEGIN
-
-@interface HomePageModel : NSObject
-
-@end
 
 
 /**
@@ -36,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *status;                    //询盘状态,status= 1，求购中；status=2，已关闭；status=3已接受报价
 @property (nonatomic, copy)NSString *isCharger;                 //是否个人发布,1 - 个人
 @end
+
 
 @interface CompanyDomain : NSObject
 @property (nonatomic, copy)NSString *provinceName;              //地区名字
@@ -77,5 +75,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *classID;                    //一级分类ID
 @end
 
+/*** 首页数据 ***/
+@interface HomePageModel : NSObject
+@property (nonatomic, copy)NSArray *enquiryList;
+@property (nonatomic, copy)NSArray *marketList;
+@end
+
+@interface BannerModel : NSObject
+
+@property (nonatomic, copy)NSString *ad_image;                  //轮播图
+@end
 
 NS_ASSUME_NONNULL_END

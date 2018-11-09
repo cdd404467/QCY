@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+@class BannerModel;
 
 @interface PromotionsCell : UITableViewCell
 + (instancetype)cellWithTableView:(UITableView *)tableView;
-
+@property (nonatomic, strong)BannerModel *model;
 @end

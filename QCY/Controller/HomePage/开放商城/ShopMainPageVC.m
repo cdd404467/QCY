@@ -18,7 +18,6 @@
 #import "CddHUD.h"
 #import "OpenMallModel.h"
 
-
 @interface ShopMainPageVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
 
 @property (nonatomic, strong)CommonNav *nav;
@@ -55,6 +54,7 @@
         _nav = [[CommonNav alloc] init];
         _nav.titleLabel.text = @"店铺主页";
         _nav.bottomLine.hidden = YES;
+        _nav.backgroundColor = HEXColor(@"ffffff", 0);
         _nav.titleLabel.textColor = RGBA(0, 0, 0, 0);
         [_nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -124,11 +124,10 @@
 }
 
 - (void)setupPageVC {
-    
     YNPageConfigration *configration = [YNPageConfigration defaultConfig];
     configration.pageStyle = YNPageStyleSuspensionTopPause;
     configration.headerViewCouldScale = YES;
-    /// 控制tabbar 和 nav
+//    /// 控制tabbar 和 nav
     configration.showTabbar = NO;
     configration.showNavigation = NO;
     configration.scrollMenu = NO;
@@ -139,25 +138,25 @@
     configration.selectedItemColor = MainColor;
     configration.lineColor = MainColor;
     configration.itemFont = [UIFont systemFontOfSize:15];
-    configration.selectedItemFont = [UIFont boldSystemFontOfSize:16];
-    
-//    configration.showBottomLine = YES;
-    /// 设置悬浮停顿偏移量
+    configration.selectedItemFont = [UIFont boldSystemFontOfSize:15];
+
+////    configration.showBottomLine = YES;
+//    /// 设置悬浮停顿偏移量
     configration.suspenOffsetY = NAV_HEIGHT;
-    
+//
     YNPageViewController *vc = [YNPageViewController pageViewControllerWithControllers:self.getArrayVCs
                                                                                 titles:[self getArrayTitles]
                                                                                 config:configration];
     vc.dataSource = self;
     vc.delegate = self;
-    
+//
     ShopMainPageHeaderView *header = [[ShopMainPageHeaderView alloc] init];
     [header setupUI:_firstDateSource.creditLevel model:_firstDateSource];
-    header.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_H(210) + 50);
-    vc.headerView = header;
-    /// 指定默认选择index 页面
-    vc.pageIndex = 0;
+    header.frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(KFit_H(210)) + 50);
     
+    vc.headerView = header;
+//    /// 指定默认选择index 页面
+    vc.pageIndex = 0;
     
     /// 作为自控制器加入到当前控制器
     [vc addSelfToParentViewController:self];
@@ -177,7 +176,7 @@
     vc_1.dataSource = _secondDataSource;
     vc_1.storeID = _storeID;
     vc_1.tempArr = _tempArr;
-    
+//
     CompanyInfoVC *vc_2 = [[CompanyInfoVC alloc] init];
     vc_2.companyDesc = _firstDateSource.descriptionStr;
     
@@ -195,6 +194,7 @@
     } else {
         return [(CompanyInfoVC *)vc tableView];
     }
+    
 }
 
 - (void)pageViewController:(YNPageViewController *)pageViewController

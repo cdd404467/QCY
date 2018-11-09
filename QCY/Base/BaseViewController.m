@@ -11,6 +11,7 @@
 #import "CommonNav.h"
 #import "LoginVC.h"
 #import "BaseNavigationController.h"
+#import "MacroHeader.h"
 
 @interface BaseViewController ()
 
@@ -21,6 +22,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    if (self.navigationController.navigationBar.isHidden == YES) {
+        _originHeight = NAV_HEIGHT;
+    } else {
+        _originHeight = 0;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

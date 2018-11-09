@@ -200,7 +200,7 @@
     [BRAddressPickerView showAddressPickerWithShowType:BRAddressPickerModeCity dataSource:nil defaultSelected:nil isAutoSelect:NO themeColor:MainColor resultBlock:^(BRProvinceModel *province, BRCityModel *city, BRAreaModel *area) {
         weakself.bView.placeArea.textLabel.text = [NSString stringWithFormat:@"%@-%@", province.name, city.name];
     } cancelBlock:^{
-        NSLog(@"点击了背景视图或取消按钮");
+//        NSLog(@"点击了背景视图或取消按钮");
     }];
     
 }

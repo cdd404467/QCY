@@ -14,7 +14,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        
+        self.backgroundColor = [UIColor whiteColor];
         self.frame = CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT);
         [self setupUI];
     }

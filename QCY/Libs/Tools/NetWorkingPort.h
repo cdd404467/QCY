@@ -10,7 +10,6 @@
 #define NetWorkingPort_h
 
 //总地址
-//#define URL_ALL_API @"http://192.168.0.206:9919/app-web/"
 //外网
 #define URL_ALL_API @"http://116.236.181.54:9919/app-web/"
 //线上测试
@@ -18,7 +17,6 @@
 
 
 #define Page_Count 50
-#define User_Token ([[UserDefault objectForKey:@"userInfo"] objectForKey:@"token"] ? [[UserDefault objectForKey:@"userInfo"] objectForKey:@"token"] : @"")
 
 /******************************** get请求 ********************************/
 
@@ -26,6 +24,8 @@
 #define URL_API_TOKEN @"user/getRequestSign?code=%@"
 //获取图形验证码
 #define URL_IMG_CODE @"captcha?deviceNo=%@"
+//获取首页数据
+#define URL_HomePage_List @"index/getAllData?sign=QCYDSSIGNCDD&token=%@&pageNo=1&pageSize=8"
 //求购列表
 #define URL_ASKTOBUY_LIST @"enquiry/getEnquiryList?sign=QCYDSSIGNCDD&token=%@&pageNo=%ld&pageSize=%ld"
 //求购详情
@@ -40,7 +40,6 @@
 #define URL_PRICE_DETAIL @"enquiryOffer/getMyEnquiryOfferDetail?sign=QCYDSSIGNCDD&id=%@&token=%@"
 //我的求购列表
 #define URL_MYASK_BUY @"enquiry/getMyEnuqiryList?sign=QCYDSSIGNCDD&token=%@&status=%@&pageNo=%d&pageSize=%d"
-
 //获取我的页面显示的数目
 #define URL_Get_Mine_Num @"enquiry/getAllCount?sign=QCYDSSIGNCDD&token=%@"
 
@@ -53,6 +52,8 @@
 #define URL_WillPast_List @"enquiry/getMyExpireList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
 //我的被接受报价列表
 #define URL_MyAccepted_List @"enquiryOffer/getMyAcceptEnquiryOfferList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
+
+
 //开放商城，获取店铺列表
 #define URL_Shop_List @"market/getMarketList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d"
 //获取店铺主页产品列表
@@ -73,7 +74,8 @@
 #define URL_Get_Banner @"index/getBanner?sign=QCYDSSIGNCDD&plate_code=%@"
 //获取团购详情
 #define URL_GroupBuy_Detail @"groupBuyMain/getGroupBuyMainById?sign=QCYDSSIGNCDD&id=%@"
-
+//获取认购列表
+#define URL_GroupBuy_Already @"groupBuyMain/queryGroupBuyerList?sign=QCYDSSIGNCDD&mainId=%@&pageNo=%d&pageSize=%d"
 
 
 
@@ -90,6 +92,9 @@
 #define URL_Accept_Offer @"enquiryOffer/acceptEnquiryOffer"
 //已读接口
 #define URL_Already_Read @"enquiryOffer/readMyAcceptOffer"
+//参与认购
+#define URL_Join_GroupBuy @"groupBuyMain/addGroupBuyer"
+
 
 
 #endif /* NetWorkingPort_h */

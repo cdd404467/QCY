@@ -18,4 +18,5 @@ target 'QCY' do
 	pod 'SGPagingView', '~> 1.5.5'
 	pod 'UITableView+FDTemplateLayoutCell', '~> 1.6'
 	pod 'YNPageViewController', '~> 0.2.3'	
+	pod 'XHWebImageAutoSize', '~> 1.1.2'
 end

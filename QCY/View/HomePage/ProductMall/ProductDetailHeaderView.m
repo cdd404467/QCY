@@ -13,6 +13,8 @@
 #import "HelperTool.h"
 #import "HYBImageCliped.h"
 #import "UIView+Border.h"
+#import "OpenMallModel.h"
+#import <YYWebImage.h>
 
 @implementation ProductDetailHeaderView {
     UIImageView *_headerImageView;
@@ -20,43 +22,47 @@
     YYLabel *_priceLabel;
     YYLabel *_product_ch_name;
     YYLabel *_product_en_name;
+    UIImageView *_productImage;
+    ProductInfoModel *_dataSource;
+    
 }
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
+//- (instancetype)initWithFrame:(CGRect)frame {
+//    if (self = [super initWithFrame:frame]) {
+//
+//        [self setupUI];
+//        [self configData];
+//    }
+//
+//    return self;
+//}
+
+- (instancetype)initWithDataSource:(ProductInfoModel *)dataSource {
+    self = [super init];
+    if (self) {
         self.backgroundColor = [UIColor whiteColor];
+        _dataSource = dataSource;
         [self setupUI];
-        [self configData];
+        [self configData:dataSource];
     }
-    
     return self;
 }
+
 
 - (void)setupUI {
     
     //名字
-    YYLabel *companyName = [[YYLabel alloc] init];
-    companyName.backgroundColor = [UIColor whiteColor];
-    companyName.frame = CGRectMake(0, 0, KFit_W(310), 40);
-    [companyName addBorderLayer:LineColor width:1.f direction:BorderDirectionBottom];
-    [self addSubview:companyName];
-    _companyName = companyName;
-    
-//    //收藏按钮
-//    UIButton *collectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    collectBtn.frame = CGRectMake(companyName.frame.size.width, 0, width, 40);
-//    [collectBtn setTitle:@"收藏" forState:UIControlStateNormal];
-//    [collectBtn setTitle:@"已收藏" forState:UIControlStateSelected];
-//    [collectBtn setTitleColor:HEXColor(@"#868686", 1) forState:UIControlStateNormal];
-//    [collectBtn setTitleColor:MainColor forState:UIControlStateSelected];
-//    collectBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-//    [collectBtn addBorderLayer:LineColor width:1.f direction: BorderDirectionLeft | BorderDirectionBottom];
-//    [self addSubview:collectBtn];
+    YYLabel *product_ch_name = [[YYLabel alloc] init];
+    product_ch_name.backgroundColor = [UIColor whiteColor];
+    product_ch_name.frame = CGRectMake(0, 0, KFit_W(310), 40);
+    [product_ch_name addBorderLayer:LineColor width:1.f direction:BorderDirectionBottom];
+    [self addSubview:product_ch_name];
+    _product_ch_name = product_ch_name;
     
     //右边分享按钮
     UIButton *shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     shareBtn.backgroundColor = [UIColor whiteColor];
-    shareBtn.frame = CGRectMake(companyName.frame.size.width , 0, SCREEN_WIDTH - companyName.frame.size.width, 40);
+    shareBtn.frame = CGRectMake(product_ch_name.frame.size.width , 0, SCREEN_WIDTH - product_ch_name.frame.size.width, 40);
     [shareBtn setTitle:@"分享" forState:UIControlStateNormal];
     [shareBtn setTitleColor:HEXColor(@"#868686", 1) forState:UIControlStateNormal];
     shareBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
@@ -68,10 +74,10 @@
     
     //图片
     UIImageView *productImage = [[UIImageView alloc] init];
-    productImage.image = [UIImage imageNamed:@"test1"];
     productImage.frame = CGRectMake(0, 40, KFit_W(250), KFit_H(210));
     [productImage addBorderLayer:LineColor width:1.f direction:BorderDirectionBottom];
     [self addSubview:productImage];
+    _productImage = productImage;
     
     //加入购物车按钮
     UIButton *collectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -113,57 +119,62 @@
     [self addSubview:priceBg];
     
     //产品中文名称
-    YYLabel *product_ch_name = [[YYLabel alloc] init];
-    product_ch_name.font = [UIFont boldSystemFontOfSize:14];
-    product_ch_name.textColor = [UIColor blackColor];
-    [priceBg addSubview:product_ch_name];
-    [product_ch_name mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(10);
-        make.right.mas_equalTo(10);
-        make.height.mas_equalTo(20);
+    YYLabel *companyName = [[YYLabel alloc] init];
+    companyName.font = [UIFont boldSystemFontOfSize:16];
+    companyName.textColor = [UIColor blackColor];
+    [priceBg addSubview:companyName];
+    [companyName mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(priceBg);
+        make.right.mas_equalTo(-10);
         make.left.mas_equalTo(KFit_W(11));
     }];
-    _product_ch_name = product_ch_name;
+    _companyName = companyName;
     //产品英文名称
-    YYLabel *product_en_name = [[YYLabel alloc] init];
-    product_en_name.font = [UIFont systemFontOfSize:12];
-    product_en_name.textColor = HEXColor(@"#868686", 1);
-    [priceBg addSubview:product_en_name];
-    [product_en_name mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(product_ch_name.mas_bottom);
-        make.right.mas_equalTo(0);
-        make.height.mas_equalTo(20);
-        make.left.equalTo(product_ch_name);
-    }];
-    _product_en_name = product_en_name;
+//    YYLabel *product_en_name = [[YYLabel alloc] init];
+//    product_en_name.font = [UIFont systemFontOfSize:12];
+//    product_en_name.textColor = HEXColor(@"#868686", 1);
+//    [priceBg addSubview:product_en_name];
+//    [product_en_name mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(product_ch_name.mas_bottom);
+//        make.right.mas_equalTo(0);
+//        make.height.mas_equalTo(20);
+//        make.left.equalTo(product_ch_name);
+//    }];
+//    _product_en_name = product_en_name;
     
 
 }
 
-- (void)configData {
-    NSString *text = @"盐城东吴化工有限公司";
+- (void)configData:(ProductInfoModel *)model {
+    NSString *text = model.productName;
     NSMutableAttributedString *mutableText = [[NSMutableAttributedString alloc] initWithString:text];
     mutableText.yy_font = [UIFont boldSystemFontOfSize:14];
     mutableText.yy_firstLineHeadIndent = 12.0;
-    _companyName.attributedText = mutableText;
+    _product_ch_name.attributedText = mutableText;
+    
+    //产品图片
+    [_productImage yy_setImageWithURL:[NSURL URLWithString:ImgStr(model.pic)] placeholder:PlaceHolderImg options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+    
     
     //价格
-    NSString *price = @"34.5";
-    NSString *unit = @"/公斤";
-    NSString *attPrice = [NSString stringWithFormat:@"¥%@%@",price,unit];
-    NSMutableAttributedString *mutablePrice = [[NSMutableAttributedString alloc] initWithString:attPrice];
-    mutablePrice.yy_color = [UIColor whiteColor];
-    [mutablePrice yy_setFont:[UIFont systemFontOfSize:18] range:NSMakeRange(0, 1)];
-    [mutablePrice yy_setFont:[UIFont systemFontOfSize:30] range:NSMakeRange(1, price.length)];
-    [mutablePrice yy_setFont:[UIFont systemFontOfSize:15] range:NSMakeRange(price.length + 1,unit.length)];
-    mutablePrice.yy_alignment = NSTextAlignmentCenter;
-    _priceLabel.attributedText = mutablePrice;
+    if isRightData(model.price) {
+        NSString *price = model.price;
+        NSString *unit = [NSString stringWithFormat:@"/%@",model.unit];
+        NSString *attPrice = [NSString stringWithFormat:@"¥%@%@",price,unit];
+        NSMutableAttributedString *mutablePrice = [[NSMutableAttributedString alloc] initWithString:attPrice];
+        mutablePrice.yy_color = [UIColor whiteColor];
+        [mutablePrice yy_setFont:[UIFont systemFontOfSize:16] range:NSMakeRange(0, 1)];
+        [mutablePrice yy_setFont:[UIFont systemFontOfSize:27] range:NSMakeRange(1, price.length)];
+        [mutablePrice yy_setFont:[UIFont systemFontOfSize:16] range:NSMakeRange(price.length + 1,unit.length)];
+        mutablePrice.yy_alignment = NSTextAlignmentCenter;
+        _priceLabel.attributedText = mutablePrice;
+    }
+    
     
     //产品名称
-    NSString *chineseName = @"阳离子染料 苏州东吴 分散阳离子红SD-GRL 100%";
-    NSString *englishName = @"CTC DONGWU Disperse-Cationic Red SD-GRL 100%";
-    _product_ch_name.text = chineseName;
-    _product_en_name.text = englishName;
+    if isRightData(model.companyName)
+        _companyName.text = model.companyName;
+
 }
 
 @end

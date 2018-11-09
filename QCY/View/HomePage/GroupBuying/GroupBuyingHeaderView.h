@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GroupBuyingHeaderView : UIView
 
-- (void)addBanner:(NSArray *)array;
+- (instancetype)initWithArray:(NSArray *)bannerArray;
 @end
 
 NS_ASSUME_NONNULL_END

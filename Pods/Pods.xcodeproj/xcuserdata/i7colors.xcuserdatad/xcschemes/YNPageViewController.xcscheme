@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1000"
+   LastUpgradeVersion = "1010"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "378077D0B62FB7E179344E913DE50221"
+               BlueprintIdentifier = "3BB3C47843AFFAF09E7A11DAB3ECAEFC"
                BuildableName = "libYNPageViewController.a"
                BlueprintName = "YNPageViewController"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "378077D0B62FB7E179344E913DE50221"
+            BlueprintIdentifier = "3BB3C47843AFFAF09E7A11DAB3ECAEFC"
             BuildableName = "libYNPageViewController.a"
             BlueprintName = "YNPageViewController"
             ReferencedContainer = "container:Pods.xcodeproj">

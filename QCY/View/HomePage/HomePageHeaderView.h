@@ -11,5 +11,6 @@
 typedef void(^TapIconsBlock)(NSInteger tag);
 @interface HomePageHeaderView : UIView
 
+@property (nonatomic, copy)NSArray *bannerArray;
 @property (nonatomic, copy)TapIconsBlock tapIconsBlock;
 @end

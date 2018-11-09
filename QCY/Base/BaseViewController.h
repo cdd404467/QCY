@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface BaseViewController : UIViewController
-
+@property (nonatomic, assign)CGFloat originHeight;
 - (void)jumpToLogin;
 @end

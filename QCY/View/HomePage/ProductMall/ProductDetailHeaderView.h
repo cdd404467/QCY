@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+@class ProductInfoModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ProductDetailHeaderView : UIView
 
+- (instancetype)initWithDataSource:(ProductInfoModel *)dataSource;
 @end
 
 NS_ASSUME_NONNULL_END

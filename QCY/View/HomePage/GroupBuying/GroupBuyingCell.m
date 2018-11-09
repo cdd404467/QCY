@@ -91,7 +91,7 @@
         make.height.mas_equalTo(13);
     }];
     _totalWeight = totalWeight;
-    
+   
     
     //最小认购量
     UILabel *minBuy = [[UILabel alloc] init];
@@ -234,7 +234,7 @@
     
     //进度label
     UILabel *progressLabel = [[UILabel alloc] init];
-    progressLabel.font = [UIFont systemFontOfSize:12];
+    progressLabel.font = [UIFont systemFontOfSize:11];
     progressLabel.textColor = HEXColor(@"#868686", 1);
     [self.contentView addSubview:progressLabel];
     [progressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -246,7 +246,7 @@
 
     //底部灰色条子
     UIView *bottomView = [[UIView alloc] init];
-    bottomView.backgroundColor = RGBA(0, 0, 0, 0.1);
+    bottomView.backgroundColor = Cell_BGColor;
     [self.contentView addSubview:bottomView];
     [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(priceImageView.mas_bottom);
@@ -308,7 +308,7 @@
     //下划线
     YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle
                                                                    width:@(1)
-                                                                   color:RGBA(0, 0, 0, 0.5)];
+                                                                   color:RGBA(0, 0, 0, 0.8)];
     //删除样式
     [mutableOriginal yy_setTextStrikethrough:decoration range:range2];
 
@@ -318,9 +318,9 @@
     NSString *cPrice = model.priceNew;
     NSString *cText = [NSString stringWithFormat:@"团购价: ¥%@元%@",cPrice,model.priceUnit];
     NSMutableAttributedString *mutablecurrent = [[NSMutableAttributedString alloc] initWithString:cText];
-    mutablecurrent.yy_color = [UIColor whiteColor];
+    mutablecurrent.yy_color = HEXColor(@"#333333", 1);
     mutablecurrent.yy_font = [UIFont systemFontOfSize:10];
-    [mutablecurrent yy_setFont:[UIFont boldSystemFontOfSize:16] range:NSMakeRange(6, oPrice.length)];
+    [mutablecurrent yy_setFont:[UIFont boldSystemFontOfSize:16] range:NSMakeRange(6, cPrice.length)];
     _currentPrice.attributedText = mutablecurrent;
     
     //右边文字状态
@@ -338,22 +338,26 @@
             make.width.height.mas_equalTo(20);
             make.center.mas_equalTo(self.stateView);
         }];
-        [_stateLabelRight mas_makeConstraints:^(MASConstraintMaker *make) {
+        [_stateLabelRight mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.stateView);
             make.left.mas_equalTo(self.emojoImage.mas_right).offset(10);
         }];
+        [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.stateView);
+            make.right.mas_equalTo(self.emojoImage.mas_left).offset(-10);
+        }];
         
     //进行中
-    } else if ([model.endCode isEqualToString:@"10"] || [model.endCode isEqualToString:@"11"]) {
+    } else if ([model.endCode isEqualToString:@"10"]) {
         _emojoImage.hidden = YES;
         _stateLabelRight.hidden = YES;
         _stateLabelLeft.text = @"团购进行中...";
         _stateLabelLeft.textColor = MainColor;
-        [_emojoImage mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.stateView);
-            make.width.height.mas_equalTo(36);
-            make.left.mas_equalTo(self.stateView.mas_centerX).offset(5);
-        }];
+//        [_emojoImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.centerY.mas_equalTo(self.stateView);
+//            make.width.height.mas_equalTo(36);
+//            make.left.mas_equalTo(self.stateView.mas_centerX).offset(5);
+//        }];
         
         [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.center.mas_equalTo(self.stateView);
@@ -371,9 +375,9 @@
             make.width.height.mas_equalTo(36);
             make.left.mas_equalTo(self.stateView.mas_centerX).offset(5);
         }];
-        [_stateLabelRight mas_makeConstraints:^(MASConstraintMaker *make) {
+        [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.stateView);
-            make.left.mas_equalTo(self.emojoImage.mas_right).offset(10);
+            make.right.mas_equalTo(self.stateView.mas_centerX).offset(-5);
         }];
     //成功
     } else {
@@ -387,10 +391,11 @@
             make.width.height.mas_equalTo(36);
             make.left.mas_equalTo(self.stateView.mas_centerX).offset(5);
         }];
-        [_stateLabelRight mas_makeConstraints:^(MASConstraintMaker *make) {
+        [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.stateView);
-            make.left.mas_equalTo(self.emojoImage.mas_right).offset(10);
+            make.right.mas_equalTo(self.stateView.mas_centerX).offset(-5);
         }];
+        
     }
     
     //已经认领

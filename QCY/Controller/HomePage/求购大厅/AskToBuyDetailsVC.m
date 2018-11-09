@@ -36,7 +36,6 @@
 @property (nonatomic, strong)NSMutableArray *infoArr;
 @property (nonatomic, strong)UIButton *btBtn;
 @property (nonatomic, strong)AskToBuyDetailsHeaderView *headerView;
-@property (nonatomic, assign)CGFloat originHeight;
 @end
 
 @implementation AskToBuyDetailsVC {
@@ -47,13 +46,10 @@
     [super viewDidLoad];
     self.title = @"求购详情";
     if (self.navigationController.navigationBar.isHidden == YES) {
-        _originHeight = NAV_HEIGHT;
         CommonNav *nav = [[CommonNav alloc] init];
         [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
         nav.titleLabel.text = @"求购详情";
         [self.view addSubview:nav];
-    } else {
-        _originHeight = 0;
     }
     
     [self requestMultiData];
@@ -62,7 +58,7 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, _originHeight, SCREEN_WIDTH, _tbHeight) style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, self.originHeight, SCREEN_WIDTH, _tbHeight) style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -147,7 +143,7 @@
             }
         }
     }
-    //用户未登录,还在进行中的就显示b报价按钮
+    //用户未登录,还在进行中的就显示报价按钮
     else {
         if ([model.status isEqualToString:@"1"]) {
             _tbHeight = SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT;
@@ -164,6 +160,7 @@
 - (UIButton *)addBottonBtn {
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    btn.titleLabel.font = [UIFont systemFontOfSize:18];
     [ClassTool addLayer:btn];
     [self.view addSubview:btn];
     [btn mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -31,19 +31,18 @@
 
 //创建轮播图, 8 + 144
 - (void)addBanner {
-    
-    NSArray *arr = @[@"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1240469072,2191573380&fm=26&gp=0.jpg",
-                     @"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=889553397,2093664619&fm=26&gp=0.jpg",
-                     @"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1397299872,1564665821&fm=26&gp=0.jpg",
-                     @"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4225846828,2497659140&fm=11&gp=0.jpg"];
+   
     CGRect frame = CGRectMake(0, 8 * Scale_H, SCREEN_WIDTH, 144 * Scale_H);
-    SDCycleScrollView *bannerView = [SDCycleScrollView cycleScrollViewWithFrame:frame imageURLStringsGroup:arr];
+//    SDCycleScrollView *bannerView = [SDCycleScrollView cycleScrollViewWithFrame:frame delegate:self placeholderImage:PlaceHolderImgBanner];
+    SDCycleScrollView *bannerView = [[SDCycleScrollView alloc] initWithFrame:frame];
+    bannerView.placeholderImage = PlaceHolderImgBanner;
     bannerView.delegate = self;
     bannerView.autoScrollTimeInterval = 3.f;
     bannerView.pageDotColor = RGBA(0, 0, 0, 0.3);
     bannerView.currentPageDotColor = [UIColor colorWithHexString:@"ee2788"];
     [self addSubview:bannerView];
     _bannerView = bannerView;
+    
 }
 
 //创建轮播图下方的四个图标  90
@@ -78,6 +77,12 @@
         [iconBg addSubview:iconbtn];
     }
 }
+
+- (void)setBannerArray:(NSArray *)bannerArray {
+    _bannerArray = bannerArray;
+    _bannerView.imageURLStringsGroup = bannerArray;
+}
+
 
 //点击事件
 - (void)tapBtn:(UIButton *)sender {

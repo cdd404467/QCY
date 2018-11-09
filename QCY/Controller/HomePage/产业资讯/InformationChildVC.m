@@ -28,10 +28,19 @@
 
 @implementation InformationChildVC
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _isFirstLoad = YES;
+        _page = 1;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _isFirstLoad = YES;
-    _page = 1;
+    
     [self requestData];
 }
 

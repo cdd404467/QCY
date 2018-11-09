@@ -41,7 +41,7 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.contentView.backgroundColor = RGBA(0, 0, 0, 0.1);
+        self.contentView.backgroundColor = Cell_BGColor;
         [self setupUI];
     }
     
@@ -285,18 +285,22 @@
     }
     
     //是否是我发布
-    if ([model.isCharger isEqualToString:@"1"]) {
-        _personImageView.hidden = NO;
-        if ([model.publishType isEqualToString:@"企业发布"]) {
-            _personImageView.image = [UIImage imageNamed:@"person_red"];
-            _personLabel.textColor = HEXColor(@"#F10215", 1);
+    if isRightData(model.isCharger) {
+        if ([model.isCharger isEqualToString:@"1"]) {
+            _personImageView.hidden = NO;
+            _personLabel.hidden = NO;
+            if ([model.publishType isEqualToString:@"企业发布"]) {
+                _personImageView.image = [UIImage imageNamed:@"person_red"];
+                _personLabel.textColor = HEXColor(@"#F10215", 1);
+            } else {
+                _personImageView.image = [UIImage imageNamed:@"person_blue"];
+                _personLabel.textColor = HEXColor(@"#386FED", 1);
+            }
+            
         } else {
-            _personImageView.image = [UIImage imageNamed:@"person_blue"];
-            _personLabel.textColor = HEXColor(@"#386FED", 1);
+            _personImageView.hidden = YES;
+            _personLabel.hidden = YES;
         }
-        
-    } else {
-        _personImageView.hidden = YES;
     }
     
     //右上角标签

@@ -7,11 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+@class GroupBuyingModel;
+@class CountDown;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GroupBuyDetailHeaderView : UIView
 
+@property (nonatomic, strong)CountDown *countDownTimer;
+@property (nonatomic, strong)GroupBuyingModel *dataSource;
+- (instancetype)initWithDataSource:(GroupBuyingModel *)dataSource;
 @end
 
 NS_ASSUME_NONNULL_END
