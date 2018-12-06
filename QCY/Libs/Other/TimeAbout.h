@@ -14,13 +14,18 @@ NS_ASSUME_NONNULL_BEGIN
 //毫秒
 +(NSString *)getNowTimeTimestamp_HM;
 //时间戳转字符串
-+ (NSString *)timestampToString:(NSInteger)time;
++ (NSString *)timestampToString:(long long)time;
 //今天开始往前后推时间
 + (NSDate *)getNDay:(NSInteger)nDay;
 //nsdate转string
 + (NSString*)stringFromDate:(NSDate*)date;
 //
 + (NSDate *)stringToDate:(NSString *)string;
+
+
+//今天、昨天
++ (NSString *)checkTheDate:(long long)string;
 @end
+
 
 NS_ASSUME_NONNULL_END

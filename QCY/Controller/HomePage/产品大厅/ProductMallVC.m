@@ -24,15 +24,24 @@
 @property (nonatomic, assign)BOOL isFirstLoad;
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, copy)NSArray *tempArr;
+@property (nonatomic, assign)int totalNum;
 @end
 
 @implementation ProductMallVC
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _page = 1;
+        _productName = @"";
+        _isFirstLoad = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _productName = @"";
-    _page = 1;
-    _isFirstLoad = YES;
     self.title = @"产品大厅";
     
     [self requestData];
@@ -54,12 +63,11 @@
         }
         DDWeakSelf;
         _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            weakself.page++;
-            if ( weakself.tempArr.count < Page_Count) {
-                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-                
-            } else {
+            if (weakself.totalNum - Page_Count * weakself.page > 0) {
+                weakself.page++;
                 [weakself requestData];
+            } else {
+                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }];
         
@@ -85,22 +93,26 @@
     NSString *urlString = [NSString stringWithFormat:URL_Product_List,_page,Page_Count,_productName];
     NSString *parameter = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:mDict options:0 error:nil] encoding:NSUTF8StringEncoding];
     parameters[@"orderCond"] = parameter;
-    [CddHUD show];
     DDWeakSelf;
+    if (_isFirstLoad == YES) {
+        [CddHUD show:self.view];
+    }
     [ClassTool getRequest:urlString Params:[parameters copy] Success:^(id json) {
-//        NSLog(@"---- %@",json);
+        [CddHUD hideHUD:weakself.view];
+//        NSLog(@"----=== %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            weakself.totalNum = [json[@"totalCount"] intValue];
             weakself.tempArr  = [ProductInfoModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             [weakself.dataSource addObjectsFromArray:weakself.tempArr];
             [weakself.tableView.mj_footer endRefreshing];
             if (weakself.isFirstLoad == YES) {
                 [weakself.view addSubview:weakself.tableView];
+                weakself.isFirstLoad = NO;
             } else {
                 [weakself.tableView reloadData];
             }
             
         }
-        [CddHUD hideHUD];
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
         

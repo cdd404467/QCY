@@ -32,12 +32,20 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
-    [CddHUD hideHUD];
+
 }
 
 - (void)jumpToLogin {
     LoginVC *vc = [[LoginVC alloc] init];
     vc.isJump = NO;
+    BaseNavigationController *navVC = [[BaseNavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:navVC animated:YES completion:nil];
+}
+
+- (void)jumpToLogin:(NSInteger)index {
+    LoginVC *vc = [[LoginVC alloc] init];
+    vc.isJump = YES;
+    vc.jumpIndex = index;
     BaseNavigationController *navVC = [[BaseNavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:navVC animated:YES completion:nil];
 }

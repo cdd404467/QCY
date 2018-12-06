@@ -31,6 +31,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)Company *company;                  //company类
 @property (nonatomic, strong)NSMutableArray *businessList;      //主营标签数组
 @property (nonatomic, copy)NSString *storeID;                   //店铺id，获取店铺详情时需要
+
+
+@property (nonatomic, copy)NSString *banner1;                   //轮播图1
+@property (nonatomic, copy)NSString *banner2;                   //轮播图2
+@property (nonatomic, copy)NSString *banner3;                   //轮播图3
+@property (nonatomic, copy)NSString *banner4;                   //轮播图4
+@property (nonatomic, copy)NSString *banner5;                   //轮播图5
+@property (nonatomic, copy)NSString *companyName;               //公司名字
+@property (nonatomic, assign)NSInteger creditLevel;             //星级评价
+@property (nonatomic, copy)NSString *descriptionStr;            //公司简介
 @end
 
 /*** 基本参数的键值对 ***/
@@ -47,15 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *pack;                      //产品规格
 @property (nonatomic, copy)NSString *price;                     //产品价格
 @property (nonatomic, copy)NSString *unit;                      //产品单位
-@property (nonatomic, copy)NSString *banner1;                   //轮播图1
-@property (nonatomic, copy)NSString *banner2;                   //轮播图2
-@property (nonatomic, copy)NSString *banner3;                   //轮播图3
-@property (nonatomic, copy)NSString *banner4;                   //轮播图4
-@property (nonatomic, copy)NSString *banner5;                   //轮播图5
-@property (nonatomic, copy)NSString *logo;                      //公司logo
-@property (nonatomic, assign)NSInteger creditLevel;             //星级评价
 @property (nonatomic, copy)NSString *companyName;               //公司名字
-@property (nonatomic, copy)NSString *descriptionStr;            //公司简介
 @property (nonatomic, copy)NSString *shopId;                    //跳转到店铺主页的ID
 @property (nonatomic, copy)NSString *supplierShotName;          //供应商名字
 @property (nonatomic, copy)NSArray *tagList;                    //标签

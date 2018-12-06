@@ -72,13 +72,16 @@ NS_ASSUME_NONNULL_BEGIN
 /*** 发布求购 ***/
 @interface PostBuyingModel : NSObject
 @property (nonatomic, copy)NSString *name;                      //一级分类名称
-@property (nonatomic, copy)NSString *classID;                    //一级分类ID
+@property (nonatomic, copy)NSString *classID;                   //一级分类ID
 @end
 
 /*** 首页数据 ***/
 @interface HomePageModel : NSObject
-@property (nonatomic, copy)NSArray *enquiryList;
-@property (nonatomic, copy)NSArray *marketList;
+@property (nonatomic, copy)NSArray *enquiryList;                //求购大厅数组
+@property (nonatomic, copy)NSArray *marketList;                 //开放商城数组
+@property (nonatomic, copy)NSArray *productList;                //产品数组
+@property (nonatomic, copy)NSString *login_status;              //NO_LOGIN,用户登录信息失效；NO_TOKRN，没有token信息（之前没有登录过），LOGIN_SUCCESS,已是登陆状态
+
 @end
 
 @interface BannerModel : NSObject

@@ -134,11 +134,10 @@
     NSString *urlString = [NSString stringWithFormat:URL_Infomation_Detail,_infoID];
     
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [CddHUD show];
-    });
     
+    [CddHUD show:self.view];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
 //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [InfomationModel mj_objectWithKeyValues:json[@"data"]];
@@ -168,7 +167,6 @@
             
             
         }
-        [CddHUD hideHUD];
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
     }];

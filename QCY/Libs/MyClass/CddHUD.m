@@ -20,7 +20,7 @@
     hud.userInteractionEnabled= NO;
     hud.bezelView.color = [UIColor blackColor];
     hud.contentColor = [UIColor whiteColor];
-    
+    hud.userInteractionEnabled = NO;
     if (icon != nil) {
         UIImage *image = [[UIImage imageNamed:icon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         hud.customView = [[UIImageView alloc] initWithImage:image];
@@ -44,65 +44,35 @@
 }
 
 /*** 只显示菊花 ***/
-+ (MBProgressHUD *)show {
-   return [self show:nil icon:nil view:nil onlyText:NO delay:0];
-}
-
 + (MBProgressHUD *)show:(UIView *)view {
     return [self show:nil icon:nil view:view onlyText:NO delay:0];
 }
 
-/*** 只显示菊花,延时关闭 ***/
-//+ (void)showDelay {
-//    [self show:nil icon:nil view:nil onlyText:NO delay:DELAY_TIME];
-//}
-
 /*** 只显示文本 ***/
-+ (void)showTextOnly:(NSString *)text {
-    [self show:text icon:nil view:nil onlyText:YES delay:0];
-}
-
 + (void)showTextOnly:(NSString *)text view:(UIView *)view {
     [self show:text icon:nil view:view onlyText:YES delay:0];
 }
 
 
 /*** 只显示文本,延时关闭 ***/
-+ (void)showTextOnlyDelay:(NSString *)text {
-    [self show:text icon:nil view:nil onlyText:YES delay:DELAY_TIME];
-}
-
 + (void)showTextOnlyDelay:(NSString *)text view:(UIView *)view {
     [self show:text icon:nil view:view onlyText:YES delay:DELAY_TIME];
 }
 
 /*** 菊花和文本 ***/
-+ (MBProgressHUD *)showWithText:(NSString *)text {
-    return [self show:text icon:nil view:nil onlyText:NO delay:0];
-}
-
 + (MBProgressHUD *)showWithText:(NSString *)text view:(UIView *)view {
     return [self show:text icon:nil view:view onlyText:NO delay:0];
 }
 
-/*** 菊花和文本,延时关闭 ***/
-//+ (void)showWithTextDelay:(NSString *)text {
-//    [self show:text icon:nil view:nil onlyText:NO delay:DELAY_TIME];
-//}
-
 
 /*** 关闭hud ***/
-+ (void)hideHUDForView:(UIView * _Nullable)view {
++ (void)hideHUD:(UIView * _Nullable)view {
     if (view == nil)
         view = [[UIApplication sharedApplication].windows lastObject];
     
     [MBProgressHUD hideHUDForView:view animated:YES];
 }
 
-/*** 关闭 window hud ***/
-+ (void)hideHUD {
-    [CddHUD hideHUDForView:nil];
-}
 
 + (void)showSwitchText:(MBProgressHUD *)hud text:(NSString *)text {
     hud.mode = MBProgressHUDModeText;

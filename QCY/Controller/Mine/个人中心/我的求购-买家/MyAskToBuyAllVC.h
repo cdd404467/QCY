@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MyAskToBuyAllVC : BaseViewController
 
+@property (nonatomic, copy)NSString *buyType;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LoginVC : BaseViewController
 
 @property (nonatomic, assign)BOOL isJump;
+@property (nonatomic, assign)NSInteger jumpIndex;
 @end
 
 NS_ASSUME_NONNULL_END

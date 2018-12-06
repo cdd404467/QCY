@@ -7,6 +7,7 @@
 //
 
 #import "BaseViewControllerNav.h"
+#import "MyInfoCenterVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

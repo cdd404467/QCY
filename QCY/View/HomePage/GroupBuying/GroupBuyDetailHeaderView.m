@@ -51,7 +51,7 @@
 - (void)setupUI {
     //产品图片
     UIImageView *productImageView = [[UIImageView alloc] init];
-    productImageView.frame = CGRectMake(0, 0, KFit_W(250), KFit_W(250));
+    productImageView.frame = CGRectMake(0, 0, KFit_W(250), floor(KFit_W(250)));
     [self addSubview:productImageView];
     _productImageView = productImageView;
     

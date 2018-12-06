@@ -6,8 +6,8 @@
 //  Copyright © 2018年 Shanghai i7colors Ecommerce Co., Ltd. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface HomePageVC : UIViewController
+@interface HomePageVC : BaseViewController
 
 @end

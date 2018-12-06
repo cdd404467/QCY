@@ -183,12 +183,8 @@
         token = @"";
     }
     
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [CddHUD show];
-        });
-    });
     
+    [CddHUD show:self.view];
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
     //详情
@@ -227,7 +223,7 @@
     dispatch_group_notify(group, globalQueue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakself setupUI];
-            [CddHUD hideHUD];
+            [CddHUD hideHUD:weakself.view];
         });
     });
 
@@ -259,13 +255,13 @@
                            };
     DDWeakSelf;
     [Alert alertTwo:@"确定要关闭求购吗?" cancelBtn:@"取消" okBtn:@"确定" OKCallBack:^{
-        [CddHUD showWithText:@"关闭求购中..."];
+        [CddHUD showWithText:@"关闭求购中..." view:self.view];
         [ClassTool postRequest:URL_CLOSE_BUYING Params:[dict mutableCopy] Success:^(id json) {
-            [CddHUD hideHUD];
+            [CddHUD hideHUD:weakself.view];
             if ([json[@"code"] isEqualToString:@"SUCCESS"]) {
                 BOOL isSuc = [json[@"data"] boolValue];
                 if (isSuc == YES) {
-                    [CddHUD showTextOnlyDelay:@"关闭成功"];
+                    [CddHUD showTextOnlyDelay:@"关闭成功" view:weakself.view];
                     [weakself.btBtn removeFromSuperview];
                     weakself.tableView.frame = CGRectMake(0, weakself.originHeight, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT);
                     [ClassTool addLayer:weakself.headerView.stateLabel frame:weakself.headerView.stateLabel.frame];
@@ -289,9 +285,9 @@
                            };
     DDWeakSelf;
     [Alert alertTwo:@"确定要采纳报价吗?" cancelBtn:@"取消" okBtn:@"确定" OKCallBack:^{
-        [CddHUD showWithText:@"采纳报价中..."];
+        [CddHUD showWithText:@"采纳报价中..." view:weakself.view];
         [ClassTool postRequest:URL_Accept_Offer Params:[dict mutableCopy] Success:^(id json) {
-            [CddHUD hideHUD];
+            [CddHUD hideHUD:weakself.view];
             if ([json[@"code"] isEqualToString:@"SUCCESS"]) {
                 BOOL isSuc = [json[@"data"] boolValue];
                 if (isSuc == YES) {
@@ -302,7 +298,7 @@
                     [ClassTool addLayer:weakself.headerView.stateLabel frame:weakself.headerView.stateLabel.frame];
                     weakself.headerView.sLabel.hidden = NO;
                     
-                    [CddHUD showTextOnlyDelay:@"采纳成功"];
+                    [CddHUD showTextOnlyDelay:@"采纳成功" view:weakself.view];
                 } else if (isSuc == NO){
                     
                 }

@@ -32,7 +32,7 @@
 //创建轮播图, 8 + 144
 - (void)addBanner {
    
-    CGRect frame = CGRectMake(0, 8 * Scale_H, SCREEN_WIDTH, 144 * Scale_H);
+    CGRect frame = CGRectMake(0, 8, SCREEN_WIDTH, KFit_W(144));
 //    SDCycleScrollView *bannerView = [SDCycleScrollView cycleScrollViewWithFrame:frame delegate:self placeholderImage:PlaceHolderImgBanner];
     SDCycleScrollView *bannerView = [[SDCycleScrollView alloc] initWithFrame:frame];
     bannerView.placeholderImage = PlaceHolderImgBanner;
@@ -53,24 +53,32 @@
     [iconBg mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(@0);
         make.top.mas_equalTo(self.bannerView.mas_bottom).offset(0);
-        make.height.mas_equalTo(@(65 * Scale_H));
+        make.height.mas_equalTo(65);
+    }];
+    
+    UIView *bottomGap = [[UIView alloc] init];
+    bottomGap.backgroundColor = Cell_BGColor;
+    [self addSubview:bottomGap];
+    [bottomGap mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(iconBg.mas_bottom);
+        make.left.right.bottom.mas_equalTo(0);
     }];
     
     CGFloat leftGap = KFit_W(8.f);
-    CGFloat imageWidth = KFit_W(60.f), imageHeight = KFit_H(50.f);
+    CGFloat imageWidth = KFit_W(60.f), imageHeight = 50;
     CGFloat centerGap = (SCREEN_WIDTH - leftGap * 2 - imageWidth * 4) / 3;
     NSArray *titleArr = @[@"产品大厅",@"求购大厅",@"开放商城",@"产业资讯"];
     
     for (uint8_t i = 0; i < 4; i ++) {
         UIButton *iconbtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        iconbtn.frame = CGRectMake(leftGap + i * (centerGap + imageWidth), KFit_H(10), imageWidth, imageHeight);
+        iconbtn.frame = CGRectMake(leftGap + i * (centerGap + imageWidth), 10, imageWidth, imageHeight);
         [iconbtn setImage:[UIImage imageNamed:[NSString stringWithFormat:@"image%d",i]] forState:UIControlStateNormal];
         [iconbtn setTitle:titleArr[i] forState:UIControlStateNormal];
         iconbtn.tag = i;
         [iconbtn addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
         iconbtn.titleLabel.font = [UIFont systemFontOfSize:12];
         [iconbtn setTitleColor:HEXColor(@"#3C3C3C", 1) forState:UIControlStateNormal];
-        iconbtn.titleEdgeInsets = UIEdgeInsetsMake(iconbtn.imageView.frame.size.height + KFit_H(4), -iconbtn.imageView.frame.size.width, KFit_H(-4), 0);
+        iconbtn.titleEdgeInsets = UIEdgeInsetsMake(iconbtn.imageView.frame.size.height + 4, -iconbtn.imageView.frame.size.width, -4, 0);
         iconbtn.imageEdgeInsets = UIEdgeInsetsMake(-iconbtn.imageView.frame.size.height, 0, 0, -iconbtn.titleLabel.bounds.size.width);
         //去掉按下时的高亮
         iconbtn.adjustsImageWhenHighlighted = NO;

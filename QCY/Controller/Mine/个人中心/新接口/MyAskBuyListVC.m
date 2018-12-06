@@ -17,6 +17,8 @@
 #import <MJExtension.h>
 #import "MinePageModel.h"
 #import "AskToBuyDetailsVC.h"
+#import "NoDataView.h"
+#import "UIView+Geometry.h"
 
 @interface MyAskBuyListVC ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -24,16 +26,28 @@
 @property (nonatomic, copy)NSArray *tempArr;
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, assign)NSInteger page;
-
+@property (nonatomic, assign)BOOL isFirstLoad;
+@property (nonatomic, strong)NoDataView *noDataView;
+@property (nonatomic, assign)int totalNum;
 @end
 
 @implementation MyAskBuyListVC {
     NSString *_urlString;
+    
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _page = 1;
+        _isFirstLoad = YES;
+    }
+    return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _page = 1;
     if (_listType == 0) {
         self.nav.titleLabel.text = @"求购中";
         _urlString = URL_MyAsking_List;
@@ -73,13 +87,12 @@
             _tableView.estimatedSectionFooterHeight = 0;
         }
         DDWeakSelf;
-        _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            weakself.page++;
-            if ( weakself.tempArr.count < Page_Count) {
-                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-                
-            } else {
+        _tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+            if (weakself.totalNum - Page_Count * weakself.page > 0) {
+                weakself.page ++;
                 [weakself requestList];
+            } else {
+                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }];
     } else {
@@ -92,15 +105,45 @@
 - (void)requestList {
     NSString *urlString = [NSString stringWithFormat:_urlString,GET_USER_TOKEN,_page,Page_Count];
     DDWeakSelf;
-    [CddHUD show];
+    if (_isFirstLoad == YES) {
+        [CddHUD show:self.view];
+    }
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            weakself.totalNum = [json[@"totalCount"] intValue];
             weakself.tempArr = [MyAskToBuyModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             [weakself.dataSource addObjectsFromArray:weakself.tempArr];
-            [weakself.view addSubview:weakself.tableView];
             [weakself.tableView.mj_footer endRefreshing];
+            if (weakself.isFirstLoad == YES) {
+                [weakself.view addSubview:weakself.tableView];
+                weakself.isFirstLoad = NO;
+                if (weakself.dataSource.count <= weakself.totalNum) {
+                    [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
+                }
+            } else {
+                [weakself.tableView reloadData];
+            }
+            
+            //判断为空
+            if (weakself.dataSource.count == 0) {
+                NSString *text = @"";
+                if (weakself.listType == 0) {
+                    text = @"暂无询盘中求购";
+                } else if (weakself.listType == 1) {
+                    text = @"暂无待确认求购";
+                } else if (weakself.listType == 2) {
+                    text = @"暂无即将过期求购";
+                }
+                weakself.noDataView = [[NoDataView alloc] init];
+                weakself.noDataView.centerY = weakself.view.centerY;
+                [weakself.view addSubview:weakself.noDataView];
+                weakself.noDataView.noLabel.text = text;
+                
+            } else {
+                [weakself.noDataView removeFromSuperview];
+            }
         }
-        [CddHUD hideHUD];
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
     }];

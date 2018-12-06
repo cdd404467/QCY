@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-@class ProductInfoModel;
+@class OpenMallModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ShopMainPageHeaderView : UIView
 
-- (void)setupUI:(NSInteger)number model:(ProductInfoModel *)model;
+- (void)setupUI:(NSInteger)number model:(OpenMallModel *)model;
 @end
 
 NS_ASSUME_NONNULL_END

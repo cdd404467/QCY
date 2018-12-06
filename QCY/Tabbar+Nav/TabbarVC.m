@@ -9,7 +9,7 @@
 #import "TabbarVC.h"
 #import "MacroHeader.h"
 #import "HomePageVC.h"
-#import "HeadLineVC.h"
+#import "FriendCircleVC.h"
 #import "MessageVC.h"
 #import "MineVC.h"
 #import "BaseNavigationController.h"
@@ -41,9 +41,9 @@
     HomePageVC *vc_1 = [[HomePageVC alloc] init];
     [self addChildViewController:vc_1 tabTitle:@"首页" normalImage:@"tabbar_1" selectedImage:@"tabbar_1_selected"];
     
-    HeadLineVC *vc_2 = [[HeadLineVC alloc] init];
+    FriendCircleVC *vc_2 = [[FriendCircleVC alloc] init];
     [self addChildViewController:vc_2 tabTitle:@"朋友圈" normalImage:@"tabbar_2" selectedImage:@"tabbar_2_selected"];
-    
+
     MessageVC *vc_3 = [[MessageVC alloc] init];
     [self addChildViewController:vc_3 tabTitle:@"消息" normalImage:@"tabbar_3" selectedImage:@"tabbar_3_selected"];
     
@@ -86,7 +86,22 @@
         if (!GET_USER_TOKEN) {
             LoginVC *vc = [[LoginVC alloc] init];
             BaseNavigationController *navVC = [[BaseNavigationController alloc] initWithRootViewController:vc];
+            UITabBarController *tb = (UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
             vc.isJump = YES;
+            vc.jumpIndex = tb.tabBar.items.count - 1;
+            
+            [self presentViewController:navVC animated:YES completion:nil];
+            return NO;
+        }else {
+            return YES;
+        }
+    } else if ([viewController.tabBarItem.title isEqualToString:@"消息"]) {
+        if (!GET_USER_TOKEN) {
+            LoginVC *vc = [[LoginVC alloc] init];
+            BaseNavigationController *navVC = [[BaseNavigationController alloc] initWithRootViewController:vc];
+            UITabBarController *tb = (UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+            vc.isJump = YES;
+            vc.jumpIndex = tb.tabBar.items.count - 2;
             [self presentViewController:navVC animated:YES completion:nil];
             return NO;
         }else {

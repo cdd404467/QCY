@@ -10,10 +10,13 @@
 #define NetWorkingPort_h
 
 //总地址
+#define URL_ALL_API @"http://192.168.0.206:9919/app-web/"
 //外网
-#define URL_ALL_API @"http://116.236.181.54:9919/app-web/"
+//#define URL_ALL_API @"http://116.236.181.54:9919/app-web/"
 //线上测试
 //#define URL_ALL_API @"https://i7apptest.i7colors.com/app-web/"
+//正式
+//#define URL_ALL_API @"https://i7app.i7colors.com/app-web/"
 
 
 #define Page_Count 50
@@ -27,7 +30,7 @@
 //获取首页数据
 #define URL_HomePage_List @"index/getAllData?sign=QCYDSSIGNCDD&token=%@&pageNo=1&pageSize=8"
 //求购列表
-#define URL_ASKTOBUY_LIST @"enquiry/getEnquiryList?sign=QCYDSSIGNCDD&token=%@&pageNo=%ld&pageSize=%ld"
+#define URL_ASKTOBUY_LIST @"enquiry/getEnquiryList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
 //求购详情
 #define URL_ASKTOBUY_DETAIL @"enquiry/getEnquiryDetail?sign=QCYDSSIGNCDD&token=%@&enquiryId=%@"
 //已报价供应商列表
@@ -52,8 +55,6 @@
 #define URL_WillPast_List @"enquiry/getMyExpireList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
 //我的被接受报价列表
 #define URL_MyAccepted_List @"enquiryOffer/getMyAcceptEnquiryOfferList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
-
-
 //开放商城，获取店铺列表
 #define URL_Shop_List @"market/getMarketList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d"
 //获取店铺主页产品列表
@@ -76,6 +77,22 @@
 #define URL_GroupBuy_Detail @"groupBuyMain/getGroupBuyMainById?sign=QCYDSSIGNCDD&id=%@"
 //获取认购列表
 #define URL_GroupBuy_Already @"groupBuyMain/queryGroupBuyerList?sign=QCYDSSIGNCDD&mainId=%@&pageNo=%d&pageSize=%d"
+//首页搜索
+#define URL_HomePage_search @"index/searchData?sign=QCYDSSIGNCDD&token=%@&keyWord=%@&pageNo=%d&pageSize=%d"
+//获取求购消息
+#define URL_AskBuy_Msg_List @"user/getMallEnquiryInformList?sign=QCYDSSIGNCDD&token=%@&type=%@&pageNo=%d&pageSize=%d"
+//获取系统消息
+#define URL_System_Msg_List @"user/getSystemInformList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d&deviceNo=%@"
+//获取求购消息详情
+#define URL_AskBuy_Msg_Detail @"user/getMallEnquiryInformDetail?sign=QCYDSSIGNCDD&token=%@&id=%@"
+//获取朋友圈列表
+#define URL_Friend_List @"dyeCommunity/queryDyeCommunityList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
+//获取用户信息
+#define URL_Friend_UserInfo @"user/getUserInfoDetail?sign=QCYDSSIGNCDD&token=%@&userId=%@"
+//获取其他用户帖子列表
+#define URL_User_Friend_InfoList @"dyeCommunity/queryDyeCommunityListByUserId?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d&userId=%@"
+//获取粉丝列表
+#define URL_Fans_List @"dyeFollow/queryFollowListByUserId?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d&userId=%@"
 
 
 
@@ -94,6 +111,30 @@
 #define URL_Already_Read @"enquiryOffer/readMyAcceptOffer"
 //参与认购
 #define URL_Join_GroupBuy @"groupBuyMain/addGroupBuyer"
+//上传/修改头像
+#define URL_Upload_Header @"user/updateUserHeadPhoto"
+//注册短信验证码
+#define URL_Msg_Code_Register @"user/send_sms_code_register"
+//用户注册
+#define URL_User_Register @"user/register"
+//找回密码-短信验证码
+#define URL_Msg_Code_Findpass @"user/send_sms_code_password"
+//找回密码-校验短信验证码
+#define URL_Msg_Code_Check @"user/checkSmsCode"
+//重设密码
+#define URL_Reset_PassWord @"user/updatePassword"
+//修改密码
+#define URL_Change_PassWord @"user/updateUserPassword"
+//微信登录
+#define URL_WeiChat_Login @"wx/onWxLogin"
+//绑定手机号发送验证码
+#define URL_Msg_Code_BindPhone @"wx/send_sms_code_password"
+//绑定手机号
+#define URL_Bind_PhoneNum @"wx/bindPhone"
+//发表评论
+#define URL_Publish_Comments @"dyeCommunity/addDyeComment"
+//发朋友圈
+#define URL_Publish_FriendCircle @"dyeCommunity/addDyeCommunity"
 
 
 

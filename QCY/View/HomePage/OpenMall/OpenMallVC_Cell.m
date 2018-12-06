@@ -45,7 +45,7 @@
 - (void)setupUI {
     UIView *bgView = [[UIView alloc] init];
     bgView.backgroundColor = [UIColor whiteColor];
-    bgView.frame = CGRectMake(KFit_W(9), 5, SCREEN_WIDTH - KFit_W(9) * 2, 120);
+    bgView.frame = CGRectMake(KFit_W(9), 6, SCREEN_WIDTH - KFit_W(9) * 2, 120);
     [HelperTool setRound:bgView corner:UIRectCornerAllCorners radiu:6];
     [self.contentView addSubview:bgView];
     

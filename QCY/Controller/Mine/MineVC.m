@@ -55,7 +55,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 //    [self.navigationController.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
 //    //去掉透明后导航栏下边的黑边
 //    [self.navigationController.navigationBar setShadowImage:[[UIImage alloc] init]];
@@ -67,7 +67,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 //    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
 //    [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
 //    [self.navigationController.navigationBar setShadowImage:nil];
@@ -130,6 +130,7 @@
     MineHeaderView *headerView = [[MineHeaderView alloc] init];
     headerView.frame = CGRectMake(0, -headerHeight, SCREEN_WIDTH, headerHeight);
     [headerView.switchBtn addTarget:self action:@selector(jumpToSwitchVC) forControlEvents:UIControlEventTouchUpInside];
+    [HelperTool addTapGesture:headerView.userHeader withTarget:self andSEL:@selector(jumpToMyInfo)];
     _headerView = headerView;
     return headerView;
 }
@@ -312,7 +313,10 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-
+- (void)jumpToMyInfo {
+    MyInfoCenterVC *vc = [[MyInfoCenterVC alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 //切换身份，刷新按钮状态,用全局变量实现
 - (void)refreshType {
@@ -351,8 +355,17 @@
 -(void)registerNoti {
     NSString *notiName = @"refreshMainData";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:notiName object:nil];
+    
+    //修改头像监听
+    NSString *notiName1 = @"changeHeader";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeHeader:) name:notiName1 object:nil];
+    
+    //修改密码后重新登录
+    NSString *notiName2 = @"notifiReLogin";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reLogin) name:notiName2 object:nil];
 }
 
+//改变整个页面的数据显示
 - (void)refreshData {
     
     [self getNumber];
@@ -376,6 +389,30 @@
     [mutableText yy_setFont:[UIFont boldSystemFontOfSize:15] range:NSMakeRange(0, name.length + 2)];
     [mutableText yy_setFont:[UIFont systemFontOfSize:12] range:NSMakeRange(name.length + 2, userType.length)];
     _headerView.userName.attributedText = mutableText;
+}
+
+//通知到这里时只改变头像
+- (void)changeHeader:(NSNotification *)notification {
+    NSURL *header = notification.userInfo[@"cHeader"];
+    //头像
+    if (header) {
+//        NSURL *headerUrl = header;
+        [_headerView.userHeader sd_setImageWithURL:header placeholderImage:nil];
+    }
+}
+
+- (void)reLogin {
+    LoginVC *vc = [[LoginVC alloc] init];
+    BaseNavigationController *navVC = [[BaseNavigationController alloc] initWithRootViewController:vc];
+    UITabBarController *tb = (UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+    vc.isJump = YES;
+    vc.jumpIndex = tb.tabBar.items.count - 1;
+    [self presentViewController:navVC animated:YES completion:nil];
+}
+
+//修改statesBar 颜色
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;  //白色，默认的值是黑色的
 }
 
 - (void)dealloc {

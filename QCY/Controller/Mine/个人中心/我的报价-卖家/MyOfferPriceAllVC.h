@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MyOfferPriceAllVC : BaseViewController
 
+@property (nonatomic, copy)NSString *offrtType;
 @end
 
 NS_ASSUME_NONNULL_END

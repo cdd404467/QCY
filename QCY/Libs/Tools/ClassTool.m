@@ -12,6 +12,7 @@
 #import "NetWorkingPort.h"
 #import "AES128.h"
 #import "CddHUD.h"
+#import "HelperTool.h"
 
 @implementation ClassTool
 
@@ -50,24 +51,36 @@
     [self addLayer:view frame:CGRectMake(0, 0, SCREEN_WIDTH, 49)];
 }
 
++ (void)addLayer:(UIView *)view frame:(CGRect)frame startPoint:(CGPoint)sPoint endPoint:(CGPoint)ePoint {
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.colors = @[(__bridge id)[UIColor colorWithHexString:@"#f26c27"].CGColor, (__bridge id)[UIColor colorWithHexString:@"#ee2788"].CGColor];
+    gradientLayer.locations = @[@0.0, @1.0];
+    gradientLayer.startPoint = sPoint;
+    gradientLayer.endPoint = ePoint;
+    gradientLayer.frame = frame;
+    //    [view.layer addSublayer:gradientLayer];
+    [view.layer insertSublayer:gradientLayer atIndex:0];
+}
+
+
 + (void)afnErrorState:(NSInteger)errorCode {
     //获取状态吗
     //  NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
     if (errorCode == -1009) {
-//        [ClassTool showSuccessOrFailSVP:@"请检查网络" displayTime:1.5 isSuccess:NO];
+        [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+        [CddHUD showTextOnlyDelay:@"请检查网络" view:[HelperTool getCurrentVC].view];
     } else if (errorCode == -1001) {
-        [CddHUD hideHUD];
-        
-//        if ([self getCurrentVC].navigationController != nil) {
-//            [[self getCurrentVC].navigationController.view addSubview:_progressHUD];
-//        }else{
-        
-//            [[self getCurrentVC].view addSubview:_progressHUD];
-//        }
-        [CddHUD showTextOnlyDelay:@"请求超时" view:[self getCurrentVC].view];
-//        [CddHUD showTextOnlyDelay:@"请求超时"];
+        [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+        [CddHUD showTextOnlyDelay:@"请求超时" view:[HelperTool getCurrentVC].view];
     } else {
-        [CddHUD showTextOnlyDelay:@"请求失败"];
+        [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+        [CddHUD showTextOnlyDelay:@"请求失败" view:[HelperTool getCurrentVC].view];
+    }
+}
+
++ (void)showMSG:(id)json {
+    if (![To_String(json[@"code"]) isEqualToString:@"NO_LOGIN"] && ![To_String(json[@"code"]) isEqualToString:@"INVALID_SIGN"]) {
+        [CddHUD showTextOnlyDelay:json[@"msg"] view:[HelperTool getCurrentVC].view];
     }
 }
 
@@ -100,7 +113,7 @@
             dispatch_semaphore_signal(semaphore);   //发送信号
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"Error: %@", error);
-            localApiToken = @"没网我就呵呵了";     //不加这句话(代码)，在没网且本地没apiToken的时候，就boom了，很尴尬
+            localApiToken = @"noNetWork";     //不加这句话(代码)，在没网且本地没apiToken的时候，就boom了，很尴尬
             dispatch_semaphore_signal(semaphore);   //发送信号
         }];
     } else {
@@ -121,7 +134,7 @@
 //    [manager setSecurityPolicy:[self customSecurityPolicy]];
     //将参数json序列化
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    //将d返回的头http序列化
+    //将返回的头http序列化
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
 //    manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     [manager GET:requestUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -148,8 +161,11 @@
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:URL];
     manager.requestSerializer.timeoutInterval = 30.0f;
 //    [manager setSecurityPolicy:[self customSecurityPolicy]];
+
     //json序列化
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+   
     //发送Get请求
     [manager GET:requestOne parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
@@ -162,8 +178,8 @@
                 if (success) {
                     success(responseObject);
                     if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
-                        [CddHUD hideHUD];
-                        [CddHUD showTextOnlyDelay:responseObject[@"msg"]];
+                        [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                        [self showMSG:responseObject];
                     }
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -178,8 +194,8 @@
             if (success) {
                 success(responseObject);
                 if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
-                    [CddHUD hideHUD];
-                    [CddHUD showTextOnlyDelay:responseObject[@"msg"]];
+                    [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                    [self showMSG:responseObject];
                 }
             }
         }
@@ -211,18 +227,18 @@
         if ([code isEqualToString:@"INVALID_SIGN"]) {
             //修改第二次请求字典中的apiToken
             [params setValue:[ClassTool getApiToken:YES] forKey:@"apiToken"];
-            //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
-            if ([params objectForKey:@"sign"]) {
-                [params removeObjectForKey:@"sign"];
-                [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
-            }
+//            //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
+//            if ([params objectForKey:@"sign"]) {
+//                [params removeObjectForKey:@"sign"];
+//                [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
+//            }
             //发起第二次请求
             [manager POST:requestUrl parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 if (success) {
                     success(responseObject);
                     if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
-                        [CddHUD hideHUD];
-                        [CddHUD showTextOnlyDelay:responseObject[@"msg"]];
+                        [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                        [self showMSG:responseObject];
                     }
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -236,8 +252,8 @@
             if (success) {
                 success(responseObject);
                 if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
-                    [CddHUD hideHUD];
-                    [CddHUD showTextOnlyDelay:responseObject[@"msg"]];
+                    [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                    [self showMSG:responseObject];
                 }
             }
         }
@@ -249,6 +265,127 @@
         }
     }];
 }
+
+//上传文件
++ (void)uploadFile:(NSString *)requestUrl Params:(NSMutableDictionary *)params DataSource:(FormData *)dataSource Success:(void (^)(id json))success Failure:(void (^)(NSError * error))failure Progress:(void(^)(float percent))percent {
+    [params setValue:[ClassTool getApiToken:NO] forKey:@"sign"];
+//    NSString *urlString = [URL_ALL_API stringByAppendingString:requestUrl];
+    // 1.获得请求管理者
+    NSURL *URL = [NSURL URLWithString:URL_ALL_API];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:URL];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    [manager POST:requestUrl parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        [formData appendPartWithFileData:dataSource.fileData
+                                    name:dataSource.name
+                                fileName:dataSource.fileName
+                                mimeType:dataSource.fileType];
+
+    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
+        if ([code isEqualToString:@"INVALID_SIGN"]) {
+            //修改第二次请求字典中的apiToken
+            [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
+//            //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
+//            if ([params objectForKey:@"sign"]) {
+//                [params removeObjectForKey:@"sign"];
+//                [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
+//            }
+            [manager POST:requestUrl parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                [formData appendPartWithFileData:dataSource.fileData
+                                            name:dataSource.name
+                                        fileName:dataSource.fileName
+                                        mimeType:dataSource.fileType];
+            } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                if (success) {
+                    success(responseObject);
+                    if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
+                        [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                        [self showMSG:responseObject];
+                    }
+                }
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                if (failure) {
+                    [ClassTool afnErrorState:error.code];
+                    failure(error);
+                }
+            }];
+        } else {
+            if (success) {
+                success(responseObject);
+                if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
+                    [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                    [self showMSG:responseObject];
+                }
+            }
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) {
+            [ClassTool afnErrorState:error.code];
+            failure(error);
+        }
+    }];
+}
+
+//// 上传多个文件请求
++ (void)uploadWithMutilFile:(NSString *)requestUrl Params:(NSMutableDictionary *)params ImgsArray:(NSArray *)ImgsArray Success:(void (^)(id json))success Failure:(void (^)(NSError * error))failure Progress:(void(^)(float percent))percent {
+    [params setValue:[ClassTool getApiToken:NO] forKey:@"sign"];
+    
+    NSString *urlString = [URL_ALL_API stringByAppendingString:requestUrl];
+    // 1.获得请求管理者
+    NSURL *URL = [NSURL URLWithString:URL_ALL_API];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:URL];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    [manager POST:urlString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        for (FormData *data in ImgsArray) {
+            [formData appendPartWithFileData:data.fileData
+                                        name:data.name
+                                    fileName:data.fileName
+                                    mimeType:data.fileType];
+        }
+    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
+        if ([code isEqualToString:@"INVALID_SIGN"]) {
+            //修改第二次请求字典中的apiToken
+            [params setValue:[ClassTool getApiToken:YES] forKey:@"apiToken"];
+            //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
+//            if ([params objectForKey:@"sign"]) {
+//                [params removeObjectForKey:@"sign"];
+//                [params setValue:[ClassTool getAutograph:params] forKey:@"sign"];
+//            }
+            //再次请求
+            [manager POST:urlString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                if (success) {
+                    success(responseObject);
+                    if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
+                        [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                        [self showMSG:responseObject];
+                    }
+                }
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                if (failure) {
+                    [ClassTool afnErrorState:error.code];
+                    failure(error);
+                }
+            }];
+        } else {
+            //第一次请求成功
+            if (success) {
+                success(responseObject);
+                if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
+                    [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                    [self showMSG:responseObject];
+                }
+            }
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) {
+            [ClassTool afnErrorState:error.code];
+            failure(error);
+        }
+    }];
+}
+
+
 
 //支持https
 + (AFSecurityPolicy *)customSecurityPolicy
@@ -285,33 +422,98 @@
 }
 
 
-+ (UIViewController *)getCurrentVC
++ (UIImage *)fixOrientation:(UIImage *)aImage
 {
-    UIViewController *result = nil;
     
-    UIWindow * window = [[UIApplication sharedApplication] keyWindow];
-    if (window.windowLevel != UIWindowLevelNormal){
-        NSArray *windows = [[UIApplication sharedApplication] windows];
-        for(UIWindow * tmpWin in windows){
-            if (tmpWin.windowLevel == UIWindowLevelNormal){
-                window = tmpWin;
-                break;
-            }
-        }
+    // No-op if the orientation is already correct
+    if (aImage.imageOrientation == UIImageOrientationUp)
+        return aImage;
+    
+    // We need to calculate the proper transformation to make the image upright.
+    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    
+    switch (aImage.imageOrientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.width, aImage.size.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, aImage.size.height);
+            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            break;
+        default:
+            break;
     }
     
-    UIView *View = [[window subviews] objectAtIndex:0];
-    UIView *frontView = [[View subviews] lastObject];
-    id nextResponder = [frontView nextResponder];
+    switch (aImage.imageOrientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        default:
+            break;
+    }
     
-    if ([nextResponder isKindOfClass:[UIViewController class]]){
-        result = nextResponder;
+    // Now we draw the underlying CGImage into a new context, applying the transform
+    // calculated above.
+    CGContextRef ctx = CGBitmapContextCreate(NULL, aImage.size.width, aImage.size.height,
+                                             CGImageGetBitsPerComponent(aImage.CGImage), 0,
+                                             CGImageGetColorSpace(aImage.CGImage),
+                                             CGImageGetBitmapInfo(aImage.CGImage));
+    CGContextConcatCTM(ctx, transform);
+    switch (aImage.imageOrientation) {
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            // Grr...
+            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.height,aImage.size.width), aImage.CGImage);
+            break;
+            
+        default:
+            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.width,aImage.size.height), aImage.CGImage);
+            break;
     }
-    else{
-        result = window.rootViewController;
-    }
-    return result;
+    
+    // And now we just create a new UIImage from the drawing context
+    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+    UIImage *img = [UIImage imageWithCGImage:cgimg];
+    CGContextRelease(ctx);
+    CGImageRelease(cgimg);
+    return img;
 }
 
 
+
+
+@end
+
+
+@implementation FormData
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.fileType = @"";
+        self.name = @"";
+    }
+    return self;
+}
 @end

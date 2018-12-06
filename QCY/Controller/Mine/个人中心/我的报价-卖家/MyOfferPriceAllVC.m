@@ -15,6 +15,8 @@
 #import <MJRefresh.h>
 #import "AskToBuyOfferCell.h"
 #import "AskToBuyDetailsVC.h"
+#import "NoDataView.h"
+#import "UIView+Geometry.h"
 
 @interface MyOfferPriceAllVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
@@ -22,15 +24,24 @@
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, copy)NSArray *tempArr;
 @property (nonatomic, assign)BOOL isFirstLoad;
-
+@property (nonatomic, assign)int totalNum;
+@property (nonatomic, strong)NoDataView *noDataView;
 @end
 
 @implementation MyOfferPriceAllVC
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _page = 1;
+        _isFirstLoad = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _isFirstLoad = YES;
-    _page = 1;
     [self requestData];
 }
 
@@ -62,15 +73,17 @@
         headerView.backgroundColor = View_Color;
         _tableView.tableHeaderView = headerView;
         DDWeakSelf;
-        _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            weakself.page++;
-            if ( weakself.tempArr.count < Page_Count) {
-                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-                
-            } else {
+        _tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+            if (weakself.totalNum - Page_Count * weakself.page > 0) {
+                weakself.page ++;
                 [weakself requestData];
+            } else {
+                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }];
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 40, 0);
+        // 忽略掉底部inset
+        _tableView.mj_footer.ignoredScrollViewContentInsetBottom = 40;
     }
     return _tableView;
 }
@@ -78,25 +91,47 @@
 #pragma mark -  网络请求
 - (void)requestData {
     DDWeakSelf;
-    NSString *urlString = [NSString stringWithFormat:URL_OFFER_LIST,GET_USER_TOKEN,@"",_page,Page_Count];
-    [CddHUD show];
-    
+    NSString *urlString = [NSString stringWithFormat:URL_OFFER_LIST,GET_USER_TOKEN,_offrtType,_page,Page_Count];
+    if (_isFirstLoad == YES) {
+        [CddHUD show:self.view];
+    }
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-        [CddHUD hideHUD];
-        
-        NSLog(@"---- %@",json);
-        
+        [CddHUD hideHUD:weakself.view];
+//        NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            weakself.totalNum = [json[@"totalCount"] intValue];
             weakself.tempArr = [AskToBuyOfferModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             [weakself.dataSource addObjectsFromArray:weakself.tempArr];
-            [weakself.tableView.mj_footer endRefreshing];
             if (weakself.isFirstLoad == YES) {
                 [weakself.view addSubview:weakself.tableView];
+                weakself.isFirstLoad = NO;
+//                if (weakself.dataSource.count <= weakself.totalNum) {
+//                    [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
+//                }
             } else {
                 [weakself.tableView reloadData];
             }
-        } else {
-            
+            [weakself.tableView.mj_footer endRefreshing];
+            //判断为空
+            if (weakself.dataSource.count == 0) {
+                NSString *text = @"";
+                if ([weakself.offrtType isEqualToString:@""]) {
+                    text = @"暂无报价数据";
+                } else if ([weakself.offrtType isEqualToString:@"0"]) {
+                    text = @"暂无进行中的报价";
+                } else if ([weakself.offrtType isEqualToString:@"1"]) {
+                    text = @"暂无已采纳的报价";
+                } else if ([weakself.offrtType isEqualToString:@"2"]) {
+                    text = @"暂无已关闭的报价";
+                }
+                weakself.noDataView = [[NoDataView alloc] init];
+                weakself.noDataView.centerY = weakself.view.centerY;
+                [weakself.view addSubview:weakself.noDataView];
+                weakself.noDataView.noLabel.text = text;
+                
+            } else {
+                [weakself.noDataView removeFromSuperview];
+            }
         }
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);

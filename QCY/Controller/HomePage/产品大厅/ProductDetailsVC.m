@@ -20,6 +20,9 @@
 #import "OpenMallModel.h"
 #import "HelperTool.h"
 #import "ShopMainPageVC.h"
+#import "MyServiceVC.h"
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKUI/ShareSDK+SSUI.h>
 
 @interface ProductDetailsVC ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -60,7 +63,7 @@
         ProductDetailHeaderView *header = [[ProductDetailHeaderView alloc] initWithDataSource:_dataSource];
         header.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40 + KFit_H(210) + 60);
         _tableView.tableHeaderView = header;
-        
+        [header.shareBtn addTarget:self action:@selector(shareSomething) forControlEvents:UIControlEventTouchUpInside];
         UIView *footer = [[UIView alloc] init];
         footer.backgroundColor = HEXColor(@"#d9d9d9", 1);
         footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 50);
@@ -74,19 +77,54 @@
    
     NSString *urlString = [NSString stringWithFormat:URL_Product_DetailInfo,_productID];
     
-    [CddHUD show];
+    [CddHUD show:self.view];
     DDWeakSelf;
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
 //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [ProductInfoModel mj_objectWithKeyValues:json[@"data"]];
             weakself.dataSource.propMap = [PropMap mj_objectArrayWithKeyValuesArray:weakself.dataSource.propMap];
             [weakself setupBottomBar];
         }
-        [CddHUD hideHUD];
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
         
+    }];
+}
+
+#pragma mark - 分享
+- (void)shareSomething {
+    NSArray* imageArray = @[@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1542972983825&di=6b79f1c89c5cc410d88f782926b50d73&imgtype=0&src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F8d79f4854015fa079530b82ef841496a1b81dfd1.jpg"];
+    NSString *shareStr = [NSString stringWithFormat:@"http://www.baidu.com"];
+    NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+    [shareParams SSDKSetShareFlags:@[@"统计1"]];
+    [shareParams SSDKSetupShareParamsByText:@"我是分享内容分享内容分享内容分享内容分享内容分享内容"
+                                     images:imageArray
+                                        url:[NSURL URLWithString:shareStr]
+                                      title:@"七彩云哦哦哦"
+                                       type:SSDKContentTypeAuto];
+    DDWeakSelf;
+    [ShareSDK showShareActionSheet:nil customItems:nil shareParams:shareParams sheetConfiguration:nil onStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+        switch (state) {
+            case SSDKResponseStateSuccess:
+            {
+                [CddHUD showTextOnlyDelay:@"分享成功" view:weakself.view];
+                break;
+            }
+            case SSDKResponseStateFail:
+            {
+                [CddHUD showTextOnlyDelay:@"分享失败" view:weakself.view];
+                break;
+            }
+            case SSDKResponseStateCancel:{
+                [CddHUD showTextOnlyDelay:@"分享已取消" view:weakself.view];
+                break;
+            }
+                
+            default:
+                break;
+        }
     }];
 }
 
@@ -115,6 +153,11 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+//客服
+- (void)jumpToService {
+    MyServiceVC *vc = [[MyServiceVC alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 #pragma mark - UITableView代理
 //section header高度
@@ -310,6 +353,7 @@
     contactService.titleLabel.font = [UIFont systemFontOfSize:10];
     contactService.titleLabel.textAlignment = NSTextAlignmentCenter;
     contactService.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [contactService addTarget:self action:@selector(jumpToService) forControlEvents:UIControlEventTouchUpInside];
     contactService.adjustsImageWhenHighlighted = NO;
     [bottomView addSubview:contactService];
     

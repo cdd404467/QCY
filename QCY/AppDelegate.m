@@ -7,9 +7,16 @@
 //
 
 #import "AppDelegate.h"
+#import "MacroHeader.h"
 #import "TabbarVC.h"
 #import <IQKeyboardManager.h>
+#import "KSGuaidViewManager.h"
 #import "NSString+Class.h"
+//MOB
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKConnector/ShareSDKConnector.h>
+#import "WXApi.h"
+#import "WXAuth.h"
 
 
 
@@ -20,7 +27,8 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [NSThread sleepForTimeInterval:1];
+//    [NSThread sleepForTimeInterval:1];
+    [self guidePage];
     //初始化
     [self initWindow];
     [self initThirdParty];
@@ -45,36 +53,11 @@
 }
 
 
-
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     
-    if (!url) {
-        return NO;
-    }
-    
-    //接收到的字符串
-//    NSString *urlString = [url absoluteString];
-//    NSLog(@"urlh --   %@ --- %@",url.host,url.query);
-//    NSString *classString = [urlString componentsSeparatedByString:@"togo="].lastObject;
-//    NSDictionary *dict = @{@"className":classString};
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"urlJump" object:nil userInfo:dict];
-    
-//    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    UIViewController *vc = [classString stringToClass:classString];
-//    [appDelegate.rootViewController.navigationController pushViewController:viewController animated:NO];
-    
-    return YES;
-}
 
-//- (void)appJumpToPage:(NSInteger)type andParagam:(id)obj,...{
-////    [AppDelegate di];
-//    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-////    Class class = [self pageTransferClassDict][@(type)];
-////    [appDelegate.rootViewController setSelectedIndex:0];
-//    UIViewController *viewController = [[class alloc]init];
-//    viewController.params = obj;
-//    [appDelegate.rootViewController.navigationController pushViewController:viewController animated:NO];
-//}
+    return [WXAUTH handleOpenURL:url];
+}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     
@@ -100,18 +83,35 @@
 }
 
 - (void)initThirdParty {
+    //IQKeyBoard
     [IQKeyboardManager sharedManager].enable = YES;
     [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
     [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
+    [IQKeyboardManager sharedManager].keyboardDistanceFromTextField = 10.0f; // 输入框距离键盘的距离
+    
+    //注册微信
+    [WXApi registerApp:@"wx63410989373f8975" enableMTA:YES];
+    //shareSDK
+    
+    [ShareSDK registPlatforms:^(SSDKRegister *platformsRegister) {
+        //注册微信
+        [platformsRegister setupWeChatWithAppId:@"wx63410989373f8975" appSecret:@"8a63da0ba72799ddd58edf7b55357094"];
+    }];
+    
 }
 
-
+- (void)guidePage {
+    KSGuaidManager.images = @[[UIImage imageNamed:@"guidepage_1"],
+                              [UIImage imageNamed:@"guidepage_2"],
+                              [UIImage imageNamed:@"guidepage_3"],
+                              [UIImage imageNamed:@"guidepage_4"]];
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    
+    KSGuaidManager.dismissButtonCenter = CGPointMake(size.width / 2, size.height - 70);
+    KSGuaidManager.pageIndicatorTintColor = RGBA(0, 0, 0, 0.2);
+    KSGuaidManager.currentPageIndicatorTintColor = [UIColor whiteColor];
+    [KSGuaidManager begin];
+}
 
 @end
 
-@implementation NSURLRequest(DataController)
-+ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host
-{
-    return YES;
-}
-@end

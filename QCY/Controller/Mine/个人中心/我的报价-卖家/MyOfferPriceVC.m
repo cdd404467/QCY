@@ -9,12 +9,8 @@
 #import "HelperTool.h"
 #import <SGPagingView.h>
 #import "MacroHeader.h"
-
-/*** 四个控制器 ***/
 #import "MyOfferPriceAllVC.h"
-#import "MyOfferPriceWorkingVC.h"
-#import "MyOfferPriceAcceptVC.h"
-#import "MyOfferPriceClosedVC.h"
+
 
 @interface MyOfferPriceVC ()<SGPageTitleViewDelegate, SGPageContentScrollViewDelegate>
 
@@ -60,9 +56,13 @@
     [self.view addSubview:_pageTitleView];
     
     MyOfferPriceAllVC *vc1 = [[MyOfferPriceAllVC alloc] init];
-    MyOfferPriceWorkingVC *vc2 = [[MyOfferPriceWorkingVC alloc] init];
-    MyOfferPriceAcceptVC *vc3 = [[MyOfferPriceAcceptVC alloc] init];
-    MyOfferPriceClosedVC *vc4 = [[MyOfferPriceClosedVC alloc] init];
+    MyOfferPriceAllVC *vc2 = [[MyOfferPriceAllVC alloc] init];
+    MyOfferPriceAllVC *vc3 = [[MyOfferPriceAllVC alloc] init];
+    MyOfferPriceAllVC *vc4 = [[MyOfferPriceAllVC alloc] init];
+    vc1.offrtType = @"";
+    vc2.offrtType = @"0";
+    vc3.offrtType = @"1";
+    vc4.offrtType = @"2";
     NSArray *childArr = @[vc1, vc2, vc3, vc4];
     CGRect contentRect = CGRectMake(0, 40 + NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - 40);
     self.pageContentScrollView = [[SGPageContentScrollView alloc] initWithFrame:contentRect parentVC:self childVCs:childArr];

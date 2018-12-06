@@ -21,6 +21,7 @@
 #import "GroupBuyRecordVC.h"
 #import "GroupBuyingModel.h"
 #import "GoToGroupBuyVC.h"
+#import "UIView+YNPageExtend.h"
 
 @interface GroupBuyingDetailVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
 
@@ -61,16 +62,16 @@
 
 - (void)requestData {
     NSString *urlString = [NSString stringWithFormat:URL_GroupBuy_Detail,_groupID];
-    
-    [CddHUD show];
     DDWeakSelf;
+    [CddHUD show:self.view];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
 //        NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [GroupBuyingModel mj_objectWithKeyValues:json[@"data"]];
             [weakself setupUI];
         }
-        [CddHUD hideHUD];
+        
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
         
@@ -140,7 +141,7 @@
     vc.delegate = self;
     
     GroupBuyDetailHeaderView *header = [[GroupBuyDetailHeaderView alloc] initWithDataSource:_dataSource];
-    header.frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, KFit_W(250) + 120 + self.originHeight);
+    header.frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, floor(KFit_W(250)) + 120 + NAV_HEIGHT);
     vc.headerView = header;
     /// 指定默认选择index 页面
     vc.pageIndex = 0;
@@ -151,6 +152,8 @@
     
     [self.view addSubview:self.nav];
     /// 如果隐藏了导航条可以 适当改y值
+    
+    
     //    pageVC.view.yn_y = kYNPAGE_NAVHEIGHT;
     
 }

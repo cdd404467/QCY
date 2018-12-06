@@ -56,6 +56,7 @@
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     rightBtn.titleLabel.font = [UIFont systemFontOfSize:15.1f];
+//    rightBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
     rightBtn.adjustsImageWhenHighlighted = NO;
     [self addSubview:rightBtn];
     [rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -67,13 +68,20 @@
     _rightBtn = rightBtn;
     
     UIView *bottomLine = [[UIView alloc] init];
-    bottomLine.backgroundColor = LineColor;
+    bottomLine.backgroundColor = RGBA(0, 0, 0, 0.3);
     [self addSubview:bottomLine];
     [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(0.5);
     }];
     _bottomLine = bottomLine;
+}
+
+- (void)setLeftBtnTintColor:(UIColor *)leftBtnTintColor {
+    _leftBtnTintColor = leftBtnTintColor;
+    UIImage *image = [UIImage imageNamed:@"back_black"];
+    [_backBtn setImage:[image imageWithTintColor:leftBtnTintColor] forState:UIControlStateNormal];
+    _backBtn.tintColor = leftBtnTintColor;
 }
 
 @end

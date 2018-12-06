@@ -28,6 +28,8 @@
 @property (nonatomic, strong)NSMutableArray *bannerDataSource;
 @property (nonatomic, copy)NSArray *bannerArr;
 @property (nonatomic, copy)NSArray *tempArr;
+@property (nonatomic, assign)BOOL isFirstLoad;
+@property (nonatomic, assign)int totalNum;
 @end
 
 @implementation GroupBuyingVC
@@ -37,6 +39,7 @@
     self = [super init];
     if (self) {
         _page = 1;
+        _isFirstLoad = YES;
     }
     return self;
 }
@@ -60,7 +63,7 @@
 
 - (void)setNavBar {
     CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"七彩云团购会";
+    nav.titleLabel.text = @"七彩云团购惠";
     [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:nav];
 }
@@ -88,12 +91,11 @@
         
         DDWeakSelf;
         _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            weakself.page++;
-            if ( weakself.tempArr.count < Page_Count) {
-                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-                
+            if (weakself.totalNum - Page_Count * weakself.page > 0) {
+                weakself.page++;
+                [weakself requestData];
             } else {
-//                [weakself requestData];
+                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }];
     }
@@ -120,7 +122,7 @@
 #pragma mark -  首次进入请求
 - (void)loadData {
     DDWeakSelf;
-    [CddHUD show];
+    [CddHUD show:self.view];
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
     //第一个线程获取banner
@@ -147,7 +149,7 @@
     dispatch_group_async(group, globalQueue, ^{
         NSString *urlString = [NSString stringWithFormat:URL_GroupBuying_List,weakself.page,Page_Count];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-            [CddHUD hideHUD];
+            [CddHUD hideHUD:weakself.view];
 //                            NSLog(@"---- %@",json);
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
                 weakself.tempArr = [GroupBuyingModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
@@ -165,7 +167,7 @@
     dispatch_group_notify(group, globalQueue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakself.view addSubview:weakself.tableView];
-            [CddHUD hideHUD];
+            [CddHUD hideHUD:weakself.view];
         });
     });
     
@@ -175,12 +177,11 @@
 - (void)requestData {
     DDWeakSelf;
     NSString *urlString = [NSString stringWithFormat:URL_GroupBuying_List,_page,Page_Count];
-    [CddHUD show];
-    
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-        [CddHUD hideHUD];
+
 //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            weakself.totalNum = [json[@"totalCount"] intValue];
             weakself.tempArr = [GroupBuyingModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             [weakself.dataSource addObjectsFromArray:weakself.tempArr];
             [weakself.tableView.mj_footer endRefreshing];

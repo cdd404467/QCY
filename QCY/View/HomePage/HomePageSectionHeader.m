@@ -23,29 +23,28 @@
 }
 
 - (void)setupUI {
-    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-    gradientLayer.colors = @[(__bridge id)RGBA(0, 0, 0, 0.1).CGColor, (__bridge id)RGBA(0, 0, 0, 0.05).CGColor];
-    //    gradientLayer.colors = @[(__bridge id)[UIColor blackColor].CGColor, (__bridge id)[UIColor whiteColor].CGColor];
-    gradientLayer.locations = @[@0.0, @1.0];
-    gradientLayer.startPoint = CGPointMake(0.0, 0.0);
-    gradientLayer.endPoint = CGPointMake(0.0,1.0);
-    gradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 6);
-    [self.contentView.layer addSublayer:gradientLayer];
+//    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+//    gradientLayer.colors = @[(__bridge id)RGBA(0, 0, 0, 0.1).CGColor, (__bridge id)RGBA(0, 0, 0, 0.05).CGColor];
+//    //    gradientLayer.colors = @[(__bridge id)[UIColor blackColor].CGColor, (__bridge id)[UIColor whiteColor].CGColor];
+//    gradientLayer.locations = @[@0.0, @1.0];
+//    gradientLayer.startPoint = CGPointMake(0.0, 0.0);
+//    gradientLayer.endPoint = CGPointMake(0.0,1.0);
+//    gradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 6);
+//    [self.contentView.layer addSublayer:gradientLayer];
     
     UIView *bgView = [[UIView alloc] init];
     [self.contentView addSubview:bgView];
     [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(30);
-        make.top.mas_equalTo(6);
+        make.edges.mas_equalTo(0);
     }];
+    
     //淡淡的黑线
     UIView *line = [[UIView alloc] init];
     line.backgroundColor = LineColor;
     [self.contentView addSubview:line];
     [line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(@0.5);
+        make.height.mas_equalTo(0.7);
     }];
     
     //图片

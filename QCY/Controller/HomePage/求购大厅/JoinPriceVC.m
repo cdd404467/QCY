@@ -98,14 +98,14 @@
     }
     [mDict setObject:companyName forKey:@"companyName2"];
     
-    [CddHUD show];
+    [CddHUD show:self.view];
     [ClassTool postRequest:URL_JOIN_OFFER Params:mDict Success:^(id json) {
         
-        [CddHUD hideHUD];
+        [CddHUD hideHUD:weakself.view];
         if ([json[@"code"] isEqualToString:@"SUCCESS"]) {
             BOOL isSuc = [json[@"data"] boolValue];
             if (isSuc == YES) {
-                [CddHUD showTextOnlyDelay:@"发布报价成功"];
+                [CddHUD showTextOnlyDelay:@"发布报价成功" view:self.view];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [weakself refresh];
                 });
@@ -141,16 +141,16 @@
 
 - (BOOL)judgeData {
     if ([isCompany boolValue] == NO && _companyTF.text.length == 0) {
-        [CddHUD showTextOnlyDelay:@"请输入公司名称"];
+        [CddHUD showTextOnlyDelay:@"请输入公司名称" view:self.view];
         return NO;
     } else if (_contactTF.text.length != 11) {
-        [CddHUD showTextOnlyDelay:@"请输入正确手机号"];
+        [CddHUD showTextOnlyDelay:@"请输入正确手机号" view:self.view];
         return NO;
     } else if (_priceTF.text.length == 0) {
-        [CddHUD showTextOnlyDelay:@"请输入价格"];
+        [CddHUD showTextOnlyDelay:@"请输入价格" view:self.view];
         return NO;
     } else if (_timeEffective.text.length < 5) {
-        [CddHUD showTextOnlyDelay:@"请选择有效时间"];
+        [CddHUD showTextOnlyDelay:@"请选择有效时间" view:self.view];
         return NO;
     }
     
@@ -450,7 +450,7 @@
 //    self.selectedBtn.backgroundColor = RGBA(245, 244, 244, 1);
 //    self.selectedBtn.layer.borderColor = [UIColor whiteColor].CGColor;
     //当前选中按钮
-    //如果按下的按钮是之前已经按下的，并且是高亮状态，设置背景变灰色
+    //如果按下的按钮是之前已经按下的
     if (sender == self.selectedBtn ) {
 //        sender.backgroundColor = [UIColor whiteColor];
 //        sender.layer.borderColor = RGBA(84, 204, 84, 1).CGColor;

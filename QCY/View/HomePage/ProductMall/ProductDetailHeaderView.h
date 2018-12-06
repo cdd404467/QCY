@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ProductDetailHeaderView : UIView
 
+@property (nonatomic, strong)UIButton *shareBtn;
 - (instancetype)initWithDataSource:(ProductInfoModel *)dataSource;
 @end
 

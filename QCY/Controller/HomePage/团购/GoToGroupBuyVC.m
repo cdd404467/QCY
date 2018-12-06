@@ -19,6 +19,8 @@
 #import "CddHUD.h"
 #import "NetWorkingPort.h"
 #import <SDAutoLayout.h>
+#import "MobilePhone.h"
+#import "LookOverHowToUseVC.h"
 
 
 @interface GoToGroupBuyVC ()<UITextFieldDelegate>
@@ -78,6 +80,9 @@
 #pragma mark - 参与认购
 
 - (void)joinGroupBuy {
+    if ([self judgeRight] == NO) {
+        return;
+    }
     
     NSArray *areaArray = [_placeArea.textLabel.text componentsSeparatedByString:@"-"];
     NSDictionary *dict = @{@"mainId":_groupID,
@@ -89,18 +94,23 @@
                            @"province":areaArray[0],
                            @"city":areaArray[1],
                            @"address":_textView.text,
-                           @"isSendSample":[NSString stringWithFormat:@"%ld",currentSelectBtnTag],
+                           @"isSendSample":[NSString stringWithFormat:@"%ld",(long)currentSelectBtnTag],
                            @"invitationCode":_heroNumTF.text,
                            @"from":@"from=app",
                            };
+    DDWeakSelf;
     
-    
-    [CddHUD showWithText:@"参与团购中..."];
+    [CddHUD showWithText:@"参与团购中..." view:self.view];
     [ClassTool postRequest:URL_Join_GroupBuy Params:[dict mutableCopy] Success:^(id json) {
-        [CddHUD hideHUD];
-                NSLog(@"----- %@",json);
+        [CddHUD hideHUD:weakself.view];
+//                NSLog(@"----- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-        
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [CddHUD showTextOnlyDelay:@"团购成功" view:weakself.view];
+                NSString *notiName = @"groupBuySuc";
+                [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:nil userInfo:nil];
+                [weakself.navigationController popViewControllerAnimated:YES];
+            });
         }
         
     } Failure:^(NSError *error) {
@@ -120,7 +130,8 @@
 }
 
 - (void)checkInfo {
-    
+    LookOverHowToUseVC *vc = [[LookOverHowToUseVC alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
     
 }
 
@@ -142,7 +153,7 @@
     
     //for循环创建
     NSArray *titleArr = @[@"我的认领量:",@"英雄码:",@"是否需要样品:",@"联系人:",@"联系人方式:", @"公司名称",@"公司所属区域:",@"公司详细地址:"];
-    for (NSInteger i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.text = titleArr[i];
         titleLabel.textColor = HEXColor(@"#3C3C3C", 1);
@@ -156,7 +167,7 @@
             make.height.mas_equalTo(32);
         }];
         
-        if (i != 1 || i != 7) {
+        if (i == 0 || (i > 1 && i < 7)) {
             UIImageView *tabIcon = [[UIImageView alloc] init];
             tabIcon.image = [UIImage imageNamed:@"tab_icon"];
             [_scrollView addSubview:tabIcon];
@@ -262,7 +273,7 @@
     }];
     
     CGFloat imageWH = 20.0;
-    //是否包含运费
+    //是否需要样品
     UIButton *yesBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     yesBtn.tag = 1;
     [yesBtn setTitle:@"是" forState:UIControlStateNormal];
@@ -369,7 +380,7 @@
     }];
     _phoneTF = phoneTF;
 
-    //联系人方式
+    //联系人公司
     UITextField *companyTF = [[UITextField alloc] init];
     companyTF.backgroundColor = HEXColor(@"#E8E8E8", 1);
     companyTF.font = [UIFont systemFontOfSize:12];
@@ -429,14 +440,35 @@
 }
 
 
-//-  (BOOL)judgeRight {
-//    if ([_bView.productClassifyOne.textLabel.text isEqualToString:@"请选择分类"]) {
-//        [CddHUD showTextOnlyDelay:@"请选择产品分类"];
-//        return NO;
-//
-//
-//    return YES;
-//}
+-  (BOOL)judgeRight {
+    if (_buyTF.text.length == 0) {
+        [CddHUD showTextOnlyDelay:@"请输入认购量" view:self.view];
+        return NO;
+    } else if ([_buyTF.text floatValue] < [_minNum floatValue]) {
+        [CddHUD showTextOnlyDelay:@"不能小于最小认领量" view:self.view];
+        return NO;
+    } else if ([_buyTF.text floatValue] > [_maxNum floatValue]) {
+        [CddHUD showTextOnlyDelay:@"不能大于最大认领量" view:self.view];
+        return NO;
+    } else if (_contactTF.text.length == 0) {
+        [CddHUD showTextOnlyDelay:@"请输入联系人" view:self.view];
+        return NO;
+    } else if (_phoneTF.text.length == 0) {
+        [CddHUD showTextOnlyDelay:@"请输入手机号" view:self.view];
+        return NO;
+    } else if ([MobilePhone isValidMobile:_phoneTF.text] == NO) {
+        [CddHUD showTextOnlyDelay:@"请输入o有效的手机号" view:self.view];
+        return NO;
+    } else if (_companyTF.text.length == 0) {
+        [CddHUD showTextOnlyDelay:@"请输入公司名称" view:self.view];
+        return NO;
+    } else if ([_placeArea.textLabel.text isEqualToString:@"请选择地区"]) {
+        [CddHUD showTextOnlyDelay:@"请选择地区" view:self.view];
+        return NO;
+    }
+
+    return YES;
+}
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
@@ -457,29 +489,23 @@
     }
     
     if (string.length > 0) {
-        
         //当前输入的字符
         unichar single = [string characterAtIndex:0];
-//        BXLog(@"single = %c",single);
-        
         // 不能输入.0-9以外的字符
         if (!((single >= '0' && single <= '9') || single == '.'))
         {
 //            [MBProgressHUD bwm_showTitle:@"您的输入格式不正确" toView:self hideAfter:1.0];
             return NO;
         }
-        
         // 只能有一个小数点
         if (self.isHaveDian && single == '.') {
 //            [MBProgressHUD bwm_showTitle:@"最多只能输入一个小数点" toView:self hideAfter:1.0];
             return NO;
         }
-        
         // 如果第一位是.则前面加上0.
         if ((textField.text.length == 0) && (single == '.')) {
             textField.text = @"0";
         }
-        
         // 如果第一位是0则后面必须输入点，否则不能输入。
         if ([textField.text hasPrefix:@"0"]) {
             if (textField.text.length > 1) {
@@ -495,13 +521,12 @@
                 }
             }
         }
-        
         // 小数点后最多能输入两位
         if (self.isHaveDian) {
             NSRange ran = [textField.text rangeOfString:@"."];
             // 由于range.location是NSUInteger类型的，所以这里不能通过(range.location - ran.location)>2来判断
             if (range.location > ran.location) {
-                if ([textField.text pathExtension].length > 1) {
+                if ([textField.text pathExtension].length > 0) {
 //                    [MBProgressHUD bwm_showTitle:@"小数点后最多有两位小数" toView:self hideAfter:1.0];
                     return NO;
                 }

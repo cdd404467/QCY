@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *bottomLine;
 @property (nonatomic, strong)UIButton *rightBtn;
 @property (nonatomic, copy)NSString *navTitle;
+@property (nonatomic, strong)UIColor *leftBtnTintColor;
 @end
 
 NS_ASSUME_NONNULL_END

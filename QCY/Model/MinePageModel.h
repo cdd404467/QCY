@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AskToBuyOfferModel : NSObject
 
 @property (nonatomic, strong)EnquiryDomain *enquiryDomain;      //报价里面的类
-@property (nonatomic, assign)NSInteger offerTime;               //报价时间
+@property (nonatomic, assign)long long offerTime;               //报价时间
 @property (nonatomic, copy)NSString *price;                     //价格
 @property (nonatomic, copy)NSString *isIncludeTrans;            //是否包含运费,1包含，0不包含
 @property (nonatomic, copy)NSString *status;                    //状态
@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MyAskToBuyModel : NSObject
 
 @property (nonatomic, copy)NSString *productName;               //产品名称
-@property (nonatomic, assign)NSInteger createdAt;               //报价时间
+@property (nonatomic, assign)long long createdAt;               //报价时间
 @property (nonatomic, copy)NSString *locationProvince;          //省
 @property (nonatomic, copy)NSString *locationCity;              //市
 @property (nonatomic, copy)NSString *pack;                      //包装

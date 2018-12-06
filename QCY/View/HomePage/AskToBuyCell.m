@@ -159,7 +159,7 @@
     [areaLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(-30);
         make.left.equalTo(nameLabel);
-        make.height.mas_equalTo(12);
+        make.height.mas_equalTo(16);
         make.right.mas_equalTo(nameLabel);
     }];
     _areaLabel = areaLabel;
@@ -180,9 +180,10 @@
     YYLabel *offerCount = [[YYLabel alloc] init];
     [bgView addSubview:offerCount];
     [offerCount mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(callBtn);
-        make.top.mas_equalTo(areaLabel);
-        make.height.mas_equalTo(12);
+//        make.centerX.equalTo(callBtn);
+        make.centerY.mas_equalTo(areaLabel);
+        make.left.mas_equalTo(callBtn.mas_left).offset(5);
+        make.right.mas_equalTo(KFit_W(-10));
     }];
     _offerCount = offerCount;
     
@@ -210,7 +211,7 @@
     NSString *firstTimeUnit = [NSString string];
     NSString *secondTimeUnit = [NSString string];
     
-    if (isNotRightData(day) && isNotRightData(hour) && isNotRightData(min) && isNotRightData(sec)) {
+    if (isNotRightData(model.surplusDay) && isNotRightData(model.surplusHour) && isNotRightData(model.surplusMin) && isNotRightData(model.surplusSec)) {
         _leftTimeLabel.backgroundColor = HEXColor(@"#E5E5E5", 1);
         _leftTimeLabel.font = [UIFont systemFontOfSize:15];
         _leftTimeLabel.textColor = HEXColor(@"#333333", 1);
@@ -317,7 +318,7 @@
 
 
 - (void)callPhone {
-    NSString *tel = [NSString stringWithFormat:@"tel://10086"];
+    NSString *tel = [NSString stringWithFormat:@"tel://%@",CompanyContact];
     //开线程，解决ios10调用慢的问题
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{

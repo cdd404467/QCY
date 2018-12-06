@@ -16,7 +16,7 @@
 
 @interface ShopMainPageHeaderView()<SDCycleScrollViewDelegate>
 @property (nonatomic, strong)SDCycleScrollView *bannerView; //轮播图
-
+@property (nonatomic, strong)OpenMallModel *model;
 @end
 
 @implementation ShopMainPageHeaderView
@@ -31,8 +31,8 @@
 
 
 //创建轮播图,50
-- (void)setupUI:(NSInteger)number model:(ProductInfoModel *)model {
-    
+- (void)setupUI:(NSInteger)number model:(OpenMallModel *)model {
+    _model = model;
     NSMutableArray *bannerArr = [NSMutableArray arrayWithCapacity:0];
     if isRightData(model.banner1) 
         [bannerArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.banner1]];
@@ -152,7 +152,14 @@
 
 
 - (void)callPhone {
-    NSString *tel = [NSString stringWithFormat:@"tel://10086"];
+//    NSString *phoneNum = [NSString string];
+//    if isRightData(_model.phone) {
+//        phoneNum = _model.phone;
+//    } else {
+//        phoneNum = CompanyContact;
+//    }
+    
+    NSString *tel = [NSString stringWithFormat:@"tel://%@",CompanyContact];
     //开线程，解决ios10调用慢的问题
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{

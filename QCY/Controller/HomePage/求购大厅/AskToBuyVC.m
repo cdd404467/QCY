@@ -24,25 +24,32 @@
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, copy)NSArray *tempArr;
+@property (nonatomic, assign)int totalNum;
 @property (nonatomic, assign)BOOL isFirstLoad;
-@property (nonatomic, assign)NSInteger number;
-@property (nonatomic, assign)NSInteger page;
+@property (nonatomic, assign)int number;
+@property (nonatomic, assign)int page;
 @end
 
 @implementation AskToBuyVC
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _page = 1;
+        _isFirstLoad = YES;
+    }
+    return self;
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _isFirstLoad = YES;
-    _page = 1;
-    _number = 20;
     self.title = @"求购大厅";
     self.view.backgroundColor = View_Color;
 //    [self setupUI];
     [self requestData];
 }
-
-
 
 //懒加载tableView
 - (UITableView *)tableView {
@@ -70,12 +77,11 @@
 //        }];
         
         _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            weakself.page++;
-            if ( weakself.tempArr.count < weakself.number) {
-                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-                
-            } else {
+            if (weakself.totalNum - Page_Count * weakself.page > 0) {
+                weakself.page++;
                 [weakself requestData];
+            } else {
+                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }];
         
@@ -127,22 +133,16 @@
 #pragma mark - 获取列表数据
 - (void)requestData {
     DDWeakSelf;
-    NSString *token = [NSString string];
-    if (GET_USER_TOKEN) {
-        token = GET_USER_TOKEN;
-    } else {
-        token = @"";
-    }
-    
-    NSString *urlString = [NSString stringWithFormat:URL_ASKTOBUY_LIST,token,(long)_page,(long)_number];
+    NSString *urlString = [NSString stringWithFormat:URL_ASKTOBUY_LIST,User_Token,_page,Page_Count];
     
     if (_isFirstLoad == YES) {
-        [CddHUD show];
+        [CddHUD show:self.view];
     }
     
     self.view.userInteractionEnabled = NO;
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //        NSLog(@"--- %@",json);
+        weakself.totalNum = [json[@"totalCount"] intValue];
         weakself.view.userInteractionEnabled = YES;
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.tempArr = [AskToBuyModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
@@ -159,7 +159,7 @@
         }
         
         
-        [CddHUD hideHUD];
+        [CddHUD hideHUD:weakself.view];
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
     }];

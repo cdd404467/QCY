@@ -23,14 +23,24 @@
 @property (nonatomic, assign)int page;
 @property (nonatomic, assign)BOOL isFirstLoad;
 @property (nonatomic, copy)NSArray *tempArr;
+@property (nonatomic, assign)int totalNum;
 @end
 
 @implementation OpenMallVC
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _page = 1;
+         _isFirstLoad = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _isFirstLoad = YES;
-    _page = 1;
+   
     self.title = @"开放商城";
     [self requestData];
 }
@@ -63,12 +73,11 @@
         }
         DDWeakSelf;
         _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            weakself.page++;
-            if ( weakself.tempArr.count < Page_Count) {
-                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-
-            } else {
+            if (weakself.totalNum - Page_Count * weakself.page > 0) {
+                weakself.page++;
                 [weakself requestData];
+            } else {
+                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }];
     }
@@ -79,23 +88,24 @@
 #pragma mark - 获取列表
 - (void)requestData {
     NSString *urlString = [NSString stringWithFormat:URL_Shop_List,_page,Page_Count];
-    if (_isFirstLoad == YES) {
-        [CddHUD show];
-    }
     DDWeakSelf;
+    if (_isFirstLoad == YES) {
+        [CddHUD show:self.view];
+    }
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-        [CddHUD hideHUD];
+        [CddHUD hideHUD:weakself.view];
 //        NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            weakself.totalNum = [json[@"totalCount"] intValue];
             weakself.tempArr  = [OpenMallModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             for (OpenMallModel *model in weakself.tempArr) {
                 model.businessList = [BusinessList mj_objectArrayWithKeyValuesArray:model.businessList];
             }
-            
             [weakself.dataSource addObjectsFromArray:weakself.tempArr];
             [weakself.tableView.mj_footer endRefreshing];
             if (weakself.isFirstLoad == YES) {
                 [weakself.view addSubview:weakself.tableView];
+                weakself.isFirstLoad = NO;
             } else {
                 [weakself.tableView reloadData];
             }
@@ -121,7 +131,7 @@
 
 //cell的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 125;
+    return 126;
 }
 
 //点击cell

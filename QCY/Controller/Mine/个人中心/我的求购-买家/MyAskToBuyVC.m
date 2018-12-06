@@ -11,9 +11,6 @@
 #import <SGPagingView.h>
 #import "MacroHeader.h"
 #import "MyAskToBuyAllVC.h"
-#import "MyAskToBuyWorkingVC.h"
-#import "MyAskToBuyClosedVC.h"
-#import "MyAskToBuyAcceptVC.h"
 
 @interface MyAskToBuyVC ()<SGPageTitleViewDelegate, SGPageContentScrollViewDelegate>
 
@@ -53,9 +50,13 @@
     [self.view addSubview:_pageTitleView];
     
     MyAskToBuyAllVC *vc1 = [[MyAskToBuyAllVC alloc] init];
-    MyAskToBuyWorkingVC *vc2 = [[MyAskToBuyWorkingVC alloc] init];
-    MyAskToBuyAcceptVC *vc3 = [[MyAskToBuyAcceptVC alloc] init];
-    MyAskToBuyClosedVC *vc4 = [[MyAskToBuyClosedVC alloc] init];
+    MyAskToBuyAllVC *vc2 = [[MyAskToBuyAllVC alloc] init];
+    MyAskToBuyAllVC *vc3 = [[MyAskToBuyAllVC alloc] init];
+    MyAskToBuyAllVC *vc4 = [[MyAskToBuyAllVC alloc] init];
+    vc1.buyType = @"";
+    vc2.buyType = @"1";
+    vc3.buyType = @"3";
+    vc4.buyType = @"2";
     NSArray *childArr = @[vc1, vc2, vc3, vc4];
     CGRect contentRect = CGRectMake(0, 40 + NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - 40);
     self.pageContentScrollView = [[SGPageContentScrollView alloc] initWithFrame:contentRect parentVC:self childVCs:childArr];

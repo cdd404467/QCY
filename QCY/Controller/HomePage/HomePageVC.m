@@ -20,6 +20,8 @@
 #import "CddHUD.h"
 #import "HomePageModel.h"
 #import "OpenMallModel.h"
+#import "PYSearch.h"
+#import <MJRefresh.h>
 /** 跳转的页面 **/
 #import "OpenMallVC.h"
 #import "ProductMallVC.h"
@@ -29,9 +31,14 @@
 #import "GroupBuyingVC.h"
 #import "AskToBuyDetailsVC.h"
 #import "ShopMainPageVC.h"
+#import "HomePageSearchVC.h"
+#import "WithoutNetView.h"
+#import "UIView+Geometry.h"
+#import "UIView+Geometry.h"
+#import "GlobalFooterView.h"
 
 
-
+#define sectionHeaderHeight 40
 @interface HomePageVC ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong)HomePageModel *dataSource;
@@ -39,18 +46,82 @@
 @property (nonatomic, strong)HomePageHeaderView *headerView;
 @property (nonatomic, strong)NSMutableArray *bannerArray;
 @property (nonatomic, strong)NSMutableArray *salesArray;
+@property (nonatomic, strong)WithoutNetView *withoutView;
+@property (nonatomic, assign)BOOL isFirstLoad;
 @end
 
 @implementation HomePageVC
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _isFirstLoad = YES;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(urlAwake:) name:@"urlJump" object:nil];
+//    [self registerNotifi];
     self.navigationController.navigationBar.translucent = NO;
-    
-    
+    [self setRightItem];
     [self requestMultiData];
-    [self.view addSubview:self.tableView];
+
+//    NSLog(@"-- %lu",self.tabBarController.tabBar.items.count);
+
+//    [self.view addSubview:self.tableView];
+}
+
+//- (void)registerNotifi {
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(urlAwake:) name:@"urlJump" object:nil];
+//}
+
+- (WithoutNetView *)withoutView {
+    if (!_withoutView) {
+        _withoutView = [[WithoutNetView alloc] init];
+        _withoutView.top = SCREEN_HEIGHT / 2 - 100;
+        [_withoutView.refreshBtn addTarget:self action:@selector(requestMultiData) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    return _withoutView;
+}
+
+- (void)setRightItem {
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 50, 44);
+    btn.imageEdgeInsets = UIEdgeInsetsMake(0, 14, 0, -14);
+    [btn setImage:[UIImage imageNamed:@"search"] forState:UIControlStateNormal];
+    
+//    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+    
+    UIBarButtonItem *rewardItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    spaceItem.width = -15;
+    [btn addTarget:self action:@selector(jumpToSearch) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItems = @[spaceItem,rewardItem];
+    
+}
+
+- (void)jumpToSearch {
+    
+//    NSArray *arr = @[@"阿伦",@"封金能"];
+    PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"搜索商品标题" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
+        
+        HomePageSearchVC *vc = [[HomePageSearchVC alloc]init];
+        vc.searchKeyWord = searchText;
+        [searchViewController.navigationController pushViewController:vc animated:NO];
+    }];
+    //历史搜索风格
+    searchViewController.searchHistoryStyle = PYSearchHistoryStyleNormalTag;
+//    searchViewController.hotSearchStyle = PYHotSearchStyleColorfulTag;
+    //    searchViewController.searchResultShowMode = PYSearchResultShowModeEmbed;
+    //    searchViewController.searchResultController = [[UIViewController alloc] init];
+    // 3. present the searchViewController
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
+    [self presentViewController:nav  animated:NO completion:nil];
+    
 }
 
 //懒加载tableView
@@ -67,7 +138,15 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
         }
+//        DDWeakSelf;
+//        _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+//            [weakself.bannerArray removeAllObjects];
+//            [weakself requestMultiData];
+//        }];
+        
         _tableView.tableHeaderView = [self addHeaderView];
+        GlobalFooterView *footer = [[GlobalFooterView alloc] init];
+        _tableView.tableFooterView = footer;
     }
     return _tableView;
 }
@@ -91,9 +170,9 @@
 
 //创建自定义的tableView headerView
 - (HomePageHeaderView *)addHeaderView {
-    CGFloat headerHeight = 8 + 144 + 67;
+    CGFloat headerHeight = 8 + KFit_W(144) + 65 + 6;
     HomePageHeaderView *headerView = [[HomePageHeaderView alloc] init];
-    headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, headerHeight * Scale_H);
+    headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, headerHeight);
     DDWeakSelf;
     headerView.tapIconsBlock = ^(NSInteger tag) {
         switch (tag) {
@@ -128,15 +207,15 @@
 #pragma mark - 获取列表数据
 - (void)requestMultiData {
     DDWeakSelf;
-    
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
     //首页列表
     dispatch_group_enter(group);
+    [CddHUD show:self.view];
     dispatch_group_async(group, globalQueue, ^{
         NSString *urlString = [NSString stringWithFormat:URL_HomePage_List,User_Token];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-//            NSLog(@"---- %@",json);
+//            NSLog(@"----1 %@",json);
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
                 weakself.dataSource = [HomePageModel mj_objectWithKeyValues:json[@"data"]];
                 weakself.dataSource.enquiryList = [AskToBuyModel mj_objectArrayWithKeyValuesArray:weakself.dataSource.enquiryList];
@@ -144,14 +223,17 @@
                 for (OpenMallModel *model in weakself.dataSource.marketList) {
                     model.businessList = [BusinessList mj_objectArrayWithKeyValuesArray:model.businessList];
                 }
-                [weakself.tableView reloadData];
                 
+                if ([weakself.dataSource.login_status isEqualToString:@"NO_LOGIN"]) {
+                    [weakself jumpToLogin];
+                }
             }
             dispatch_group_leave(group);
         } Failure:^(NSError *error) {
-            dispatch_group_leave(group);
+            [weakself.view addSubview:weakself.withoutView];
+//            dispatch_group_leave(group);
         }];
-        
+
     });
     
     //获取轮播图
@@ -160,16 +242,17 @@
         NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"APP_Index_Banner"];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-//                                 NSLog(@"---- %@",json);
+//                                 NSLog(@"----2 %@",json);
                 NSArray *bArray = [BannerModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
                 for (BannerModel *model in bArray) {
                     [weakself.bannerArray addObject:ImgUrl(model.ad_image)];
                 }
-                weakself.headerView.bannerArray = [weakself.bannerArray copy];
+//                weakself.headerView.bannerArray = [weakself.bannerArray copy];
             }
             dispatch_group_leave(group);
         } Failure:^(NSError *error) {
-            dispatch_group_leave(group);
+            [weakself.view addSubview:weakself.withoutView];
+//            dispatch_group_leave(group);
         }];
     });
     
@@ -179,36 +262,45 @@
         NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"APP_Group_Buy"];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-//                                                 NSLog(@"---- %@",json);
+//                                                 NSLog(@"----3 %@",json);
                 weakself.salesArray = [BannerModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
-                NSIndexSet *indexSet = [[NSIndexSet alloc] initWithIndex:0];
-                [weakself.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+//                NSIndexSet *indexSet = [[NSIndexSet alloc] initWithIndex:0];
+//                [weakself.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
             }
             dispatch_group_leave(group);
         } Failure:^(NSError *error) {
-            dispatch_group_leave(group);
+            [weakself.view addSubview:weakself.withoutView];
+//            dispatch_group_leave(group);
         }];
     });
     
     //全部任务完成后，就可以在这吊了
     dispatch_group_notify(group, globalQueue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-
+            [weakself.withoutView removeFromSuperview];
+            weakself.withoutView = nil;
+            [weakself.tableView.mj_header endRefreshing];
+            if (weakself.isFirstLoad == YES) {
+                [weakself.view addSubview:self.tableView];
+                weakself.isFirstLoad = NO;
+            } else {
+                [weakself.tableView reloadData];
+            }
+            weakself.headerView.bannerArray = [weakself.bannerArray copy];
+            [CddHUD hideHUD:weakself.view];
         });
     });
     
 }
 
-
 //header不悬停
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if(scrollView == self.tableView) {
-        CGFloat sectionHeaderHeight = 36; //header高度
-        if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
+        if (scrollView.contentOffset.y <= sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
             scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        } else if (scrollView.contentOffset.y>sectionHeaderHeight) {
+        } else if (scrollView.contentOffset.y > sectionHeaderHeight) {
             scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
-        }else if (scrollView.contentOffset.y<=sectionHeaderHeight){
+        }else if (scrollView.contentOffset.y <= sectionHeaderHeight){
             scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
         }
     }
@@ -234,17 +326,15 @@
 //cell的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return KFit_H(110) + 30 + 6;
-    } else if (indexPath.section == 1){
-        return 126;
+        return KFit_H(110) + 6;
     } else {
-        return 125;
+        return 126;
     }
 }
 
 //section header的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 36;
+    return sectionHeaderHeight;
 }
 
 //section footer的高度
@@ -262,12 +352,14 @@
         header.moreLabel.hidden = YES;
         return header;
     } else if (section == 1) {
+        header.moreLabel.hidden = NO;
         header.clickMoreBlock = ^{
             AskToBuyVC *vc = [[AskToBuyVC alloc] init];
             [weakself.navigationController pushViewController:vc animated:YES];
         };
         return header;
     } else {
+        header.moreLabel.hidden = NO;
         header.clickMoreBlock = ^{
             OpenMallVC *vc = [[OpenMallVC alloc] init];
             [weakself.navigationController pushViewController:vc animated:YES];
@@ -318,8 +410,6 @@
     UIViewController *vc = [classString stringToClass:classString];
     [self.navigationController pushViewController:vc animated:YES];
 }
-
-
 
 
 - (void)didReceiveMemoryWarning {

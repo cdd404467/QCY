@@ -54,23 +54,25 @@
     //名字
     YYLabel *product_ch_name = [[YYLabel alloc] init];
     product_ch_name.backgroundColor = [UIColor whiteColor];
-    product_ch_name.frame = CGRectMake(0, 0, KFit_W(310), 40);
+//    product_ch_name.frame = CGRectMake(0, 0, KFit_W(310), 40);
+    product_ch_name.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
     [product_ch_name addBorderLayer:LineColor width:1.f direction:BorderDirectionBottom];
     [self addSubview:product_ch_name];
     _product_ch_name = product_ch_name;
     
     //右边分享按钮
-    UIButton *shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    shareBtn.backgroundColor = [UIColor whiteColor];
-    shareBtn.frame = CGRectMake(product_ch_name.frame.size.width , 0, SCREEN_WIDTH - product_ch_name.frame.size.width, 40);
-    [shareBtn setTitle:@"分享" forState:UIControlStateNormal];
-    [shareBtn setTitleColor:HEXColor(@"#868686", 1) forState:UIControlStateNormal];
-    shareBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
-    shareBtn.layer.shadowOffset = CGSizeMake(0, 8);
-    shareBtn.layer.shadowOpacity = 1.0f;
-    shareBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-    [shareBtn addBorderLayer:LineColor width:1.f direction:BorderDirectionLeft];
-    [self addSubview:shareBtn];
+//    UIButton *shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    shareBtn.backgroundColor = [UIColor whiteColor];
+//    shareBtn.frame = CGRectMake(product_ch_name.frame.size.width , 0, SCREEN_WIDTH - product_ch_name.frame.size.width, 40);
+//    [shareBtn setTitle:@"分享" forState:UIControlStateNormal];
+//    [shareBtn setTitleColor:HEXColor(@"#868686", 1) forState:UIControlStateNormal];
+//    shareBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
+//    shareBtn.layer.shadowOffset = CGSizeMake(0, 8);
+//    shareBtn.layer.shadowOpacity = 1.0f;
+//    shareBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+//    [shareBtn addBorderLayer:LineColor width:1.f direction:BorderDirectionLeft];
+//    [self addSubview:shareBtn];
+//    _shareBtn = shareBtn;
     
     //图片
     UIImageView *productImage = [[UIImageView alloc] init];
@@ -79,9 +81,8 @@
     [self addSubview:productImage];
     _productImage = productImage;
     
-    //加入购物车按钮
+    //收藏按钮
     UIButton *collectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    collectBtn.backgroundColor = [UIColor whiteColor];
     collectBtn.frame = CGRectMake(productImage.frame.size.width, 40, SCREEN_WIDTH - productImage.frame.size.width, productImage.frame.size.height / 2);
     collectBtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [collectBtn setImage:[UIImage imageNamed:@"collect"] forState:UIControlStateNormal];
@@ -159,7 +160,8 @@
     //价格
     if isRightData(model.price) {
         NSString *price = model.price;
-        NSString *unit = [NSString stringWithFormat:@"/%@",model.unit];
+//        NSString *unit = [NSString stringWithFormat:@"/%@",model.unit];
+        NSString *unit = [NSString stringWithFormat:@"/KG"];
         NSString *attPrice = [NSString stringWithFormat:@"¥%@%@",price,unit];
         NSMutableAttributedString *mutablePrice = [[NSMutableAttributedString alloc] initWithString:attPrice];
         mutablePrice.yy_color = [UIColor whiteColor];

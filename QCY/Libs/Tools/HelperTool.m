@@ -8,6 +8,7 @@
 
 #import "HelperTool.h"
 #import <Masonry.h>
+#import <AVFoundation/AVFoundation.h>
 
 @implementation HelperTool
 
@@ -42,63 +43,85 @@
     view.layer.mask = maskLayer;
 }
 
+//获取当前显示的控制器
++ (UIViewController *)getCurrentVC
+{
+    UIViewController *resultVC;
+    resultVC = [self _topViewController:[[UIApplication sharedApplication].keyWindow rootViewController]];
+    while (resultVC.presentedViewController) {
+        resultVC = [self _topViewController:resultVC.presentedViewController];
+    }
+    return resultVC;
+    
+}
 
++ (UIViewController *)_topViewController:(UIViewController *)vc {
+    if ([vc isKindOfClass:[UINavigationController class]]) {
+        return [self _topViewController:[(UINavigationController *)vc topViewController]];
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        return [self _topViewController:[(UITabBarController *)vc selectedViewController]];
+    } else {
+        return vc;
+    }
+    return nil;
+}
 
-///*** 添加View ***/
-//+ (void)addBorderView:(UIView *_Nonnull)view color:(UIColor * _Nonnull)color width:(CGFloat)borderWidth direction:(BorderDirection)direction {
-//    if (direction & BorderDirectionTop) {
-//        [self addBorderViewTop:view color:color andWidth:borderWidth];
-//    }
-//    if (direction & BorderDirectionLeft) {
-//        [self addBorderViewLeft:view color:color andWidth:borderWidth];
-//    }
-//    if (direction & BorderDirectionBottom) {
-//        [self addBorderViewBottom:view color:color andWidth:borderWidth];
-//    }
-//    if (direction & BorderDirectionRight) {
-//        [self addBorderViewRight:view color:color andWidth:borderWidth];
-//    }
-//}
-//
-//+ (void)addBorderViewTop:(UIView *)view color:(UIColor *)color andWidth:(CGFloat) borderWidth {
-//    UIView *border = [[UIView alloc] init];
-//    border.backgroundColor = color;
-//    [view addSubview:border];
-//    [border mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.left.right.mas_equalTo(0);
-//        make.height.mas_equalTo(1);
-//    }];
-//}
-//
-//+ (void)addBorderViewLeft:(UIView *)view color:(UIColor *)color andWidth:(CGFloat) borderWidth {
-//    UIView *border = [[UIView alloc] init];
-//    border.backgroundColor = color;
-//    [view addSubview:border];
-//    [border mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.left.bottom.mas_equalTo(0);
-//        make.width.mas_equalTo(1);
-//    }];
-//}
-//
-//+ (void)addBorderViewBottom:(UIView *)view color:(UIColor *)color andWidth:(CGFloat) borderWidth {
-//    UIView *border = [[UIView alloc] init];
-//    border.backgroundColor = color;
-//    [view addSubview:border];
-//    [border mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.bottom.right.mas_equalTo(0);
-//        make.height.mas_equalTo(1);
-//    }];
-//}
-//
-//+ (void)addBorderViewRight:(UIView *)view color:(UIColor *)color andWidth:(CGFloat) borderWidth {
-//    UIView *border = [[UIView alloc] init];
-//    border.backgroundColor = color;
-//    [view addSubview:border];
-//    [border mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.bottom.right.mas_equalTo(0);
-//        make.width.mas_equalTo(1);
-//    }];
-//}
+// 视频转换为MP4
++ (NSURL *)convertToMp4:(NSURL *)movUrl
+{
+    NSURL *mp4Url = nil;
+    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:movUrl options:nil];
+    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
+    
+    if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
+        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset
+                                                                              presetName:AVAssetExportPresetHighestQuality];
+        NSString *mp4Path = [NSString stringWithFormat:@"%@/%d%d.mp4", [self dataPath], (int)[[NSDate date] timeIntervalSince1970], arc4random() % 100000];
+        mp4Url = [NSURL fileURLWithPath:mp4Path];
+        exportSession.outputURL = mp4Url;
+        exportSession.shouldOptimizeForNetworkUse = YES;
+        exportSession.outputFileType = AVFileTypeMPEG4;
+        dispatch_semaphore_t wait = dispatch_semaphore_create(0l);
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            switch ([exportSession status]) {
+                case AVAssetExportSessionStatusFailed: {
+                    NSLog(@"failed, error:%@.", exportSession.error);
+                } break;
+                case AVAssetExportSessionStatusCancelled: {
+                    NSLog(@"cancelled.");
+                } break;
+                case AVAssetExportSessionStatusCompleted: {
+                    NSLog(@"completed.");
+                } break;
+                default: {
+                    NSLog(@"others.");
+                } break;
+            }
+            dispatch_semaphore_signal(wait);
+        }];
+        long timeout = dispatch_semaphore_wait(wait, DISPATCH_TIME_FOREVER);
+        if (timeout) {
+            NSLog(@"timeout.");
+        }
+        if (wait) {
+            //dispatch_release(wait);
+            wait = nil;
+        }
+    }
+    return mp4Url;
+}
 
++ (NSString*)dataPath
+{
+    NSString *dataPath = [NSString stringWithFormat:@"%@/Library/appdata/chatbuffer", NSHomeDirectory()];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if(![fm fileExistsAtPath:dataPath]){
+        [fm createDirectoryAtPath:dataPath
+      withIntermediateDirectories:YES
+                       attributes:nil
+                            error:nil];
+    }
+    return dataPath;
+}
 
 @end

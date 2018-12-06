@@ -23,7 +23,7 @@
 @property (nonatomic, strong)CommonNav *nav;
 @property (nonatomic, assign)int page;
 @property (nonatomic, copy)NSArray *tempArr;
-@property (nonatomic, strong)ProductInfoModel *firstDateSource;
+@property (nonatomic, strong)OpenMallModel *firstDateSource;
 @property (nonatomic, strong)NSMutableArray *secondDataSource;
 @end
 
@@ -73,13 +73,8 @@
 
 #pragma mark - 网络请求
 - (void)requestData {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [CddHUD show];
-        });
-    });
     DDWeakSelf;
-    
+    [CddHUD show:self.view];
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
     //第一个线程获取列表
@@ -105,7 +100,7 @@
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //            NSLog(@"---- %@",json);
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-                weakself.firstDateSource = [ProductInfoModel mj_objectWithKeyValues:json[@"data"]];
+                weakself.firstDateSource = [OpenMallModel mj_objectWithKeyValues:json[@"data"]];
             }
             dispatch_group_leave(group);
         } Failure:^(NSError *error) {
@@ -118,7 +113,7 @@
     dispatch_group_notify(group, globalQueue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakself setupPageVC];
-            [CddHUD hideHUD];
+            [CddHUD hideHUD:weakself.view];
         });
     });
 }

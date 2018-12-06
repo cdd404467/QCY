@@ -17,36 +17,38 @@
 #import "UIDevice+UUID.h"
 #import "AES128.h"
 #import "CddHUD.h"
+#import "UITextField+Limit.h"
+#import "WXAuth.h"
+#import <WXApi.h>
+#import "HelperTool.h"
+#import "BindMobileView.h"
+
 
 @interface LoginVC ()<UITextFieldDelegate>
 @property (nonatomic, strong)UITextField *userNameTF;
 @property (nonatomic, strong)UITextField *passwdTF;
 @property (nonatomic, strong)UITextField *checkCodeTF;
 @property (nonatomic,strong) UIImageView *checkImage;
+@property (nonatomic, strong)BindMobileView *bindView;
 @end
 
 @implementation LoginVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.navigationController.navigationBar.hidden = YES;
     [self setupNav];
     [self setupUI];
     [self requestImageCode];
+    [self registerNoti];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+-(void)registerNoti {
+    NSString *notiName = @"weixinLogin";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginWithWeiChat:) name:notiName object:nil];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-}
 
 - (void)jumpToRegisterVC {
     RegisterVC *vc = [[RegisterVC alloc] init];
@@ -86,49 +88,129 @@
                            @"captcha":_checkCodeTF.text,
                            @"deviceNo":[UIDevice getDeviceID]
                            };
-    [CddHUD showWithText:@"登陆中..."];
+    [CddHUD showWithText:@"登陆中..." view:self.view];
     [ClassTool postRequest:URL_USER_LOGIN Params:[dict mutableCopy] Success:^(id json) {
-//        NSLog(@"----- %@",json);
+        [CddHUD hideHUD:weakself.view];
+//        NSLog(@"-----ppp %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             //用户信息存入字典
-            NSString *companyName = [NSString string];
-            if ([json[@"data"][@"isCompany"] boolValue] == YES) {
-                companyName = json[@"data"][@"companyName"];
-            } else {
-                companyName = @"";
-            }
-            
-            NSDictionary *userDict = @{@"userName":json[@"data"][@"loginName"],
-//                                       @"userHeaderImage":json[@"data"][@"photo"],
-                                       @"token":json[@"data"][@"token"],
-                                       @"companyName":companyName,
-                                       @"isCompany":json[@"data"][@"isCompany"]
-                                       };
-            NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:userDict];
-            
-            if isRightData(To_String(json[@"data"][@"photo"])) {
-                [mDict setObject:json[@"data"][@"photo"] forKey:@"userHeaderImage"];
-            }
-            
-            [UserDefault setObject:[mDict copy] forKey:@"userInfo"];
-            
-            [self refreshMainData_notifi];
+            [weakself saveInfo:json];
+            [weakself refreshMainData_notifi];
             [weakself disMiss];
             UITabBarController *tb=(UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
             if (weakself.isJump == YES) {
-                tb.selectedIndex = 3;
+                tb.selectedIndex = weakself.jumpIndex;
             }
             
-            [CddHUD hideHUD];
-        }else if ([json[@"code"] isEqualToString:@"CAPTCHA_ERROR"]) {
-            sLog(@" 验证码错误");
-        } else if ([json[@"code"] isEqualToString:@"LOGIN_ERROR"]){
-            sLog(@"用户名或密码错误");
         }
         
     } Failure:^(NSError *error) {
         
     }];
+}
+
+//微信登录
+- (void)loginWithWeiChat:(NSNotification *)notification {
+    [self.view endEditing:YES];
+//    DDWeakSelf;
+    NSDictionary *dict = @{@"code":notification.userInfo[@"weixinCode"]
+                           };
+    DDWeakSelf;
+    [ClassTool postRequest:URL_WeiChat_Login Params:[dict mutableCopy] Success:^(id json) {
+//                NSLog(@"-----ppp %@",json);
+        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            if ([To_String(json[@"data"][@"needPhone"]) isEqualToString:@"1"]) {
+                [weakself alertBindMobile:To_String(json[@"data"][@"token"])];
+            } else {
+                //用户信息存入字典
+                [weakself saveInfo:json];
+                [weakself refreshMainData_notifi];
+                [weakself disMiss];
+                UITabBarController *tb=(UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+                if (weakself.isJump == YES) {
+                    tb.selectedIndex = weakself.jumpIndex;
+                }
+            }
+       
+        }
+        
+    } Failure:^(NSError *error) {
+        
+    }];
+    
+}
+
+//绑定手机号
+- (void)bindPhone {
+    NSDictionary *dict = @{@"phone":_bindView.phoneTF.text,
+                           @"token":_bindView.bToken,
+                           @"smsCode":_bindView.passwdTF.text,
+                            };
+    DDWeakSelf;
+    [CddHUD show:_bindView];
+    [ClassTool postRequest:URL_Bind_PhoneNum Params:[dict mutableCopy] Success:^(id json) {
+        [CddHUD hideHUD:weakself.bindView];
+//        NSLog(@"-----=== %@",json);
+        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            //用户信息存入字典
+            [weakself saveInfo:json];
+            [weakself refreshMainData_notifi];
+            [CddHUD showTextOnlyDelay:@"绑定成功" view:weakself.view];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakself.bindView removeSignView];
+                [weakself disMiss];
+            });
+            UITabBarController *tb=(UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+            if (weakself.isJump == YES) {
+                tb.selectedIndex = weakself.jumpIndex;
+            }
+        }
+    } Failure:^(NSError *error) {
+        
+    }];
+}
+
+//弹框
+- (void)alertBindMobile:(NSString *)token {
+    BindMobileView *bindView = [[BindMobileView alloc]init];
+    bindView.bToken = token;
+    [bindView.loginBtn addTarget:self action:@selector(bindPhone) forControlEvents:UIControlEventTouchUpInside];
+    [bindView.cancelBtn addTarget:self action:@selector(cancelBind) forControlEvents:UIControlEventTouchUpInside];
+    [UIApplication.sharedApplication.keyWindow addSubview:bindView];
+    _bindView = bindView;
+}
+
+//取消
+- (void)cancelBind {
+    [CddHUD hideHUD:_bindView];
+    [_bindView removeSignView];
+}
+
+
+//第三方登录,获取微信信息
+- (void)getWeixinInfo {
+    [WXAUTH sendWXAuthReq];
+}
+
+- (void)saveInfo:(id)json {
+    NSString *companyName = [NSString string];
+    if ([json[@"data"][@"isCompany"] boolValue] == YES) {
+        companyName = json[@"data"][@"companyName"];
+    } else {
+        companyName = @"";
+    }
+    
+    NSDictionary *userDict = @{@"userName":json[@"data"][@"loginName"],
+                               @"token":json[@"data"][@"token"],
+                               @"companyName":companyName,
+                               @"isCompany":json[@"data"][@"isCompany"]
+                               };
+    NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:userDict];
+    if isRightData(To_String(json[@"data"][@"photo"])) {
+        [mDict setObject:json[@"data"][@"photo"] forKey:@"userHeaderImage"];
+    }
+    
+    [UserDefault setObject:[mDict copy] forKey:@"userInfo"];
 }
 
 /*** 通知主页刷新数据 ***/
@@ -146,7 +228,7 @@
     [self.view addSubview:appHeader];
     [appHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view.mas_centerX);
-        make.top.mas_equalTo(37 * Scale_H + NAV_HEIGHT);
+        make.top.mas_equalTo(37 + NAV_HEIGHT);
         make.width.height.mas_equalTo(@(87 * Scale_W));
     }];
     
@@ -157,18 +239,19 @@
     tfView.clipsToBounds = YES;
     [self.view addSubview:tfView];
     [tfView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(appHeader.mas_bottom).offset(37 * Scale_H);
-        make.height.mas_equalTo(@(150 * Scale_H));
+        make.top.mas_equalTo(appHeader.mas_bottom).offset(37);
+        make.height.mas_equalTo(150);
         make.left.mas_equalTo(@(38 * Scale_W));
         make.right.mas_equalTo(@(-38 * Scale_W));
     }];
     
     //账号TF
     UITextField *userNameTF = [[UITextField alloc] init];
+    userNameTF.keyboardType = UIKeyboardTypeDefault;
     [tfView addSubview:userNameTF];
     [userNameTF mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(@0);
-        make.height.mas_equalTo(@(50 * Scale_H));
+        make.height.mas_equalTo(50);
     }];
     _userNameTF = userNameTF;
     [self setTextField:userNameTF];
@@ -183,11 +266,12 @@
     }];
     //密码TF
     UITextField *passwdTF = [[UITextField alloc] init];
+    passwdTF.keyboardType = UIKeyboardTypeASCIICapable;
     [tfView addSubview:passwdTF];
     [passwdTF mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(@0);
         make.top.mas_equalTo(userNameTF.mas_bottom);
-        make.height.mas_equalTo(@(50 * Scale_H));
+        make.height.mas_equalTo(50);
     }];
     _passwdTF = passwdTF;
     [self setTextField:passwdTF];
@@ -208,7 +292,12 @@
         make.left.mas_equalTo(@0);
         make.width.mas_equalTo(@(158 * Scale_W));
         make.top.mas_equalTo(passwdTF.mas_bottom);
-        make.height.mas_equalTo(@(50 * Scale_H));
+        make.height.mas_equalTo(50);
+    }];
+    [checkCodeTF lengthLimit:^{
+        if (checkCodeTF.text.length > 4) {
+            checkCodeTF.text = [checkCodeTF.text substringToIndex:4];
+        }
     }];
     _checkCodeTF = checkCodeTF;
     [self setTextField:checkCodeTF];
@@ -219,8 +308,8 @@
     [tfView addSubview:sLine];
     [sLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(checkCodeTF.mas_right);
-        make.height.mas_equalTo(@(30 * Scale_H));
-        make.width.mas_equalTo(@0.5);
+        make.height.mas_equalTo(30);
+        make.width.mas_equalTo(1);
         make.centerY.mas_equalTo(checkCodeTF.mas_centerY);
     }];
     
@@ -230,7 +319,7 @@
     [tfView addSubview:checkImage];
     [checkImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(sLine.mas_right).offset(13 * Scale_W);
-        make.height.mas_equalTo(@(30 * Scale_H));
+        make.height.mas_equalTo(30);
         make.width.mas_equalTo(@(65 * Scale_W));
         make.centerY.mas_equalTo(sLine.mas_centerY);
     }];
@@ -244,7 +333,7 @@
     [changeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(checkImage.mas_right);
         make.right.mas_equalTo(@0);
-        make.height.mas_equalTo(@(30 * Scale_H));
+        make.height.mas_equalTo(30);
         make.centerY.mas_equalTo(sLine.mas_centerY);
     }];
     
@@ -264,7 +353,7 @@
         make.left.mas_equalTo(tfView.mas_left);
         make.right.mas_equalTo(tfView.mas_right);
         make.height.mas_equalTo(@49);
-        make.top.mas_equalTo(tfView.mas_bottom).offset(KFit_H(18));
+        make.top.mas_equalTo(tfView.mas_bottom).offset(18);
     }];
     
     //立即注册按钮
@@ -293,50 +382,57 @@
         make.height.mas_equalTo(30);
     }];
     
-    //快速登陆
-    UILabel *thirdLogin = [[UILabel alloc] init];
-    thirdLogin.text = @"快速登陆";
-    thirdLogin.textColor = HEXColor(@"#C8C8C8", 1);
-    thirdLogin.font = [UIFont systemFontOfSize:12];
-    [self.view addSubview:thirdLogin];
-    [thirdLogin mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(loginBtn.mas_bottom).offset(KFit_H(97));
-        make.centerX.mas_equalTo(self.view.mas_centerX);
-        make.height.mas_equalTo(@(12 * Scale_H));
-    }];
+    /*** 如果已经安装微信了，再显示第三方登录 ***/
+    if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
+        //快速登陆
+        UILabel *thirdLogin = [[UILabel alloc] init];
+        thirdLogin.text = @"快速登陆";
+        thirdLogin.textColor = HEXColor(@"#C8C8C8", 1);
+        thirdLogin.font = [UIFont systemFontOfSize:12];
+        [self.view addSubview:thirdLogin];
+        [thirdLogin mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(loginBtn.mas_bottom).offset(97);
+            make.centerX.mas_equalTo(self.view.mas_centerX);
+            make.height.mas_equalTo(12);
+        }];
+        
+        //left line
+        UIView *leftLine = [[UIView alloc] init];
+        leftLine.backgroundColor = HEXColor(@"#C8C8C8", 1);
+        [self.view addSubview:leftLine];
+        [leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(@(36 * Scale_W));
+            make.right.mas_equalTo(thirdLogin.mas_left).offset(-8);
+            make.centerY.mas_equalTo(thirdLogin.mas_centerY);
+            make.height.mas_equalTo(@1);
+        }];
+        
+        //right line
+        UIView *rightLine = [[UIView alloc] init];
+        rightLine.backgroundColor = HEXColor(@"#C8C8C8", 1);
+        [self.view addSubview:rightLine];
+        [rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(thirdLogin.mas_right).offset(8);
+            make.right.mas_equalTo(@(-36 * Scale_W));
+            make.centerY.mas_equalTo(thirdLogin.mas_centerY);
+            make.height.mas_equalTo(@1);
+        }];
+        
+        //微信登录
+        UIImageView *weiChat = [[UIImageView alloc] init];
+        [HelperTool addTapGesture:weiChat withTarget:self andSEL:@selector(getWeixinInfo)];
+        weiChat.image = [UIImage imageNamed:@"weixin"];
+        [self.view addSubview:weiChat];
+        [weiChat mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(thirdLogin.mas_bottom).offset(20);
+            make.centerX.mas_equalTo(self.view.mas_centerX);
+            make.width.height.mas_equalTo(@(44 * Scale_W));
+        }];
+    }
     
-    //left line
-    UIView *leftLine = [[UIView alloc] init];
-    leftLine.backgroundColor = HEXColor(@"#C8C8C8", 1);
-    [self.view addSubview:leftLine];
-    [leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(@(36 * Scale_W));
-        make.right.mas_equalTo(thirdLogin.mas_left).offset(-8);
-        make.centerY.mas_equalTo(thirdLogin.mas_centerY);
-        make.height.mas_equalTo(@1);
-    }];
-    
-    //right line
-    UIView *rightLine = [[UIView alloc] init];
-    rightLine.backgroundColor = HEXColor(@"#C8C8C8", 1);
-    [self.view addSubview:rightLine];
-    [rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(thirdLogin.mas_right).offset(8);
-        make.right.mas_equalTo(@(-36 * Scale_W));
-        make.centerY.mas_equalTo(thirdLogin.mas_centerY);
-        make.height.mas_equalTo(@1);
-    }];
-    
-    //微信登录
-    UIImageView *weiChat = [[UIImageView alloc] init];
-    weiChat.image = [UIImage imageNamed:@"weixin"];
-    [self.view addSubview:weiChat];
-    [weiChat mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(thirdLogin.mas_bottom).offset(KFit_H(20));
-        make.centerX.mas_equalTo(self.view.mas_centerX);
-        make.width.height.mas_equalTo(@(44 * Scale_W));
-    }];
 }
+
+
 
 //设置textfield
 - (void)setTextField:(UITextField *)tf {
@@ -354,7 +450,7 @@
         tf.keyboardType = UIKeyboardTypeNumberPad;
     }
     //添加leftView
-    UIImageView *leftView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, KFit_W(50), KFit_H(50))];
+    UIImageView *leftView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, KFit_W(50), 50)];
     leftView.image = [UIImage imageNamed:imageName];
     leftView.contentMode = UIViewContentModeCenter;
     tf.leftView = leftView;
@@ -376,4 +472,9 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+
+- (void)dealloc {
+    //移除通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 @end

@@ -242,8 +242,14 @@
         [mutableTime yy_setFont:[UIFont systemFontOfSize:10] range:NSMakeRange(time.length - textTime.length, textTime.length)];
         _stateLabel.attributedText = mutableTime;
     }
+
+    NSString *text = [NSString string];
+    if isRightData(model.productName) {
+        text = model.productName;
+    } else {
+        text = @"";
+    }
     
-    NSString *text = model.productName;
     NSMutableAttributedString *mutableText = [[NSMutableAttributedString alloc] initWithString:text];
     mutableText.yy_font = [UIFont boldSystemFontOfSize:14];
     mutableText.yy_firstLineHeadIndent = 12.0;

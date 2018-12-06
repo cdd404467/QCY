@@ -12,7 +12,25 @@
 		<key>QCY.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>21</integer>
+			<integer>22</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>3ACD0FE02138CADF00E83D3C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3ACD0FF82138CAE000E83D3C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3ACD10032138CAE000E83D3C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

@@ -89,20 +89,18 @@
     return _scrollView;
 }
 
-#pragma mark - 发布报价
+#pragma mark - 发布求购
 //获取全部供应商一级分类ID
 - (void)getSupID {
     [self.view endEditing:YES];
     DDWeakSelf;
     NSString *urlString = [NSString stringWithFormat:URL_GET_SUPID,@"0"];
-    [CddHUD show];
+    [CddHUD show:self.view];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-        [CddHUD hideHUD];
+        [CddHUD hideHUD:weakself.view];
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.firstClassify = [PostBuyingModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             [weakself showPickView_1];
-        } else {
-            
         }
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
@@ -113,19 +111,17 @@
 - (void)getSupID_second {
     [self.view endEditing:YES];
     if (_firstClassify.count == 0 || [_bView.productClassifyOne.textLabel.text isEqualToString:@"请选择分类"]) {
-        [CddHUD showTextOnlyDelay:@"请先选择一级分类"];
+        [CddHUD showTextOnlyDelay:@"请先选择一级分类" view:self.view];
         return ;
     }
     DDWeakSelf;
-    [CddHUD show];
+    [CddHUD show:self.view];
     NSString *urlString = [NSString stringWithFormat:URL_GET_SUPID,[self getFirstID]];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-        [CddHUD hideHUD];
+        [CddHUD hideHUD:weakself.view];
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.secondClassify = [PostBuyingModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             [weakself showPickView_2];
-        } else {
-            
         }
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
@@ -237,7 +233,7 @@
 - (void)showPickView_deliveryDate {
     [self.view endEditing:YES];
     if ([_bView.endTime.textLabel.text isEqualToString:@"请选择时间"]) {
-        [CddHUD showTextOnlyDelay:@"请先选择结束日期"];
+        [CddHUD showTextOnlyDelay:@"请先选择结束日期" view:self.view];
         return;
     }
     DDWeakSelf;
@@ -274,7 +270,7 @@
         dDate = _bView.billDate.textLabel.text;
     }
     
-    NSDictionary *dict = @{@"token":GET_USER_TOKEN,
+    NSDictionary *dict = @{@"token":User_Token,
                            @"companyName2":companyName,
                            @"productName":_bView.productNameTF.text,
                            @"productCli1":_idArr[firstID],
@@ -292,13 +288,13 @@
                            };
 
     DDWeakSelf;
-    [CddHUD show];
+    [CddHUD show:self.view];
     [ClassTool postRequest:URL_POST_BUYING Params:[dict mutableCopy] Success:^(id json) {
-        [CddHUD hideHUD];
+        [CddHUD hideHUD:weakself.view];
         if ([json[@"code"] isEqualToString:@"SUCCESS"]) {
             BOOL isSuc = [json[@"data"] boolValue];
             if (isSuc == YES) {
-                [CddHUD showTextOnlyDelay:@"发布求购成功"];
+                [CddHUD showTextOnlyDelay:@"发布求购成功" view:weakself.view];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [weakself refresh];
                 });
@@ -498,40 +494,40 @@
 
 - (BOOL)judgeRight {
     if ([isCompany boolValue] == NO && _bView.companyNameTF.text.length == 0) {
-        [CddHUD showTextOnlyDelay:@"请填写公司名称"];
+        [CddHUD showTextOnlyDelay:@"请填写公司名称" view:self.view];
         return NO;
     } else if ([_bView.productClassifyOne.textLabel.text isEqualToString:@"请选择分类"]) {
-        [CddHUD showTextOnlyDelay:@"请选择产品分类"];
+        [CddHUD showTextOnlyDelay:@"请选择产品分类" view:self.view];
         return NO;
     } else if ([_bView.productClassifyTwo.textLabel.text isEqualToString:@"产品二级分类"]) {
-        [CddHUD showTextOnlyDelay:@"请选择产品二级分类"];
+        [CddHUD showTextOnlyDelay:@"请选择产品二级分类" view:self.view];
         return NO;
     } else if (_bView.productNameTF.text.length == 0) {
-        [CddHUD showTextOnlyDelay:@"请填写产品名称"];
+        [CddHUD showTextOnlyDelay:@"请填写产品名称" view:self.view];
         return NO;
     } else if (_bView.specificationTF.text.length == 0 || [_bView.unit.textLabel.text isEqualToString:@"请选择"]) {
-        [CddHUD showTextOnlyDelay:@"请填写/选择包装规格"];
+        [CddHUD showTextOnlyDelay:@"请填写/选择包装规格" view:self.view];
         return NO;
     } else if (_bView.buyCountTF.text.length == 0) {
-        [CddHUD showTextOnlyDelay:@"请填写求购数量"];
+        [CddHUD showTextOnlyDelay:@"请填写求购数量" view:self.view];
         return NO;
     } else if ([_bView.payType.textLabel.text isEqualToString:@"请选择"]) {
-        [CddHUD showTextOnlyDelay:@"请选择付款方式"];
+        [CddHUD showTextOnlyDelay:@"请选择付款方式" view:self.view];
         return NO;
     } else if (_bView.checkBox.on == YES && _bView.billTF.text.length == 0) {
-        [CddHUD showTextOnlyDelay:@"请输入帐期时间"];
+        [CddHUD showTextOnlyDelay:@"请输入帐期时间" view:self.view];
         return NO;
     } else if (_bView.checkBox.on == NO && [_bView.billDate.textLabel.text isEqualToString:@"输入帐期时间"]) {
-        [CddHUD showTextOnlyDelay:@"请输入帐期时间"];
+        [CddHUD showTextOnlyDelay:@"请输入帐期时间" view:self.view];
         return NO;
     } else if ([_bView.placeArea.textLabel.text isEqualToString:@"请选择地区"]) {
-        [CddHUD showTextOnlyDelay:@"请选择地区"];
+        [CddHUD showTextOnlyDelay:@"请选择地区" view:self.view];
         return NO;
     } else if ([_bView.endTime.textLabel.text isEqualToString:@"请选择时间"]) {
-        [CddHUD showTextOnlyDelay:@"请选择结束日期"];
+        [CddHUD showTextOnlyDelay:@"请选择结束日期" view:self.view];
         return NO;
     } else if ([_bView.deliveryDate.textLabel.text isEqualToString:@"请选择日期"]) {
-        [CddHUD showTextOnlyDelay:@"请选择交货日期"];
+        [CddHUD showTextOnlyDelay:@"请选择交货日期" view:self.view];
         return NO;
     }
     

@@ -11,4 +11,7 @@
 @interface UIImage (Color)
 + (UIImage * _Nonnull)imageWithColor:(UIColor * _Nonnull)color size:(CGSize)size;
 + (UIImage * _Nonnull)imageWithColor:(UIColor * _Nonnull)color;
+
+- (UIImage *) imageWithTintColor:(UIColor *)tintColor;
+
 @end

@@ -37,6 +37,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshGroupBuyRecord) name:@"urlJump" object:nil];
     [self requestData];
     
 }
@@ -77,7 +78,6 @@
 //    [CddHUD show];
     DDWeakSelf;
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-//        [CddHUD hideHUD];
 //        NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [GroupBuyFinishModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
@@ -187,6 +187,14 @@
     
 }
 
+- (void)refreshGroupBuyRecord {
+    
+    [self requestData];
+}
 
+- (void)dealloc {
+    //移除通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 @end

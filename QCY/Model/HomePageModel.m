@@ -48,7 +48,6 @@
 
 @implementation PostBuyingModel
 
-//description转换
 + (NSDictionary *)mj_replacedKeyFromPropertyName{
     return @{
              @"classID" : @"id"//前边的是你想用的key，后边的是返回的key

@@ -24,7 +24,8 @@
 @implementation OpenMallModel
 + (NSDictionary *)mj_replacedKeyFromPropertyName{
     return @{
-             @"storeID" : @"id"//前边的是你想用的key，后边的是返回的key
+             @"storeID" : @"id",//前边的是你想用的key，后边的是返回的key
+             @"descriptionStr" : @"description"//前边的是你想用的key，后边的是返回的key
              };
 }
 

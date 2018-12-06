@@ -37,8 +37,8 @@
             dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
             dispatch_source_set_event_handler(_timer, ^{
                 if(timeout<=0){ //倒计时结束，关闭
-                    dispatch_source_cancel(self->_timer);
-                    self->_timer = nil;
+                    dispatch_source_cancel(self -> _timer);
+                    self -> _timer = nil;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         completeBlock(0,0,0,0);
                     });
@@ -53,10 +53,11 @@
                     timeout--;
                 }
             });
-            dispatch_resume(self->_timer);
+            dispatch_resume(_timer);
         }
     }
 }
+
 -(void)countDownWithPER_SECBlock:(void (^)(void))PER_SECBlock{
     if (_timer==nil) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -90,8 +91,8 @@
             dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
             dispatch_source_set_event_handler(_timer, ^{
                 if(timeout<=0){ //倒计时结束，关闭
-                    dispatch_source_cancel(self->_timer);
-                    self->_timer = nil;
+                    dispatch_source_cancel(self -> _timer);
+                    self -> _timer = nil;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         completeBlock(0,0,0,0);
                     });
@@ -101,7 +102,6 @@
                     int minute = (int)(timeout-days*24*3600-hours*3600)/60;
                     int second = timeout-days*24*3600-hours*3600-minute*60;
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        
                         completeBlock(days,hours,minute,second);
                     });
                     timeout--;
@@ -124,7 +124,7 @@
 }
 /**
  *  主动销毁定时器
- * 
+ *
  */
 -(void)destoryTimer{
     if (_timer) {

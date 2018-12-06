@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Alert : NSObject
 + (void)alertOne:(NSString *)title okBtn:(NSString *)okTitle OKCallBack:(void(^)(void))OK;
++ (void)alertOne:(NSString *)title okBtn:(NSString *)okTitle  msg:(NSString *)msg  OKCallBack:(void(^)(void))OK;
 + (void)alertTwo:(NSString *)title cancelBtn:(NSString *)cancelTitle okBtn:(NSString *)okTitle OKCallBack:(void(^)(void))OK;
 @end
 

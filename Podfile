@@ -19,4 +19,13 @@ target 'QCY' do
 	pod 'UITableView+FDTemplateLayoutCell', '~> 1.6'
 	pod 'YNPageViewController', '~> 0.2.3'	
 	pod 'XHWebImageAutoSize', '~> 1.1.2'
+	pod 'TZImagePickerController', '~> 3.1.5'
+	pod 'FLAnimatedImage', '~> 1.0.12'
+	pod 'YBImageBrowser', '~> 2.0.9'
+	pod 'HXPhotoPicker', '~> 2.2.3'
+	#shareSDK
+        pod 'mob_sharesdk'
+        pod 'mob_sharesdk/ShareSDKUI'
+	pod 'mob_sharesdk/ShareSDKPlatforms/WeChatFull'
+	
 end

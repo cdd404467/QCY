@@ -20,6 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 //添加圆角
 + (void)setRound:(UIView * _Nonnull)view corner:(UIRectCorner)corner radiu:(CGFloat)radius;
+
+//获取当前显示的控制器
++ (UIViewController *)getCurrentVC;
+
+//视频转换为mp4
++ (NSURL *)convertToMp4:(NSURL *)movUrl;
+
 @end
 
 NS_ASSUME_NONNULL_END

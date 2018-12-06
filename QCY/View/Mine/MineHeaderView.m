@@ -45,9 +45,11 @@
     if (Get_Header) {
         NSURL *headerUrl = Get_Header;
         [userHeader sd_setImageWithURL:headerUrl placeholderImage:nil];
+    } else {
+        userHeader.image = DefaultImage;
     }
     
-    userHeader.layer.cornerRadius = KFit_W(58) / 2;
+    userHeader.layer.cornerRadius = 58 / 2;
     userHeader.clipsToBounds = YES;
     userHeader.backgroundColor = [UIColor whiteColor];
     [topView addSubview:userHeader];

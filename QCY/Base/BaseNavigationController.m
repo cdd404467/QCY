@@ -20,6 +20,11 @@
     
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    UIViewController* topVC = self.topViewController;
+    return [topVC preferredStatusBarStyle];
+}
+
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     if (self.childViewControllers.count > 0) {

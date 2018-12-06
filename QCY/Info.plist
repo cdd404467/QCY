@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
 	<string>七彩云电商</string>
 	<key>CFBundleExecutable</key>
@@ -23,21 +23,38 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>weixin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.i7colors.QCY</string>
+				<string>wx63410989373f8975</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>1.0.2</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weixin</string>
+		<string>wechat</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MOBAppKey</key>
+	<string>27b94a832b2f3</string>
+	<key>MOBAppSecret</key>
+	<string>33ffa9e39c1a9b6eaaee8566deb77bb2</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>访问您的相机来拍摄照片，用于设置头像，发布朋友圈</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>访问您的相册，用于上传头像，发布朋友圈</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>使用您的麦克风，用于拍摄视频，发布朋友圈</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -54,6 +71,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

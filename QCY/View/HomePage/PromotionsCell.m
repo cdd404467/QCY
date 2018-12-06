@@ -36,23 +36,23 @@
 
 - (void)setupUI {
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_H(110));
+    imageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_W(110));
     [self.contentView addSubview:imageView];
     _imageView = imageView;
     //文字描述
-    UILabel *desText = [[UILabel alloc] init];
-    desText.text = @"夏季大促销！更多优惠等你来，我是活动描述~";
-    desText.font = [UIFont systemFontOfSize:12];
-    desText.textColor = [UIColor colorWithHexString:@"#3C3C3C"];
-    desText.backgroundColor = [UIColor whiteColor];
-    desText.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:desText];
-    [desText mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(30);
-        make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(imageView.mas_bottom).offset(0);
-    }];
-    _desText = desText;
+//    UILabel *desText = [[UILabel alloc] init];
+//    desText.text = @"夏季大促销！更多优惠等你来，我是活动描述~";
+//    desText.font = [UIFont systemFontOfSize:12];
+//    desText.textColor = [UIColor colorWithHexString:@"#3C3C3C"];
+//    desText.backgroundColor = [UIColor whiteColor];
+//    desText.textAlignment = NSTextAlignmentCenter;
+//    [self.contentView addSubview:desText];
+//    [desText mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.height.mas_equalTo(30);
+//        make.left.right.mas_equalTo(0);
+//        make.top.mas_equalTo(imageView.mas_bottom).offset(0);
+//    }];
+//    _desText = desText;
 }
 
 - (void)setModel:(BannerModel *)model {

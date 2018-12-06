@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3BB3C47843AFFAF09E7A11DAB3ECAEFC"
+               BlueprintIdentifier = "F7A6F39F48FAA03C413FB97C83E513EA"
                BuildableName = "libYNPageViewController.a"
                BlueprintName = "YNPageViewController"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3BB3C47843AFFAF09E7A11DAB3ECAEFC"
+            BlueprintIdentifier = "F7A6F39F48FAA03C413FB97C83E513EA"
             BuildableName = "libYNPageViewController.a"
             BlueprintName = "YNPageViewController"
             ReferencedContainer = "container:Pods.xcodeproj">

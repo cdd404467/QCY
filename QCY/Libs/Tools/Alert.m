@@ -13,7 +13,13 @@
 
 //中间弹框,一个按钮
 + (void)alertOne:(NSString *)title okBtn:(NSString *)okTitle OKCallBack:(void(^)(void))OK {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [self alertOne:title okBtn:okTitle msg:@"" OKCallBack:OK];
+}
+
+//中间弹框,一个按钮
++ (void)alertOne:(NSString *)title okBtn:(NSString *)okTitle  msg:(NSString *)msg  OKCallBack:(void(^)(void))OK {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:msg preferredStyle:UIAlertControllerStyleAlert];
+    
     NSMutableAttributedString *alertString = [[NSMutableAttributedString alloc] initWithString:title];
     [alertString addAttribute:NSForegroundColorAttributeName value:RGBA(51, 51, 51, 1) range:NSMakeRange(0, title.length)];
     [alert setValue:alertString forKey:@"attributedTitle"];

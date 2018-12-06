@@ -16,24 +16,28 @@
 #define Photo_URL @"http://192.168.0.76"
 //线上测试-图片
 //#define Photo_URL @"http://static1.i7colors.com"
+//正式
+//#define Photo_URL @"http://static.i7colors.com"
 
-
-
+//公司电话
 #define CompanyContact @"4009208599"
 //图片地址
 #define ImgStr(urlStr) [NSString stringWithFormat:@"%@%@",Photo_URL,urlStr]
 #define ImgUrl(urlStr) [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",Photo_URL,urlStr]]
+
+
+
 //占位图片
 #define PlaceHolderImg [UIImage imageNamed:@"placeHolder_Img1"]
 #define PlaceHolderImgBanner [UIImage imageNamed:@"placeHolder_Img2"]
+#define DefaultImage [UIImage imageNamed:@"default_116"]
+
 /*** 颜色 ***/
 #define LineColor [UIColor colorWithHexString:@"#e5e5e5"]   //全局线条颜色
 #define MainColor [UIColor colorWithHexString:@"#ef3673"]   //全局主题色
-#define View_Color [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1];     //全局view背景色
+#define View_Color [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1];     //全局view背景色
 #define Main_BgColor RGBA(0, 0, 0, 0.08)
-#define Cell_BGColor  HEXColor(@"#D3D3D3", 1);
-
-
+#define Cell_BGColor  HEXColor(@"#D3D3D3", 1)
 
 //RGBA
 #define RGBA(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
@@ -82,7 +86,7 @@
 #define DDStrongSelf __weak typeof(weakself) strongself = weakself;
 
 //判断后台返回数据是合法的
-#define isRightData(jsonData) (jsonData && ![jsonData isEqualToString:@""]  && ![jsonData isEqualToString:@"null"] && ![jsonData isEqualToString:@"<null>"] && jsonData != NULL && ![jsonData isKindOfClass:[NSNull class]])
+#define isRightData(jsonData) (jsonData && ![jsonData isEqualToString:@""] && ![jsonData isEqualToString:@"null"] && ![jsonData isEqualToString:@"<null>"] && jsonData != NULL && ![jsonData isKindOfClass:[NSNull class]])
 //判断后台返回数据是不合法的
 #define isNotRightData(jsonData) (!jsonData || [jsonData isEqualToString:@""]  || [jsonData isEqualToString:@"null"] || [jsonData isEqualToString:@"<null>"] || jsonData == NULL || [jsonData isKindOfClass:[NSNull class]])
 
@@ -100,6 +104,8 @@
 #define isCompany [[UserDefault objectForKey:@"userInfo"] objectForKey:@"isCompany"]
 //公司名称
 #define Get_CompanyName [[UserDefault objectForKey:@"userInfo"] objectForKey:@"companyName"]
+//用户名称
+#define Get_UserName [[UserDefault objectForKey:@"userInfo"] objectForKey:@"userName"]
 
 #ifdef DEBUG
 #define sLog(format, ...) NSLog((@"[函数名:%s]" "[行号:%d]  " format), __FUNCTION__, __LINE__, ##__VA_ARGS__);

@@ -2,12 +2,16 @@
 //  MessageVC.h
 //  QCY
 //
-//  Created by zz on 2018/9/4.
-//  Copyright © 2018年 Shanghai i7colors Ecommerce Co., Ltd. All rights reserved.
+//  Created by i7colors on 2018/11/14.
+//  Copyright © 2018 Shanghai i7colors Ecommerce Co., Ltd. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "BaseViewControllerNav.h"
 
-@interface MessageVC : UIViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@interface MessageVC : BaseViewControllerNav
 
 @end
+
+NS_ASSUME_NONNULL_END

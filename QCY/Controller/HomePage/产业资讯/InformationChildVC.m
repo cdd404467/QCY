@@ -87,10 +87,10 @@
 - (void)requestData {
     DDWeakSelf;
     NSString *urlString = [NSString stringWithFormat:URL_Infomation_List,_page,Page_Count,_typeID];
-    [CddHUD show];
+    [CddHUD show:self.view];
     
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-        [CddHUD hideHUD];
+        [CddHUD hideHUD:weakself.view];
 //        NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.tempArr = [InfomationModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
