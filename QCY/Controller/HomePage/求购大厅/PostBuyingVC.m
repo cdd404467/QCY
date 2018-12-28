@@ -33,6 +33,7 @@
 @property (nonatomic, strong)NSMutableArray *idArr_second;
 @property (nonatomic, copy)NSString *selectedFirstTitle;
 @property (nonatomic, strong)NSDate *endDate;
+@property (nonatomic, copy)NSString *allWeight;
 @end
 
 @implementation PostBuyingVC
@@ -202,14 +203,20 @@
 }
 
 - (void)showPickView_5 {
+//    [self.view endEditing:YES];
+//    DDWeakSelf;
+//    //开始日期
+//    NSDate *minDate = [NSDate date];
+//    //最大日期
+//    NSDate *maxDate = [NSDate br_setYear:2020 month:1 day:1];
+//    //    NSDate *maxDate = [NSDate br_setYear:2030 month:1 day:1];
+//    [BRDatePickerView showDatePickerWithTitle:@"选择结帐期" dateType:BRDatePickerModeYMD defaultSelValue:nil minDate:minDate maxDate:maxDate isAutoSelect:NO themeColor:MainColor resultBlock:^(NSString *selectValue) {
+//        weakself.bView.billDate.textLabel.text = selectValue;
+//    }];
     [self.view endEditing:YES];
+    NSArray *arr = @[@"款到发货",@"货到付款",@"货到30天付款",@"货到45天付款",@"货到60天付款"];
     DDWeakSelf;
-    //开始日期
-    NSDate *minDate = [NSDate date];
-    //最大日期
-    NSDate *maxDate = [NSDate br_setYear:2020 month:1 day:1];
-    //    NSDate *maxDate = [NSDate br_setYear:2030 month:1 day:1];
-    [BRDatePickerView showDatePickerWithTitle:@"选择结帐期" dateType:BRDatePickerModeYMD defaultSelValue:nil minDate:minDate maxDate:maxDate isAutoSelect:NO themeColor:MainColor resultBlock:^(NSString *selectValue) {
+    [BRStringPickerView showStringPickerWithTitle:@"选择结帐期" dataSource:arr defaultSelValue:nil isAutoSelect:NO themeColor:MainColor resultBlock:^(id selectValue) {
         weakself.bView.billDate.textLabel.text = selectValue;
     }];
 }
@@ -276,8 +283,8 @@
                            @"productCli1":_idArr[firstID],
                            @"productCli2":_idArr_second[secondID],
                            @"endTime":_bView.endTime.textLabel.text,
-                           @"pack":[NSString stringWithFormat:@"%@%@",_bView.specificationTF.text,_bView.unit.textLabel.text],
-                           @"num":_bView.buyCountTF.text,
+                           @"pack":[NSString stringWithFormat:@"%@KG/%@",_bView.specificationTF.text,_bView.unit.textLabel.text],
+                           @"num":_allWeight,
                            @"numUnit":@"KG",
                            @"locationProvince":areaArr[0],
                            @"locationCity":areaArr[1],
@@ -286,7 +293,7 @@
                            @"paymentType":_bView.payType.textLabel.text,
                            @"description":_bView.textView.text,
                            };
-
+    
     DDWeakSelf;
     [CddHUD show:self.view];
     [ClassTool postRequest:URL_POST_BUYING Params:[dict mutableCopy] Success:^(id json) {
@@ -327,94 +334,6 @@
 
 
 - (void)setupUI {
-//    UIView *topBg = [[UIView alloc] init];
-//    topBg.backgroundColor = [UIColor whiteColor];
-//    topBg.frame = CGRectMake(0, 0, SCREEN_WIDTH, 156);
-//    [_scrollView addSubview:topBg];
-//    UIView *gapView = [[UIView alloc] init];
-//    gapView.backgroundColor = RGBA(0, 0, 0, 0.2);
-//    gapView.frame = CGRectMake(0, 150, SCREEN_WIDTH, 6);
-//    [_scrollView addSubview:gapView];
-//
-//    //水平线
-//    UIView *hLine = [[UIView alloc] init];
-//    hLine.backgroundColor = LineColor;
-//    hLine.frame = CGRectMake(0, 75, SCREEN_WIDTH, 1);
-//    [topBg addSubview:hLine];
-//    //垂直线
-//    CGFloat width = SCREEN_WIDTH / 3;
-//    for (NSInteger i = 0; i < 2; i ++) {
-//        UIView *vLine = [[UIView alloc] init];
-//        vLine.backgroundColor = LineColor;
-//        vLine.frame = CGRectMake((i + 1) * width, 0, 1, 150);
-//        [_scrollView addSubview:vLine];
-//    }
-//
-//    //第一行图标
-//    CGFloat iconWidth = 24, iconHeight = 27;
-//    CGFloat leftgap = (width - iconWidth) / 2;
-//    NSArray *titleArr1 = @[@"发布求购",@"卖家报价",@"比较筛选"];
-//    NSArray *titleArr2 = @[@"交易完成",@"卖家接单",@"在线下单"];
-//    for (NSInteger i = 0;i < 3; i++) {
-//        UIImageView *imageViewLineOne = [[UIImageView alloc] init];
-//        imageViewLineOne.frame = CGRectMake(leftgap + i * width, 15, iconWidth, iconHeight);
-//        imageViewLineOne.image = [UIImage imageNamed:[NSString stringWithFormat:@"line1_icon%ld",(long)i]];
-//        [topBg addSubview:imageViewLineOne];
-//        //text
-//        UILabel *title = [[UILabel alloc] init];
-//        title.font = [UIFont systemFontOfSize:14];
-//        title.textColor = HEXColor(@"333333", 1);
-//        title.text = titleArr1[i];
-//        [topBg addSubview:title];
-//        [title mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(imageViewLineOne.mas_bottom).offset(6);
-//            make.centerX.mas_equalTo(imageViewLineOne.mas_centerX);
-//        }];
-//
-//        if (i == 0 || i == 1) {
-//            UIImageView *jIcon = [[UIImageView alloc] init];
-//            jIcon.frame = CGRectMake((i + 1) * width, 28, 10, 20);
-//            jIcon.image = [UIImage imageNamed:@"j_right"];
-//            [topBg addSubview:jIcon];
-//        }
-//        if (i == 2) {
-//            UIImageView *jIcon = [[UIImageView alloc] init];
-//            jIcon.image = [UIImage imageNamed:@"j_down"];
-//            [topBg addSubview:jIcon];
-//            [jIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-//                make.centerX.mas_equalTo(imageViewLineOne.mas_centerX);
-//                make.width.mas_equalTo(20);
-//                make.height.mas_equalTo(10);
-//                make.top.mas_equalTo(hLine.mas_bottom).offset(0);
-//            }];
-//        }
-//
-//    }
-//    //第二行图标
-//    for (NSInteger i = 0;i < 3; i++) {
-//        UIImageView *imageViewLineOne = [[UIImageView alloc] init];
-//        imageViewLineOne.frame = CGRectMake(leftgap + i * width, 90, iconWidth, iconHeight);
-//        imageViewLineOne.image = [UIImage imageNamed:[NSString stringWithFormat:@"line2_icon%ld",(long)i]];
-//        [topBg addSubview:imageViewLineOne];
-//        //text
-//        UILabel *title = [[UILabel alloc] init];
-//        title.font = [UIFont systemFontOfSize:14];
-//        title.textColor = HEXColor(@"333333", 1);
-//        title.text = titleArr2[i];
-//        [topBg addSubview:title];
-//        [title mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(imageViewLineOne.mas_bottom).offset(6);
-//            make.centerX.mas_equalTo(imageViewLineOne.mas_centerX);
-//        }];
-//
-//        if (i == 0 || i == 1) {
-//            UIImageView *jIcon = [[UIImageView alloc] init];
-//            jIcon.frame = CGRectMake(width - 10 + width * i, 103, 10, 20);
-//            jIcon.image = [UIImage imageNamed:@"j_left"];
-//            [topBg addSubview:jIcon];
-//        }
-//    }
-    
     AskToBuyBottomView *bView = [[AskToBuyBottomView alloc] init];
     bView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 680);
     [_scrollView addSubview:bView];
@@ -451,12 +370,6 @@
 
 }
 
-//监听phoneTF
-//- (void)tfChange:(UITextField *)textField {
-//
-//}
-
-
 - (void)changeLabel {
     
     NSString *allWeight = [NSString string];
@@ -486,8 +399,8 @@
         NSInteger x = [perCount integerValue] * [_bView.buyCountTF.text integerValue];
         allWeight =  [NSString stringWithFormat:@"%ld",(long)x];
     }
-    
     _bView.explainLabel.text = [NSString stringWithFormat:@"总数量为%@KG(%@KG/%@ * %@%@)",allWeight,perCount,unit,num,unit];
+    self.allWeight = allWeight;
 }
 
 

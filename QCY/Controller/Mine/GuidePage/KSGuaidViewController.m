@@ -168,6 +168,7 @@ UICollectionViewDelegateFlowLayout>
 /// MARK:- 隐藏
 - (void)dismiss{
     if (self.willDismissHandler) {
+        [[NSUserDefaults standardUserDefaults] setValue:@"NO" forKey:@"isFirstLaunch"];
         self.willDismissHandler();
     }
 }

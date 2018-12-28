@@ -124,59 +124,103 @@
         make.width.mas_equalTo(1);
     }];
 
-    //卖家按钮
-    NSString *title = @"买家中心";
-    UIButton *idBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    idBtn.adjustsImageWhenHighlighted = NO;
-    idBtn.titleLabel.numberOfLines = 0;
-    idBtn.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
-    [idBtn setImage:[UIImage imageNamed:@"buyer_icon"] forState:UIControlStateNormal];
-    idBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [idBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [idBtn setTitle:title forState:UIControlStateNormal];
-    
-    [bgView addSubview:idBtn];
-    idBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 7, 0, -7);
-    idBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -7, 0, 7);
-    [idBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    //买家按钮
+//    NSString *title = @"买家中心";
+//    UIButton *idBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    idBtn.adjustsImageWhenHighlighted = NO;
+//    idBtn.titleLabel.numberOfLines = 0;
+//    idBtn.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+//    [idBtn setImage:[UIImage imageNamed:@"buyer_icon"] forState:UIControlStateNormal];
+//    idBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+//    [idBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//    [idBtn setTitle:title forState:UIControlStateNormal];
+//
+//    [bgView addSubview:idBtn];
+//    idBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 7, 0, -7);
+//    idBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -7, 0, 7);
+//    [idBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(0);
+//        make.right.mas_equalTo(vLine.mas_left);
+//        make.top.mas_equalTo(10);
+//        make.bottom.mas_equalTo(-10);
+//    }];
+//    _idBtn = idBtn;
+    UIButton *buyerBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    buyerBtn.adjustsImageWhenHighlighted = NO;
+    buyerBtn.titleLabel.numberOfLines = 0;
+    buyerBtn.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    [buyerBtn setImage:[UIImage imageNamed:@"buyer_icon"] forState:UIControlStateNormal];
+    buyerBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [buyerBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [buyerBtn setTitle:@"买家中心" forState:UIControlStateNormal];
+    buyerBtn.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    buyerBtn.tag = 100;
+    buyerBtn.selected = YES;
+    [buyerBtn setTitleColor:RGBA(0, 0, 0, 0.5) forState:UIControlStateNormal];
+    [buyerBtn setTitleColor:RGBA(0, 0, 0, 1) forState:UIControlStateSelected];
+    [bgView addSubview:buyerBtn];
+    buyerBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 7, 0, -7);
+    buyerBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -7, 0, 7);
+    [buyerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
         make.right.mas_equalTo(vLine.mas_left);
         make.top.mas_equalTo(10);
         make.bottom.mas_equalTo(-10);
     }];
-    _idBtn = idBtn;
+    _buyerBtn = buyerBtn;
 
 
     //切换按钮
-    NSString *sTitle = @"点击切换\n选择您的身份";
-    UIButton *switchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    switchBtn.adjustsImageWhenHighlighted = NO;
-    switchBtn.titleLabel.numberOfLines = 0;
-    switchBtn.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
-    [switchBtn setImage:[UIImage imageNamed:@"switch_icon"] forState:UIControlStateNormal];
-
-    NSMutableAttributedString *mutableTitle_1 = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",sTitle]];
-    NSMutableParagraphStyle *paragraphStyle_1 = [[NSMutableParagraphStyle alloc] init];
-    // 行间距设置为4
-    [paragraphStyle_1  setLineSpacing:2];
-    [mutableTitle_1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle_1 range:NSMakeRange(0, sTitle.length)];
-    [mutableTitle_1 addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(0,4)];
-    //    [mutableTitle addAttribute:NSForegroundColorAttributeName value:HEXColor(@"#818181", 1) range:NSMakeRange(0,4)];
-    [mutableTitle_1 addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(4,7)];
-    [mutableTitle_1 addAttribute:NSForegroundColorAttributeName value:HEXColor(@"#868686", 1) range:NSMakeRange(4,7)];
-    [switchBtn setAttributedTitle:mutableTitle_1 forState:UIControlStateNormal];
-    switchBtn.titleEdgeInsets = UIEdgeInsetsMake(0, KFit_W(7), 0, KFit_W(-7));
-    switchBtn.imageEdgeInsets = UIEdgeInsetsMake(0, KFit_W(-7), 0, KFit_W(7));
-    [bgView addSubview:switchBtn];
-    [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//    NSString *sTitle = @"点击切换\n选择您的身份";
+//    UIButton *switchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    switchBtn.adjustsImageWhenHighlighted = NO;
+//    switchBtn.titleLabel.numberOfLines = 0;
+//    switchBtn.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+//    [switchBtn setImage:[UIImage imageNamed:@"switch_icon"] forState:UIControlStateNormal];
+//
+//    NSMutableAttributedString *mutableTitle_1 = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",sTitle]];
+//    NSMutableParagraphStyle *paragraphStyle_1 = [[NSMutableParagraphStyle alloc] init];
+//    // 行间距设置为4
+//    [paragraphStyle_1  setLineSpacing:2];
+//    [mutableTitle_1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle_1 range:NSMakeRange(0, sTitle.length)];
+//    [mutableTitle_1 addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(0,4)];
+//    //    [mutableTitle addAttribute:NSForegroundColorAttributeName value:HEXColor(@"#818181", 1) range:NSMakeRange(0,4)];
+//    [mutableTitle_1 addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(4,7)];
+//    [mutableTitle_1 addAttribute:NSForegroundColorAttributeName value:HEXColor(@"#868686", 1) range:NSMakeRange(4,7)];
+//    [switchBtn setAttributedTitle:mutableTitle_1 forState:UIControlStateNormal];
+//    switchBtn.titleEdgeInsets = UIEdgeInsetsMake(0, KFit_W(7), 0, KFit_W(-7));
+//    switchBtn.imageEdgeInsets = UIEdgeInsetsMake(0, KFit_W(-7), 0, KFit_W(7));
+//    [bgView addSubview:switchBtn];
+//    [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(vLine.mas_right).offset(0);
+//        make.right.mas_equalTo(0);
+//        make.top.mas_equalTo(10);
+//        make.bottom.mas_equalTo(-10);
+//    }];
+//    _switchBtn = switchBtn;
+    
+    UIButton *sellerBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    sellerBtn.adjustsImageWhenHighlighted = NO;
+    sellerBtn.titleLabel.numberOfLines = 0;
+    sellerBtn.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    [sellerBtn setImage:[UIImage imageNamed:@"seller_icon"] forState:UIControlStateNormal];
+    sellerBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [sellerBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [sellerBtn setTitleColor:RGBA(0, 0, 0, 0.5) forState:UIControlStateNormal];
+    [sellerBtn setTitleColor:RGBA(0, 0, 0, 1) forState:UIControlStateSelected];
+    [sellerBtn setTitle:@"卖家中心" forState:UIControlStateNormal];
+    sellerBtn.tag = 101;
+    [bgView addSubview:sellerBtn];
+    sellerBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 7, 0, -7);
+    sellerBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -7, 0, 7);
+    [sellerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(vLine.mas_right).offset(0);
         make.right.mas_equalTo(0);
         make.top.mas_equalTo(10);
         make.bottom.mas_equalTo(-10);
     }];
-    _switchBtn = switchBtn;
+    _sellerBtn = sellerBtn;
 
-    
 }
 
 - (void)configData:(NSString *)historyAsk offer:(NSString *)hisOffer {

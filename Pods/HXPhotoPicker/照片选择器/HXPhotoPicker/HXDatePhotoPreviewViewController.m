@@ -736,7 +736,9 @@ HXDateVideoEditViewControllerDelegate
     if (self.manager.configuration.singleSelected) {
         if (model.type == HXPhotoModelMediaTypeVideo ) {
             if (model.asset.duration > self.manager.configuration.videoMaxDuration) {
-                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+//                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+                NSInteger maxTime = self.manager.configuration.videoMaxDuration;
+                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:[NSString stringWithFormat:@"视频不能超过%ld秒",maxTime]]];
                 return;
             }else if (model.asset.duration < 3.f) {
                 [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频少于3秒,无法选择"]];
@@ -744,7 +746,9 @@ HXDateVideoEditViewControllerDelegate
             }
         }else if (model.type == HXPhotoModelMediaTypeCameraVideo) {
             if (model.videoDuration > self.manager.configuration.videoMaxDuration) {
-                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+//                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+                NSInteger maxTime = self.manager.configuration.videoMaxDuration;
+                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:[NSString stringWithFormat:@"视频不能超过%ld秒",maxTime]]];
                 return;
             }else if (model.videoDuration < 3.f) {
                 [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频少于3秒,无法选择"]];
@@ -785,7 +789,9 @@ HXDateVideoEditViewControllerDelegate
     if ([self.manager selectedCount] == 0) {
         if (model.type == HXPhotoModelMediaTypeVideo ) {
             if (model.asset.duration > self.manager.configuration.videoMaxDuration) {
-                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+//                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+                NSInteger maxTime = self.manager.configuration.videoMaxDuration;
+                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:[NSString stringWithFormat:@"视频不能超过%ld秒",maxTime]]];
                 return;
             }else if (model.asset.duration < 3.f) {
                 [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频少于3秒,无法选择"]];
@@ -793,7 +799,9 @@ HXDateVideoEditViewControllerDelegate
             }
         }else if (model.type == HXPhotoModelMediaTypeCameraVideo) {
             if (model.videoDuration > self.manager.configuration.videoMaxDuration) {
-                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+//                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+                NSInteger maxTime = self.manager.configuration.videoMaxDuration;
+                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:[NSString stringWithFormat:@"视频不能超过%ld秒",maxTime]]];
                 return;
             }else if (model.videoDuration < 3.f) {
                 [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:@"视频少于3秒,无法选择"]];

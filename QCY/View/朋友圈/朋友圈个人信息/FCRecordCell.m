@@ -14,6 +14,9 @@
 #import "TimeAbout.h"
 #import <UIImageView+WebCache.h>
 
+// 最大高度限制
+CGFloat maxHeight = 60;
+
 @interface FCRecordCell()
 @property (nonatomic, strong)YYLabel *timeLabel;
 @property (nonatomic, strong)UIImageView *recordImage;
@@ -44,7 +47,7 @@
 - (void)setupUI {
     //时间
     YYLabel *timeLabel = [[YYLabel alloc] init];
-    timeLabel.numberOfLines = 3;
+    timeLabel.numberOfLines = 0;
     timeLabel.textColor = [UIColor blackColor];
     timeLabel.font = [UIFont boldSystemFontOfSize:20];
     timeLabel.textAlignment = NSTextAlignmentCenter;
@@ -68,7 +71,7 @@
     UILabel *mainLabel = [[UILabel alloc] init];
     mainLabel.textColor = [UIColor blackColor];
     mainLabel.font = [UIFont systemFontOfSize:15];
-    mainLabel.numberOfLines = 0;
+    mainLabel.numberOfLines = 3;
     mainLabel.frame = CGRectMake(0, timeLabel.top, 0, 0);
     [self.contentView addSubview:mainLabel];
     _mainLabel = mainLabel;
@@ -80,16 +83,30 @@
     //时间
     CGFloat cx = 0;
     NSString *timeStr = [TimeAbout checkTheDate:[model.createdAtStamp longLongValue]];
-    if (timeStr.length > 3) {
+    CGFloat labelHeight;
+    if (timeStr.length > 4) {
         NSArray *array = [timeStr componentsSeparatedByString:@"-"];
-        _timeLabel.text = [NSString stringWithFormat:@"%@\n%@/%@",array[0],array[1],array[2]];
+        NSString *strY = array[0], *strM = array[1], *strD = array[2];
+        NSString *time = [NSString stringWithFormat:@"%@\n%@/%@",strY,strM,strD];
+        NSMutableAttributedString * mutabTitle = [[NSMutableAttributedString alloc] initWithString:time];
+//        mutabTitle.yy_font = [UIFont boldSystemFontOfSize:18];
+        mutabTitle.yy_alignment = NSTextAlignmentCenter;
+        [mutabTitle yy_setFont:[UIFont boldSystemFontOfSize:20] range:NSMakeRange(0, strY.length)];
+        [mutabTitle yy_setFont:[UIFont systemFontOfSize:16] range:NSMakeRange(strY.length + 1, strM.length)];
+        [mutabTitle yy_setFont:[UIFont systemFontOfSize:16] range:NSMakeRange(strY.length + strM.length + 2, strD.length)];
+        _timeLabel.attributedText = mutabTitle;
+        CGSize introSize = CGSizeMake(_timeLabel.width, CGFLOAT_MAX);
+        YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:introSize text:mutabTitle];
+        _timeLabel.textLayout = layout;
+        labelHeight = layout.textBoundingSize.height;
     } else {
         _timeLabel.text = timeStr;
+        labelHeight = [_timeLabel.text boundingRectWithSize:CGSizeMake(_timeLabel.width, CGFLOAT_MAX)
+                                                    options:NSStringDrawingUsesLineFragmentOrigin
+                                                 attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:20]}
+                                                    context:nil].size.height;
     }
-    CGFloat labelHeight = [_timeLabel.text boundingRectWithSize:CGSizeMake(_timeLabel.width, CGFLOAT_MAX)
-                                                  options:NSStringDrawingUsesLineFragmentOrigin
-                                               attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:20]}
-                                                  context:nil].size.height;
+    
     _timeLabel.height = labelHeight;
     cx = _timeLabel.width;
     //图片
@@ -113,6 +130,7 @@
     
     //文本
     if isRightData(model.content) {
+        CGFloat mainHeight;
         _mainLabel.hidden = NO;
         _mainLabel.text = model.content;
         _mainLabel.left = cx;
@@ -121,13 +139,18 @@
                                                           options:NSStringDrawingUsesLineFragmentOrigin
                                                        attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}
                                                           context:nil].size.height;
-        _mainLabel.height = mHeight;
+        if (mHeight > maxHeight) {
+           mainHeight = _mainLabel.font.lineHeight * 3;
+        } else {
+            mainHeight = mHeight;
+        }
+        _mainLabel.height = mainHeight;
     } else {
         _mainLabel.hidden = YES;
+        _mainLabel.height = 0;
+        _mainLabel.left = 0;
+        _mainLabel.width = 0;
     }
-    
-    
-    
 }
 
 + (instancetype)cellWithTableView:(UITableView *)tableView {

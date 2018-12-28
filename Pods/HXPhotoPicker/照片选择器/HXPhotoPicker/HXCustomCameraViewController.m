@@ -41,6 +41,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [UINavigationBar appearance].translucent = YES;
     if (self.manager.configuration.saveSystemAblum && !self.manager.albums.count) { 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self.manager getAllPhotoAlbums:nil albums:nil isFirst:NO];

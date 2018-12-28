@@ -150,7 +150,7 @@
     }];
     _cancelBtn = cancelBtn;
     
-    //登陆按钮
+    //登录按钮
     UIButton *loginBtn = [[UIButton alloc]init];
     [loginBtn setTitle:@"绑定" forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

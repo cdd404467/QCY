@@ -54,6 +54,6 @@
 //上传多个文件
 + (void)uploadWithMutilFile:(NSString *)requestUrl Params:(NSMutableDictionary *)params ImgsArray:(NSArray *)ImgsArray Success:(void (^)(id json))success Failure:(void (^)(NSError * error))failure Progress:(void(^)(float percent))percent;
 
-
-+ (UIImage *)fixOrientation:(UIImage *)aImage;
+//分享
++ (void)shareSomething:(NSMutableArray<NSString *> *)imageArray urlStr:(NSString *)urlStr title:(NSString *)title text:(NSString *)text;
 @end

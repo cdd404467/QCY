@@ -13,6 +13,8 @@
 #import "AES128.h"
 #import "CddHUD.h"
 #import "HelperTool.h"
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKUI/ShareSDK+SSUI.h>
 
 @implementation ClassTool
 
@@ -164,8 +166,7 @@
 
     //json序列化
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    
-   
+
     //发送Get请求
     [manager GET:requestOne parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
@@ -179,14 +180,25 @@
                     success(responseObject);
                     if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
                         [CddHUD hideHUD:[HelperTool getCurrentVC].view];
-                        [self showMSG:responseObject];
+                        NSArray *arr = [requestUrl componentsSeparatedByString:@"?"];
+                        NSArray *arr1 = [URL_Unread_MsgCounts componentsSeparatedByString:@"?"];
+                        if (![arr[0] isEqualToString:arr1[0]]) {
+                            [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                            [self showMSG:responseObject];
+                        }
                     }
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 if (failure) {
                     NSLog(@" Error : %@",error);
-                    [ClassTool afnErrorState:error.code];
                     failure(error);
+                    /*** 不用弹窗 ***/
+                    NSArray *arr = [requestUrl componentsSeparatedByString:@"?"];
+                    NSArray *arr1 = [URL_Unread_MsgCounts componentsSeparatedByString:@"?"];
+                    if (![arr[0] isEqualToString:arr1[0]]) {
+                        [ClassTool afnErrorState:error.code];
+                    }
+                    
                 }
             }];
             
@@ -194,19 +206,29 @@
             if (success) {
                 success(responseObject);
                 if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {
-                    [CddHUD hideHUD:[HelperTool getCurrentVC].view];
-                    [self showMSG:responseObject];
+                    NSArray *arr = [requestUrl componentsSeparatedByString:@"?"];
+                    NSArray *arr1 = [URL_Unread_MsgCounts componentsSeparatedByString:@"?"];
+                    if (![arr[0] isEqualToString:arr1[0]]) {
+                        [CddHUD hideHUD:[HelperTool getCurrentVC].view];
+                        [self showMSG:responseObject];
+                    }
                 }
             }
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) {
             NSLog(@" Error : %@",error);
-            [ClassTool afnErrorState:error.code];
             failure(error);
+            NSArray *arr = [requestUrl componentsSeparatedByString:@"?"];
+            NSArray *arr1 = [URL_Unread_MsgCounts componentsSeparatedByString:@"?"];
+            if (![arr[0] isEqualToString:arr1[0]]) {
+                [ClassTool afnErrorState:error.code];
+            }
         }
     }];
 }
+
+
 
 // Post请求
 + (void)postRequest:(NSString *)requestUrl Params:(NSMutableDictionary *)params  Success:(void (^)(id json))success Failure:(void (^)(NSError *error))failure {
@@ -422,86 +444,36 @@
 }
 
 
-+ (UIImage *)fixOrientation:(UIImage *)aImage
-{
-    
-    // No-op if the orientation is already correct
-    if (aImage.imageOrientation == UIImageOrientationUp)
-        return aImage;
-    
-    // We need to calculate the proper transformation to make the image upright.
-    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    
-    switch (aImage.imageOrientation) {
-        case UIImageOrientationDown:
-        case UIImageOrientationDownMirrored:
-            transform = CGAffineTransformTranslate(transform, aImage.size.width, aImage.size.height);
-            transform = CGAffineTransformRotate(transform, M_PI);
-            break;
-            
-        case UIImageOrientationLeft:
-        case UIImageOrientationLeftMirrored:
-            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
-            transform = CGAffineTransformRotate(transform, M_PI_2);
-            break;
-            
-        case UIImageOrientationRight:
-        case UIImageOrientationRightMirrored:
-            transform = CGAffineTransformTranslate(transform, 0, aImage.size.height);
-            transform = CGAffineTransformRotate(transform, -M_PI_2);
-            break;
-        default:
-            break;
-    }
-    
-    switch (aImage.imageOrientation) {
-        case UIImageOrientationUpMirrored:
-        case UIImageOrientationDownMirrored:
-            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
-            transform = CGAffineTransformScale(transform, -1, 1);
-            break;
-            
-        case UIImageOrientationLeftMirrored:
-        case UIImageOrientationRightMirrored:
-            transform = CGAffineTransformTranslate(transform, aImage.size.height, 0);
-            transform = CGAffineTransformScale(transform, -1, 1);
-            break;
-        default:
-            break;
-    }
-    
-    // Now we draw the underlying CGImage into a new context, applying the transform
-    // calculated above.
-    CGContextRef ctx = CGBitmapContextCreate(NULL, aImage.size.width, aImage.size.height,
-                                             CGImageGetBitsPerComponent(aImage.CGImage), 0,
-                                             CGImageGetColorSpace(aImage.CGImage),
-                                             CGImageGetBitmapInfo(aImage.CGImage));
-    CGContextConcatCTM(ctx, transform);
-    switch (aImage.imageOrientation) {
-        case UIImageOrientationLeft:
-        case UIImageOrientationLeftMirrored:
-        case UIImageOrientationRight:
-        case UIImageOrientationRightMirrored:
-            // Grr...
-            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.height,aImage.size.width), aImage.CGImage);
-            break;
-            
-        default:
-            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.width,aImage.size.height), aImage.CGImage);
-            break;
-    }
-    
-    // And now we just create a new UIImage from the drawing context
-    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
-    UIImage *img = [UIImage imageWithCGImage:cgimg];
-    CGContextRelease(ctx);
-    CGImageRelease(cgimg);
-    return img;
++ (void)shareSomething:(NSMutableArray<NSString *> *)imageArray urlStr:(NSString *)urlStr title:(NSString *)title text:(NSString *)text {
+    NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+    [shareParams SSDKSetShareFlags:@[@"统计1"]];
+    [shareParams SSDKSetupShareParamsByText:text
+                                     images:imageArray
+                                        url:[NSURL URLWithString:urlStr]
+                                      title:title
+                                       type:SSDKContentTypeAuto];
+    [ShareSDK showShareActionSheet:nil customItems:nil shareParams:shareParams sheetConfiguration:nil onStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+        switch (state) {
+            case SSDKResponseStateSuccess:
+            {
+                [CddHUD showTextOnlyDelay:@"分享成功" view:[HelperTool getCurrentVC].view];
+                break;
+            }
+            case SSDKResponseStateFail:
+            {
+                [CddHUD showTextOnlyDelay:@"分享失败" view:[HelperTool getCurrentVC].view];
+                break;
+            }
+            case SSDKResponseStateCancel:{
+                [CddHUD showTextOnlyDelay:@"分享已取消" view:[HelperTool getCurrentVC].view];
+                break;
+            }
+                
+            default:
+                break;
+        }
+    }];
 }
-
-
-
 
 @end
 

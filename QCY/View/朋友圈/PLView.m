@@ -61,14 +61,19 @@
     mText.yy_color = [UIColor blackColor];
     [mText yy_setFont:[UIFont boldSystemFontOfSize:kComTextFont] range:NSMakeRange(0, _commentModel.commentUser.length)];
     //评论人点击事件
+    DDWeakSelf;
     [mText yy_setTextHighlightRange:NSMakeRange(0, _commentModel.commentUser.length) color:kHLTextColor backgroundColor:kHLBgColor tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-        NSLog(@"-------");
+        if (weakself.clickNameBlock) {
+            weakself.clickNameBlock(weakself.commentModel.userId);
+        }
     }];
     if (isRightData(_commentModel.byCommentUser)) {
         [mText yy_setFont:[UIFont boldSystemFontOfSize:kComTextFont] range:NSMakeRange(_commentModel.commentUser.length + 2, _commentModel.byCommentUser.length)];
         //被评论人点击事件
         [mText yy_setTextHighlightRange:NSMakeRange(_commentModel.commentUser.length + 2, _commentModel.byCommentUser.length) color:kHLTextColor backgroundColor:kHLBgColor tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-            NSLog(@"-------");
+            if (weakself.clickNameBlock) {
+                weakself.clickNameBlock(weakself.commentModel.byUserId);
+            }
         }];
     }
 

@@ -153,16 +153,20 @@
         });
         return;
     }
+    
     self.writeArray = [NSMutableArray arrayWithObjects:self.waitArray.lastObject, nil];
     [self.waitArray removeLastObject];
     HXPhotoModel *model = self.writeArray.firstObject;
     __weak typeof(self) weakSelf = self;
     if (model.type == HXPhotoModelMediaTypeVideo) {
+        NSLog(@"1111555");
         NSString *presetName;
         if (self.requestType == HXDatePhotoToolManagerRequestTypeOriginal) {
             presetName = AVAssetExportPresetHighestQuality;
+            NSLog(@"11111");
         }else {
             presetName = AVAssetExportPresetMediumQuality;
+            NSLog(@"22222");
         }
         if (model.asset) {
             [HXPhotoTools getExportSessionWithPHAsset:model.asset deliveryMode:PHVideoRequestOptionsDeliveryModeAutomatic presetName:presetName startRequestIcloud:^(PHImageRequestID cloudRequestId) {
@@ -471,7 +475,7 @@
     }else {
         avAsset = [AVURLAsset URLAssetWithURL:obj options:nil];
     }
-    
+  
     NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
     if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
         AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPresetMediumQuality];

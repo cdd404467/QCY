@@ -10,17 +10,17 @@
 
 @implementation MessageModel
 
-+ (instancetype)initWith:(NSDictionary *)dict {
-    MessageModel *mM = [[self alloc] init];
-    [mM setValuesForKeysWithDictionary:dict];
-    return mM;
-}
-
 + (NSDictionary *)mj_replacedKeyFromPropertyName{
     return @{
              @"detailID" : @"id"//前边的是你想用的key，后边的是返回的key
              };
 }
 
+- (CGFloat)cellHeight {
+    if (!_cellHeight) {
+        _cellHeight = 200;
+    }
+    return _cellHeight;
+}
 
 @end

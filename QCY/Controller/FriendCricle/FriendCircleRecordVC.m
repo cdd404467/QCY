@@ -12,9 +12,12 @@
 #import "ClassTool.h"
 #import "NetWorkingPort.h"
 #import "FCRecordCell.h"
+#import "FriendCircleDetailVC.h"
+#import "FriendCricleModel.h"
+#import <UIScrollView+EmptyDataSet.h>
 
 
-@interface FriendCircleRecordVC ()<UITableViewDataSource, UITableViewDelegate>
+@interface FriendCircleRecordVC ()<UITableViewDataSource, UITableViewDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @end
 
@@ -30,6 +33,8 @@
         _tableView = [[YNPageTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.emptyDataSetSource = self;
+        _tableView.emptyDataSetDelegate = self;
         if (@available(iOS 11.0, *)) {
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
@@ -53,9 +58,14 @@
     return _tableView;
 }
 
-#pragma mark - 获取信息
-
-
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
+    NSString *title = @"暂无朋友圈记录";
+    NSDictionary *attributes = @{
+                                 NSFontAttributeName:[UIFont boldSystemFontOfSize:16.0f],
+                                 NSForegroundColorAttributeName:HEXColor(@"#708090", 1)
+                                 };
+    return [[NSAttributedString alloc] initWithString:title attributes:attributes];
+}
 
 #pragma mark - UITableView代理
 //section header高度
@@ -86,6 +96,14 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return 72;
+}
+
+//cell点击事件
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    FriendCircleDetailVC *vc = [[FriendCircleDetailVC alloc] init];
+    FriendCricleModel *model = _dataSource[indexPath.row];
+    vc.tieziID = model.tieziID;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 //数据源

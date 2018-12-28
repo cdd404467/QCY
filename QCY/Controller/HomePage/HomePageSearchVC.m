@@ -27,15 +27,17 @@
 #import "OpenMallVC.h"
 #import "NoDataView.h"
 #import "UIView+Geometry.h"
+#import <UIScrollView+EmptyDataSet.h>
+#import "SearchResultPageVC.h"
 
 
-@interface HomePageSearchVC ()<UITableViewDataSource, UITableViewDelegate,UISearchBarDelegate>
+
+@interface HomePageSearchVC ()<UITableViewDataSource, UITableViewDelegate,UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, assign)int page;
 @property (nonatomic, strong)HomePageModel *dataSource;
 @property (nonatomic, weak) UISearchBar *searchBar;
 @property (nonatomic, assign)BOOL isFirstLoad;
-@property (nonatomic, strong)NoDataView *noDataView;
 @end
 
 @implementation HomePageSearchVC
@@ -53,7 +55,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.translucent = NO;
-    self.title = @"搜索结果";
+    
+    self.title = @" ";
     
     [self keyWordSearch];
     [self setupUI];
@@ -64,6 +67,8 @@
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT) style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.emptyDataSetSource = self;
+        _tableView.emptyDataSetDelegate = self;
         if (@available(iOS 11.0, *)) {
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
@@ -73,7 +78,8 @@
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
+        UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, TABBAR_HEIGHT)];
+        _tableView.tableFooterView = footer;
     }
     return _tableView;
 }
@@ -189,22 +195,20 @@
             } else {
                 [weakself.tableView reloadData];
             }
-            
-            //判断为空
-            if (weakself.dataSource.productList.count == 0 && weakself.dataSource.enquiryList.count == 0 && weakself.dataSource.marketList.count == 0) {
-                NSString *text = @"没有搜索结果，请换个关键词";
-                weakself.noDataView = [[NoDataView alloc] init];
-                weakself.noDataView.centerY = weakself.view.centerY;
-                [weakself.view addSubview:weakself.noDataView];
-                weakself.noDataView.noLabel.text = text;
-            } else {
-                [weakself.noDataView removeFromSuperview];
-            }
         }
         
     } Failure:^(NSError *error) {
         
     }];
+}
+
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
+    NSString *title = @"没有搜索结果，请换个关键词";
+    NSDictionary *attributes = @{
+                                 NSFontAttributeName:[UIFont boldSystemFontOfSize:16.0f],
+                                 NSForegroundColorAttributeName:HEXColor(@"#708090", 1)
+                                 };
+    return [[NSAttributedString alloc] initWithString:title attributes:attributes];
 }
 
 #pragma mark - UITableView代理
@@ -249,11 +253,13 @@
     NSArray *titleArr = @[@"产品大厅",@"求购大厅",@"开放商城"];
     HomePageSectionHeader *header = [ HomePageSectionHeader headerWithTableView:tableView];
     header.titleLabel.text = titleArr[section];
+    SearchResultPageVC *vc = [[SearchResultPageVC alloc] init];
+    vc.keyWord = _searchKeyWord;
     DDWeakSelf;
     if (section == 0) {
         if (_dataSource.productList.count > 0) {
             header.clickMoreBlock = ^{
-                ProductMallVC *vc = [[ProductMallVC alloc] init];
+                vc.type = @"product";
                 [weakself.navigationController pushViewController:vc animated:YES];
             };
             return header;
@@ -263,7 +269,7 @@
     } else if (section == 1) {
         if (_dataSource.enquiryList.count > 0) {
             header.clickMoreBlock = ^{
-                AskToBuyVC *vc = [[AskToBuyVC alloc] init];
+                vc.type = @"askBuy";
                 [weakself.navigationController pushViewController:vc animated:YES];
             };
             return header;
@@ -273,7 +279,7 @@
     } else {
         if (_dataSource.marketList.count > 0) {
             header.clickMoreBlock = ^{
-                OpenMallVC *vc = [[OpenMallVC alloc] init];
+                vc.type = @"openMall";
                 [weakself.navigationController pushViewController:vc animated:YES];
             };
             return header;
@@ -346,7 +352,6 @@
         vc.storeID = model.storeID;
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
 }
 
 //数据源

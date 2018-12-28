@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FAB2B832C7981C25171CD4BFCFBA369D"
+               BlueprintIdentifier = "47237B3444C4EE03E2AD7D3B3299CBA3"
                BuildableName = "libXHWebImageAutoSize.a"
                BlueprintName = "XHWebImageAutoSize"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FAB2B832C7981C25171CD4BFCFBA369D"
+            BlueprintIdentifier = "47237B3444C4EE03E2AD7D3B3299CBA3"
             BuildableName = "libXHWebImageAutoSize.a"
             BlueprintName = "XHWebImageAutoSize"
             ReferencedContainer = "container:Pods.xcodeproj">

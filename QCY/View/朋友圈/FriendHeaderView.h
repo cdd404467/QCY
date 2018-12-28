@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+@class FriendCricleInfoModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FriendHeaderView : UIView
 
+@property (nonatomic, strong)FriendCricleInfoModel *model;
+@property (nonatomic, strong)UILabel *noLoginLabel;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -89,16 +89,13 @@
 //    [CddHUD show];
     NSString *urlString = [NSString stringWithFormat:URL_AskBuy_Msg_List,User_Token,_type,_page,Page_Count];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-        
-//        NSLog(@"---- %@",json);
+//        NSLog(@"----=== %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             NSArray *tempArr = [MessageModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             [weakself.dataSource addObjectsFromArray:tempArr];
             [weakself.tableView.mj_footer endRefreshing];
             [weakself.tableView reloadData];
         }
-        
-        
         //判断为空
         if (weakself.dataSource.count == 0) {
             NSString *text = @"暂无消息";
@@ -106,11 +103,9 @@
             weakself.noDataView.centerY = weakself.view.centerY;
             [weakself.view addSubview:weakself.noDataView];
             weakself.noDataView.noLabel.text = text;
-            
         } else {
             [weakself.noDataView removeFromSuperview];
         }
-        
         
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
@@ -152,6 +147,15 @@
     MsgDetaiiVC *vc = [[MsgDetaiiVC alloc] init];
     MessageModel *model = _dataSource[indexPath.row];
     vc.msgID = model.detailID;
+    DDWeakSelf;
+    vc.alreadyReadBlock = ^(NSString * _Nonnull dID) {
+        for (MessageModel *model in weakself.dataSource) {
+            if ([model.detailID isEqualToString:dID]) {
+                model.isRead = @"1";
+                [weakself.tableView reloadData];
+            }
+        }
+    };
     [self.navigationController pushViewController:vc animated:YES];
 }
 

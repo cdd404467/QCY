@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC772B0D522047B10865ACBACA388D99"
+               BlueprintIdentifier = "C16D16C398FB79DD4217F4225524CFF6"
                BuildableName = "libSGPagingView.a"
                BlueprintName = "SGPagingView"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FC772B0D522047B10865ACBACA388D99"
+            BlueprintIdentifier = "C16D16C398FB79DD4217F4225524CFF6"
             BuildableName = "libSGPagingView.a"
             BlueprintName = "SGPagingView"
             ReferencedContainer = "container:Pods.xcodeproj">

@@ -111,6 +111,51 @@
     return mp4Url;
 }
 
++ (CGFloat) getFileSize:(NSString *)path
+{
+    NSFileManager *fileManager = [[NSFileManager alloc] init] ;
+    float filesize = -1.0;
+    if ([fileManager fileExistsAtPath:path]) {
+        NSDictionary *fileDic = [fileManager attributesOfItemAtPath:path error:nil];//获取文件的属性
+        unsigned long long size = [[fileDic objectForKey:NSFileSize] longLongValue];
+        filesize = 1.0*size/1024;
+    }
+    return filesize;
+}
+
+//视频压缩
++ (NSURL *)yasuoVideoNewUrl:(NSURL *)url {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *dateTime = [formatter stringFromDate:[NSDate date]];
+    // 沙盒目录
+    NSString *docuPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *destFilePath = [docuPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp4",dateTime]];
+    NSURL *destUrl = [NSURL fileURLWithPath:destFilePath];
+    //将视频文件copy到沙盒目录中
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    [manager copyItemAtURL:url toURL:destUrl error:&error];
+//    NSLog(@"压缩前--%.2fk",[self getFileSize:destFilePath]);
+    // 进行压缩
+    AVAsset *asset = [AVAsset assetWithURL:destUrl];
+    AVAssetExportSession *session = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetMediumQuality];
+    session.shouldOptimizeForNetworkUse = YES;
+    // 创建导出的url
+    NSString *resultPath = [docuPath stringByAppendingPathComponent:[NSString stringWithFormat:@"h%@.mp4",dateTime]];
+    session.outputURL = [NSURL fileURLWithPath:resultPath];
+    // 必须配置输出属性
+    session.outputFileType = AVFileTypeMPEG4;
+    // 导出视频
+    [session exportAsynchronouslyWithCompletionHandler:^{
+//        NSLog(@"压缩后---%.2fk",[self getFileSize:resultPath]);
+//        NSLog(@"视频导出完成");
+    }];
+    
+    return session.outputURL;
+}
+
+
 + (NSString*)dataPath
 {
     NSString *dataPath = [NSString stringWithFormat:@"%@/Library/appdata/chatbuffer", NSHomeDirectory()];
@@ -122,6 +167,55 @@
                             error:nil];
     }
     return dataPath;
+}
+
+//版本比较,1 - 线上大于当前版本，要更新， 0 - 版本相同
++ (NSInteger)compareVersionWithOnline:(NSString *)onlineVersion oldVersion:(NSString *)oldVersion {
+    // 都为空，相等，返回0
+    if (!onlineVersion && !oldVersion) {
+        return 0;
+    }
+    
+    // v1为空，v2不为空，返回-1
+    if (!onlineVersion && oldVersion) {
+        return -1;
+    }
+    
+    // v2为空，v1不为空，返回1
+    if (onlineVersion && !oldVersion) {
+        return 1;
+    }
+    
+    // 获取版本号字段
+    NSArray *v1Array = [onlineVersion componentsSeparatedByString:@"."];
+    NSArray *v2Array = [oldVersion componentsSeparatedByString:@"."];
+    // 取字段最少的，进行循环比较
+    NSInteger smallCount = (v1Array.count > v2Array.count) ? v2Array.count : v1Array.count;
+    
+    for (int i = 0; i < smallCount; i++) {
+        NSInteger value1 = [[v1Array objectAtIndex:i] integerValue];
+        NSInteger value2 = [[v2Array objectAtIndex:i] integerValue];
+        if (value1 > value2) {
+            // v1版本字段大于v2版本字段，返回1
+            return 1;
+        } else if (value1 < value2) {
+            // v2版本字段大于v1版本字段，返回-1
+            return -1;
+        }
+        
+        // 版本相等，继续循环。
+    }
+    
+    // 版本可比较字段相等，则字段多的版本高于字段少的版本。
+    if (v1Array.count > v2Array.count) {
+        return 1;
+    } else if (v1Array.count < v2Array.count) {
+        return -1;
+    } else {
+        return 0;
+    }
+    
+    return 0;
 }
 
 @end

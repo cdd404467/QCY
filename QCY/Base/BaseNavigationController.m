@@ -20,6 +20,13 @@
     
 }
 
++ (void)initialize
+{
+    UINavigationBar *navigationBar = [UINavigationBar appearance];
+    navigationBar.tintColor=[UIColor blackColor];
+
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
     UIViewController* topVC = self.topViewController;
     return [topVC preferredStatusBarStyle];

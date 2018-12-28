@@ -17,6 +17,7 @@
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
 #import "OpenMallModel.h"
+#import <WXApi.h>
 
 @interface ShopMainPageVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
 
@@ -31,7 +32,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"店铺主页";
+    
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     _page = 1;
     [self.view addSubview:self.nav];
@@ -57,6 +58,10 @@
         _nav.backgroundColor = HEXColor(@"ffffff", 0);
         _nav.titleLabel.textColor = RGBA(0, 0, 0, 0);
         [_nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+         if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
+              [_nav.rightBtn setTitle:@"分享" forState:UIControlStateNormal];
+              [_nav.rightBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
+         }
     }
     
     return _nav;
@@ -69,6 +74,24 @@
         _secondDataSource = mArr;
     }
     return _secondDataSource;
+}
+
+- (void)share{
+    NSMutableArray *imageArray = [NSMutableArray arrayWithCapacity:0];
+    if isRightData(_firstDateSource.logo) {
+        [imageArray addObject:ImgStr(_firstDateSource.logo)];
+    } else {
+        [imageArray addObject:Logo];
+    }
+    
+    NSString *shareStr = [NSString stringWithFormat:@"http://%@.i7colors.com/groupBuyMobile/openApp/preferredShop.html?id=%@",ShareString,_storeID];
+    NSString *text = [NSString string];
+    if isRightData(_firstDateSource.descriptionStr) {
+        text = _firstDateSource.descriptionStr;
+    } else {
+        text = @"暂无介绍";
+    }
+    [ClassTool shareSomething:imageArray urlStr:shareStr title:_firstDateSource.companyName text:text];
 }
 
 #pragma mark - 网络请求
@@ -189,7 +212,6 @@
     } else {
         return [(CompanyInfoVC *)vc tableView];
     }
-    
 }
 
 - (void)pageViewController:(YNPageViewController *)pageViewController

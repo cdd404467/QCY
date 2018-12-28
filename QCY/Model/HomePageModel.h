@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSArray *enquiryList;                //求购大厅数组
 @property (nonatomic, copy)NSArray *marketList;                 //开放商城数组
 @property (nonatomic, copy)NSArray *productList;                //产品数组
-@property (nonatomic, copy)NSString *login_status;              //NO_LOGIN,用户登录信息失效；NO_TOKRN，没有token信息（之前没有登录过），LOGIN_SUCCESS,已是登陆状态
+@property (nonatomic, copy)NSString *login_status;              //NO_LOGIN,用户登录信息失效；NO_TOKRN，没有token信息（之前没有登录过），LOGIN_SUCCESS,已是登录状态
 
 @end
 

@@ -53,7 +53,7 @@
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[YNPageTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _tbHeight) style:UITableViewStylePlain];
-        _tableView.backgroundColor = Cell_BGColor;
+        _tableView.backgroundColor = [UIColor whiteColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         if (@available(iOS 11.0, *)) {
@@ -65,8 +65,7 @@
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         UIView *footer = [[UIView alloc] init];
-        footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
-        footer.backgroundColor = Cell_BGColor;
+        footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, TABBAR_HEIGHT + 40);
         _tableView.tableFooterView = footer;
     }
     return _tableView;

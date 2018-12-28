@@ -16,6 +16,8 @@
 #import <MJRefresh.h>
 #import "OpenMallModel.h"
 #import "CddHUD.h"
+#import "PYSearch.h"
+#import "SearchResultPageVC.h"
 
 @interface ProductMallVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic,strong) UITableView *tableView;
@@ -43,8 +45,37 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"产品大厅";
-    
+    [self setRightItem];
     [self requestData];
+}
+
+- (void)setRightItem {
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 50, 44);
+    btn.imageEdgeInsets = UIEdgeInsetsMake(0, 14, 0, -14);
+    [btn setImage:[UIImage imageNamed:@"search"] forState:UIControlStateNormal];
+    
+    //    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+    
+    UIBarButtonItem *rewardItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    spaceItem.width = -15;
+    [btn addTarget:self action:@selector(jumpToSearch) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItems = @[spaceItem,rewardItem];
+}
+
+- (void)jumpToSearch {
+    //    NSArray *arr = @[@"阿伦",@"封金能"];
+    PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"输入关键词搜索" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
+        SearchResultPageVC *vc = [[SearchResultPageVC alloc]init];
+        vc.keyWord = searchText;
+        vc.type = @"product";
+        [searchViewController.navigationController pushViewController:vc animated:NO];
+    }];
+    //历史搜索风格
+    searchViewController.searchHistoryStyle = PYSearchHistoryStyleNormalTag;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
+    [self presentViewController:nav  animated:NO completion:nil];
 }
 
 //懒加载tableView

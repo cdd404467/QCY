@@ -12,9 +12,19 @@
 //帖子id转换
 + (NSDictionary *)mj_replacedKeyFromPropertyName{
     return @{
-             @"tieziID" : @"id"//前边的是你想用的key，后边的是返回的key
+             @"tieziID" : @"id",//前边的是你想用的key，后边的是返回的key
+             @"isCompanyType" : @"isCompany"
              };
 }
+
+- (CGFloat)cellHeight {
+    if (!_cellHeight) {
+        _cellHeight = 200;
+    }
+    return _cellHeight;
+}
+
+
 @end
 
 @implementation LikeListModel
@@ -32,5 +42,9 @@
 @end
 
 @implementation FriendCricleInfoModel
-
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"isCompanyType" : @"isCompany"
+             };
+}
 @end

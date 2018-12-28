@@ -31,8 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)Company *company;                  //company类
 @property (nonatomic, strong)NSMutableArray *businessList;      //主营标签数组
 @property (nonatomic, copy)NSString *storeID;                   //店铺id，获取店铺详情时需要
-
-
+@property (nonatomic, copy)NSString *phone;                     //店铺主页电话
 @property (nonatomic, copy)NSString *banner1;                   //轮播图1
 @property (nonatomic, copy)NSString *banner2;                   //轮播图2
 @property (nonatomic, copy)NSString *banner3;                   //轮播图3
@@ -41,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *companyName;               //公司名字
 @property (nonatomic, assign)NSInteger creditLevel;             //星级评价
 @property (nonatomic, copy)NSString *descriptionStr;            //公司简介
+
 @end
 
 /*** 基本参数的键值对 ***/
@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *pic;                       //产品图片
 @property (nonatomic, copy)NSString *productName;               //产品名字
 @property (nonatomic, copy)NSString *pack;                      //产品规格
-@property (nonatomic, copy)NSString *price;                     //产品价格
+@property (nonatomic, assign)double price;                      //产品价格
 @property (nonatomic, copy)NSString *unit;                      //产品单位
 @property (nonatomic, copy)NSString *companyName;               //公司名字
 @property (nonatomic, copy)NSString *shopId;                    //跳转到店铺主页的ID
@@ -63,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSArray *tagList;                    //标签
 @property (nonatomic, copy)NSString *productID;                 //产品大厅的产品ID，获取产品详情
 @property (nonatomic, copy)NSString *phone;                     //客服手机号，没有就填我们公司的电话
+@property (nonatomic, copy)NSString *displayPrice;              //是否显示价格 1 - 是，0 议价
 
 //基本参数的key和value
 @property (nonatomic, copy)NSArray *propMap;                    //基本参数数组

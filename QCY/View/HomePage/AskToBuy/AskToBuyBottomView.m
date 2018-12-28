@@ -52,6 +52,7 @@
         companyNameTF.placeholder = @"输入公司名称";
         companyNameTF.font = [UIFont systemFontOfSize:13];
         companyNameTF.layer.borderColor = HEXColor(@"#E6E6E6", 1).CGColor;
+        [companyNameTF setValue:RGBA(0, 0, 0, 0.25) forKeyPath:@"_placeholderLabel.textColor"];
         [companyBg addSubview:companyNameTF];
         [companyNameTF mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(0);
@@ -95,6 +96,7 @@
     productNameTF.placeholder = @"输入产品名称";
     productNameTF.font = [UIFont systemFontOfSize:13];
     productNameTF.layer.borderColor = HEXColor(@"#E6E6E6", 1).CGColor;
+    [productNameTF setValue:RGBA(0, 0, 0, 0.25) forKeyPath:@"_placeholderLabel.textColor"];
     [self addSubview:productNameTF];
     [productNameTF mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.height.right.mas_equalTo(companyBg);
@@ -153,6 +155,7 @@
     buyCountTF.layer.borderWidth = 1.f;
     buyCountTF.keyboardType = UIKeyboardTypeNumberPad;
     buyCountTF.placeholder = @"数量";
+    [buyCountTF setValue:RGBA(0, 0, 0, 0.25) forKeyPath:@"_placeholderLabel.textColor"];
     buyCountTF.font = [UIFont systemFontOfSize:13];
     buyCountTF.layer.borderColor = HEXColor(@"#E6E6E6", 1).CGColor;
     [self addSubview:buyCountTF];
@@ -212,13 +215,14 @@
     
     //其他时间
     BEMCheckBox *checkBox = [[BEMCheckBox alloc] init];
+    checkBox.delegate = self;
     checkBox.boxType = BEMBoxTypeSquare;
-    checkBox.onAnimationType = BEMAnimationTypeFade;
-    checkBox.offAnimationType = BEMAnimationTypeFade;
+    checkBox.onAnimationType = BEMAnimationTypeBounce;
+    checkBox.offAnimationType = BEMAnimationTypeStroke;
     [self addSubview:checkBox];
     [checkBox mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(20);
-        make.left.mas_equalTo(billDate.mas_right).offset(20);
+        make.width.height.mas_equalTo(25);
+        make.left.mas_equalTo(billDate.mas_right).offset(25);
         make.centerY.mas_equalTo(billDate);
     }];
     _checkBox = checkBox;
@@ -236,12 +240,13 @@
     
     //勾选其他时间选择的输入框
     UITextField *billTF = [[UITextField alloc] init];
-    billTF.backgroundColor = HEXColor(@"#E8E8E8", 1);
+    billTF.backgroundColor = HEXColor(@"#E8E8E8", 0.4);
     billTF.layer.borderWidth = 1.f;
-    billTF.userInteractionEnabled = NO;
     billTF.placeholder = @"输入帐期时间";
+    [billTF setValue:RGBA(0, 0, 0, 0.25) forKeyPath:@"_placeholderLabel.textColor"];
+    billTF.userInteractionEnabled = NO;
     billTF.font = [UIFont systemFontOfSize:13];
-    billTF.layer.borderColor = HEXColor(@"#E6E6E6", 1).CGColor;
+    billTF.layer.borderColor = HEXColor(@"#E6E6E6", 0.1).CGColor;
     [self addSubview:billTF];
     [billTF mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.height.mas_equalTo(productClassifyOne);
@@ -249,25 +254,6 @@
         make.top.mas_equalTo(billDate.mas_bottom).offset(10);
     }];
     _billTF = billTF;
-    
-    //需方所在地
-//    SelectedView *placeShen = [[SelectedView alloc] init];
-//    placeShen.textLabel.text = @"请选择省";
-//    [self addSubview:placeShen];
-//    [placeShen mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.height.width.mas_equalTo(productClassifyOne);
-//        make.top.mas_equalTo(billTF.mas_bottom).offset(20);
-//    }];
-//    _placeShen = placeShen;
-//
-//    SelectedView *placeShi = [[SelectedView alloc] init];
-//    placeShi.textLabel.text = @"请选择市";
-//    [self addSubview:placeShi];
-//    [placeShi mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.right.height.width.mas_equalTo(productClassifyTwo);
-//        make.top.mas_equalTo(placeShen);
-//    }];
-//    _placeShi = placeShi;
     
     SelectedView *placeArea = [[SelectedView alloc] init];
     placeArea.textLabel.text = @"请选择地区";
@@ -336,8 +322,6 @@
         make.top.mas_equalTo(desLabel_2.mas_bottom).offset(20);
     }];
     _textView = textView;
-    
-    
     
     NSArray *titleArr = @[@"公司名称:",@"产品分类:",@"产品名称:",@"包装规格:",@"求购数量:",@"付款方式:",@"账期:",@"需方所在地:",@"结束时间:",@"交货日期:",@"详细说明:"];
     UILabel *nameLabel1 = [[UILabel alloc] init];
@@ -531,6 +515,20 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [self endEditing:YES];
+}
+
+//复选按钮代理
+- (void)didTapCheckBox:(BEMCheckBox *)checkBox {
+    _billTF.userInteractionEnabled = !_billTF.userInteractionEnabled;
+    _billDate.userInteractionEnabled = !_billDate.userInteractionEnabled;
+    _billTF.backgroundColor = _billTF.userInteractionEnabled ? HEXColor(@"#E8E8E8", 1) : HEXColor(@"#E8E8E8", 0.4);
+    _billTF.layer.borderColor = _billTF.userInteractionEnabled ? HEXColor(@"#E6E6E6", 1).CGColor : HEXColor(@"#E6E6E6", 0.1).CGColor;
+    _billDate.textLabel.textColor = _billDate.userInteractionEnabled ? HEXColor(@"#868686", 1) : HEXColor(@"#868686", 0.3);
+    if (_billTF.userInteractionEnabled == NO) {
+        _billTF.text = @"";
+    } else {
+        _billDate.textLabel.text = @"请选择";
+    }
 }
 
 @end

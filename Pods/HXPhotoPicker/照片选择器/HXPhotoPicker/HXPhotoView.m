@@ -509,7 +509,9 @@ static NSString *HXPhotoSubViewCellId = @"photoSubViewCellId";
             [[self hx_viewController].view showImageHUDText:[NSBundle hx_localizedStringForKey:@"视频少于3秒,无法选择"]];
             return;
         }else if (model.videoDuration > self.manager.configuration.videoMaxDuration) {
-            [[self hx_viewController].view showImageHUDText:[NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+//            [[self hx_viewController].view showImageHUDText:[NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+            NSInteger maxTime = self.manager.configuration.videoMaxDuration;
+            [[self hx_viewController].view showImageHUDText:[NSBundle hx_localizedStringForKey:[NSString stringWithFormat:@"视频不能超过%ld秒",maxTime]]];
             return;
         }else if ([self.manager afterSelectVideoCountIsMaximum]) {
             [[self hx_viewController].view showImageHUDText:[NSString stringWithFormat:[NSBundle hx_localizedStringForKey:@"最多只能选择%ld个视频"],self.manager.configuration.videoMaxNum]];

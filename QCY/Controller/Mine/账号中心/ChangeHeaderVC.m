@@ -34,7 +34,7 @@
 }
 
 - (void)setNavBar {
-    self.nav.titleLabel.text = @"用户头像";
+    self.nav.titleLabel.text = [_changeType isEqualToString:@"uc"] ? @"用户头像" : @"朋友圈头像";
     self.nav.titleLabel.textColor = [UIColor whiteColor];
     [self.nav.backBtn setImage:[UIImage imageNamed:@"back_white"] forState:UIControlStateNormal];
     [self.nav.rightBtn addTarget:self action:@selector(selectedPhoto) forControlEvents:UIControlEventTouchUpInside];
@@ -51,17 +51,26 @@
     [self.view addSubview:headerImage];
     _headerImage = headerImage;
     
-    if (Get_Header) {
-        NSURL *url = [NSURL URLWithString:Get_Header];
-        [headerImage sd_setImageWithURL:url placeholderImage:nil];
+    if ([_changeType isEqualToString:@"uc"]) {
+        if (Get_Header) {
+            NSURL *url = [NSURL URLWithString:Get_Header];
+            [headerImage sd_setImageWithURL:url placeholderImage:nil];
+        } else {
+            headerImage.image = [UIImage imageNamed:@"default_750"];
+        }
     } else {
-        headerImage.image = [UIImage imageNamed:@"default_750"];
+        if isRightData(_fcHeaderUrl) {
+            [headerImage sd_setImageWithURL:ImgUrl(_fcHeaderUrl) placeholderImage:nil];
+        } else {
+            headerImage.image = [UIImage imageNamed:@"default_750"];
+        }
     }
+    
 }
 
 #pragma mark - 上传图片
 
-//上传图片
+//上传图片，用户中心
 - (void)uploadHeaderImage {
     
     FormData *data = [[FormData alloc]init];
@@ -95,7 +104,38 @@
     } Failure:^(NSError *error) {
         NSLog(@"Error:  %@",error);
     } Progress:nil];
+}
+
+//修改头像，朋友圈
+- (void)fcChangeHeaderImage {
+    FormData *data = [[FormData alloc]init];
+    data.fileData = UIImageJPEGRepresentation(_headerImage.image, 0.1);
+    data.name = @"file";
+    data.fileName = @"1.jpg";
+    data.fileType = @"image/jpeg";
     
+    NSDictionary *dict = @{@"token":User_Token
+                           };
+    DDWeakSelf;
+    [CddHUD showTextOnly:@"正在上传头像..." view:self.view];
+    [ClassTool uploadFile:URL_Change_FCInfo Params:[dict mutableCopy] DataSource:data Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
+//        NSLog(@"-------p  %@",json);
+        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            
+            if isRightData(To_String(json[@"data"])) {
+                NSString *notiName = @"changeFCInfo";
+                [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:@"header" userInfo:@{@"fcDict":json[@"data"]}];
+                 [CddHUD showTextOnlyDelay:@"头像修改成功" view:weakself.view];
+            } else {
+                [CddHUD showTextOnlyDelay:@"头像修改出错" view:weakself.view];
+            }
+           
+        }
+        
+    } Failure:^(NSError *error) {
+        NSLog(@"Error:  %@",error);
+    } Progress:nil];
 }
 
 
@@ -163,7 +203,12 @@
 - (void)imageCropper:(YYImageClipViewController *)cropperViewController didFinished:(UIImage *)editedImage {
     _headerImage.image = editedImage;
     [cropperViewController dismissViewControllerAnimated:YES completion:nil];
-    [self uploadHeaderImage];
+    if ([_changeType isEqualToString:@"uc"]) {
+        [self uploadHeaderImage];
+    } else {
+        [self fcChangeHeaderImage];
+    }
+    
 }
 
 - (void)imageCropperDidCancel:(YYImageClipViewController *)cropperViewController {

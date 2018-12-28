@@ -44,6 +44,11 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [UINavigationBar appearance].translucent = NO;
+}
+
 - (void)textViewDidChange:(UITextView *)textView {
     NSString *text = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (text.length == 0 && _photoArray.count == 0 && _videoArray.count == 0) {
@@ -123,19 +128,20 @@
             formData.fileType = @"image/png";
             [imageArray addObject:formData];
         }
-        type = @"photo";
     }
     
     if (_videoArray.count > 0) {
         FormData *formData = [[FormData alloc] init];
-        NSURL *mp4URL = [HelperTool convertToMp4:_videoArray[0]];
-        NSData *videoData = [NSData dataWithContentsOfURL:mp4URL];
+//        NSURL *mp4URL = [HelperTool convertToMp4:_videoArray[0]];
+        NSData *videoData = [NSData dataWithContentsOfURL:_videoArray[0]];
         formData.fileData = videoData;
         formData.name = @"file";
         formData.fileName = @"1.mp4";
         formData.fileType = @"video/mp4";
         [imageArray addObject:formData];
         type = @"video";
+    } else {
+        type = @"photo";
     }
     
     NSDictionary *dict = @{@"token":User_Token,
@@ -145,6 +151,7 @@
     
     [CddHUD show:self.view];
     DDWeakSelf;
+    _publishBtn.userInteractionEnabled = NO;
     [ClassTool uploadWithMutilFile:URL_Publish_FriendCircle Params:[dict mutableCopy] ImgsArray:imageArray Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
 //        NSLog(@"---- %@",json);
@@ -154,8 +161,9 @@
             }
             [weakself exit];
         }
+        weakself.publishBtn.userInteractionEnabled = YES;
     } Failure:^(NSError *error) {
-        
+        weakself.publishBtn.userInteractionEnabled = YES;
     } Progress:nil];
 }
 
@@ -163,11 +171,18 @@
 
 - (void)photoView:(HXPhotoView *)photoView changeComplete:(NSArray<HXPhotoModel *> *)allList photos:(NSArray<HXPhotoModel *> *)photos videos:(NSArray<HXPhotoModel *> *)videos original:(BOOL)isOriginal {
     DDWeakSelf;
-    if (allList.count > 0) {
-        _publishBtn.enabled = YES;
-    } else {
+//    if (allList.count > 0) {
+//        _publishBtn.enabled = YES;
+//    } else {
+//        _publishBtn.enabled = NO;
+//    }
+    
+    if (_textView.text.length == 0 && allList.count == 0) {
         _publishBtn.enabled = NO;
+    } else {
+        _publishBtn.enabled = YES;
     }
+    
     [weakself.photoArray removeAllObjects];
     [weakself.videoArray removeAllObjects];
     if (photos.count > 0) {
@@ -177,10 +192,10 @@
             }
         } failed:nil];
     }
-    
     if (videos.count > 0) {
         [weakself.toolManager writeSelectModelListToTempPathWithList:videos success:^(NSArray<NSURL *> *allURL, NSArray<NSURL *> *photoURL, NSArray<NSURL *> *videoURL) {
-            [weakself.videoArray addObject:videoURL[0]];
+//            [HelperTool yasuoVideoNewUrl:videoURL[0]];
+            [weakself.videoArray addObject:[HelperTool yasuoVideoNewUrl:videoURL.firstObject]];
         } failed:^{
             NSSLog(@"写入失败");
         }];
@@ -272,7 +287,7 @@
     
     //输入框
     UITextView *textView = [[UITextView alloc] init];
-    textView.placeholder = @"这一刻的想法...";
+    textView.placeholder = @"写点什么...";
     textView.enablesReturnKeyAutomatically = YES;
     textView.font = [UIFont systemFontOfSize:17 weight:UIFontWeightRegular];
     textView.textColor = [UIColor blackColor];

@@ -14,7 +14,7 @@
 
 
 #define Child_Height SCREEN_HEIGHT - NAV_HEIGHT - 86 - TABBAR_HEIGHT
-#define Child_Count 2
+#define Child_Count 3
 @interface MessageVC ()<UIScrollViewDelegate>
 @property (nonatomic, strong)UIScrollView *scrollView;
 @property (nonatomic, strong)UIButton *buyerMsg_btn;
@@ -69,9 +69,8 @@
     MsgChildVC *vc_2 = [[MsgChildVC alloc]init];
     vc_2.type = @"seller";
     [self addChildViewController:vc_2];
-    
-//    MsgSystemVC *vc_3 = [[MsgSystemVC alloc]init];
-//    [self addChildViewController:vc_3];
+    MsgSystemVC *vc_3 = [[MsgSystemVC alloc]init];
+    [self addChildViewController:vc_3];
     
     [self scrollViewDidEndDecelerating:self.scrollView];
 }
@@ -82,13 +81,10 @@
 {
     //获取contentOffset
     CGPoint currentOffset = scrollView.contentOffset;
-    
     NSInteger page = currentOffset.x / SCREEN_WIDTH;
     
     //取出对应控制器
     UIViewController *viewController = self.childViewControllers[page];
-    
-    
     [self.scrollView addSubview:viewController.view];
     viewController.view.frame = CGRectMake(page * SCREEN_WIDTH, 0, SCREEN_WIDTH, Child_Height);
     //之前的按钮
@@ -140,7 +136,7 @@
         
         if (i == 0) {
             _buyerMsg_btn = btn;
-            [_buyerMsg_btn setTitle:@"买家消息" forState:UIControlStateNormal];
+            [_buyerMsg_btn setTitle:@"我是买家" forState:UIControlStateNormal];
             [_buyerMsg_btn setImage:[UIImage imageNamed:@"msg_buyer_black"] forState:UIControlStateNormal];
             [_buyerMsg_btn setImage:[UIImage imageNamed:@"msg_buyer_white"] forState:UIControlStateSelected];
             //默认选择第一个
@@ -149,7 +145,7 @@
             _currentSelectBtnTag = _buyerMsg_btn.tag;
         } else if (i == 1) {
             _sellerMsg_btn = btn;
-            [_sellerMsg_btn setTitle:@"卖家消息" forState:UIControlStateNormal];
+            [_sellerMsg_btn setTitle:@"我是卖家" forState:UIControlStateNormal];
             [_sellerMsg_btn setImage:[UIImage imageNamed:@"msg_seller_black"] forState:UIControlStateNormal];
             [_sellerMsg_btn setImage:[UIImage imageNamed:@"msg_seller_white"] forState:UIControlStateSelected];
         } else {
@@ -176,17 +172,13 @@
         //点击按钮翻页
         NSInteger page = _currentSelectBtnTag - 1000;
         [self.scrollView setContentOffset:CGPointMake(page * SCREEN_WIDTH, 0) animated:YES];
-        
         //取出对应控制器
         UIViewController *viewController = self.childViewControllers[page];
         [self.scrollView addSubview:viewController.view];
         viewController.view.frame = CGRectMake(page * SCREEN_WIDTH, 0, SCREEN_WIDTH, Child_Height);
     }
-    
     self.selectedBtn = sender;
 }
-
-
 
 //修改statesBar 颜色
 - (UIStatusBarStyle)preferredStatusBarStyle {

@@ -29,7 +29,6 @@
     return self;
 }
 
-
 //创建轮播图,50
 - (void)setupUI:(NSInteger)number model:(OpenMallModel *)model {
     _model = model;
@@ -149,17 +148,15 @@
     }];
 }
 
-
-
 - (void)callPhone {
-//    NSString *phoneNum = [NSString string];
-//    if isRightData(_model.phone) {
-//        phoneNum = _model.phone;
-//    } else {
-//        phoneNum = CompanyContact;
-//    }
+    NSString *phoneNum = [NSString string];
+    if isRightData(_model.phone) {
+        phoneNum = _model.phone;
+    } else {
+        phoneNum = CompanyContact;
+    }
     
-    NSString *tel = [NSString stringWithFormat:@"tel://%@",CompanyContact];
+    NSString *tel = [NSString stringWithFormat:@"tel://%@",phoneNum];
     //开线程，解决ios10调用慢的问题
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -25,7 +25,8 @@
 #import "Alert.h"
 #import "CommonNav.h"
 #import <YYLabel.h>
-#import <UITableView+FDTemplateLayoutCell.h>
+#import "UIView+Geometry.h"
+#import <WXApi.h>
 
 
 @interface AskToBuyDetailsVC ()<UITableViewDelegate, UITableViewDataSource>
@@ -34,6 +35,7 @@
 @property (nonatomic, strong)NSMutableArray *secondDateSource;
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, strong)NSMutableArray *infoArr;
+@property (nonatomic, strong)AskToBuyModel *infoDataSource;
 @property (nonatomic, strong)UIButton *btBtn;
 @property (nonatomic, strong)AskToBuyDetailsHeaderView *headerView;
 @end
@@ -49,7 +51,24 @@
         CommonNav *nav = [[CommonNav alloc] init];
         [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
         nav.titleLabel.text = @"求购详情";
+        if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
+            nav.rightBtn.hidden = NO;
+            [nav.rightBtn setTitle:@"分享" forState:UIControlStateNormal];
+            [nav.rightBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
         [self.view addSubview:nav];
+    } else {
+        if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
+            UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+            rightBtn.frame = CGRectMake(0, 0, 50, 44);
+            [rightBtn setTitle:@"分享" forState:UIControlStateNormal];
+            [rightBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [rightBtn sizeToFit];
+            [rightBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
+            UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:rightBtn];
+            self.navigationItem.rightBarButtonItem = rightItem;
+        }
     }
     
     [self requestMultiData];
@@ -89,6 +108,15 @@
         
     }
     return _tableView;
+}
+
+- (void)share{
+    NSMutableArray *imageArray = [NSMutableArray arrayWithCapacity:0];
+    [imageArray addObject:Logo];
+    NSString *shareStr = [NSString stringWithFormat:@"http://%@.i7colors.com/groupBuyMobile/openApp/industryChain.html?enquiryId=%@",ShareString,_buyID];
+    NSString *text = [NSString stringWithFormat:@"地区:%@ %@ 求购重量:%@KG",_infoDataSource.locationProvince,_infoDataSource.locationCity,_infoDataSource.num];
+    
+    [ClassTool shareSomething:imageArray urlStr:shareStr title:_firstDateSource.productName text:text];
 }
 
 - (NSMutableArray *)infoArr {
@@ -183,7 +211,6 @@
         token = @"";
     }
     
-    
     [CddHUD show:self.view];
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
@@ -194,7 +221,7 @@
         NSString *urlString = [NSString stringWithFormat:URL_ASKTOBUY_DETAIL,token,weakself.buyID];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //            NSLog(@"---- %@",json);
-            
+            weakself.infoDataSource = [AskToBuyModel mj_objectWithKeyValues:json[@"data"]];
             [weakself addInfo:json];
             weakself.firstDateSource = [AskToBuyDetailModel mj_objectWithKeyValues:json[@"data"]];
             dispatch_group_leave(group);
@@ -322,6 +349,7 @@
     DDWeakSelf;
     JoinPriceVC *vc = [[JoinPriceVC alloc] init];
     vc.productID = _buyID;
+    vc.productName = _firstDateSource.productName;
     vc.refreshDataBlock = ^{
         [weakself getOffrtList];
     };
@@ -428,7 +456,7 @@
     //包装规格
     [self.infoArr addObject:[self judgeStr:json[@"data"][@"pack"]]];
     //采购数量
-    [self.infoArr addObject:[self judgeStr:To_String(json[@"data"][@"enquiryTimes"])]];
+    [self.infoArr addObject:[self judgeStr:[NSString stringWithFormat:@"%@KG",To_String(json[@"data"][@"num"])]]];
     //产品分类
     NSString *s1 = json[@"data"][@"productCli1Name"];
     NSString *s2 = json[@"data"][@"productCli2Name"];

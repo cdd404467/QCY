@@ -41,6 +41,7 @@
 @property (nonatomic, assign)NSInteger switchID;
 @property (nonatomic, copy)NSArray *sectionOneData_buyArr;
 @property (nonatomic, copy)NSArray *sectionOneData_sellerArr;
+@property (nonatomic, strong)UIButton *selectedBtn; //选中按钮
 @end
 
 @implementation MineVC
@@ -129,12 +130,30 @@
     CGFloat headerHeight = NAV_HEIGHT + 106 + 35;
     MineHeaderView *headerView = [[MineHeaderView alloc] init];
     headerView.frame = CGRectMake(0, -headerHeight, SCREEN_WIDTH, headerHeight);
-    [headerView.switchBtn addTarget:self action:@selector(jumpToSwitchVC) forControlEvents:UIControlEventTouchUpInside];
+//    [headerView.switchBtn addTarget:self action:@selector(jumpToSwitchVC) forControlEvents:UIControlEventTouchUpInside];
+    [headerView.buyerBtn addTarget:self action:@selector(switchIdentity:) forControlEvents:UIControlEventTouchUpInside];
+    [headerView.sellerBtn addTarget:self action:@selector(switchIdentity:) forControlEvents:UIControlEventTouchUpInside];
     [HelperTool addTapGesture:headerView.userHeader withTarget:self andSEL:@selector(jumpToMyInfo)];
+    self.selectedBtn = headerView.buyerBtn;
     _headerView = headerView;
     return headerView;
 }
-
+//判断选择的按钮
+- (void)btnClickSelected:(UIButton *)sender {
+    //其他按钮
+    self.selectedBtn.selected = NO;
+    self.selectedBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    //当前选中按钮
+    //如果按下的按钮是之前已经按下的
+    if (sender == self.selectedBtn ) {
+        sender.selected = YES;
+//        sender.titleLabel.font = [UIFont systemFontOfSize:14];
+    } else {
+        sender.selected = !sender.selected;
+        sender.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    }
+    self.selectedBtn = sender;
+}
 #pragma mark - 网络请求
 //获取被采纳的数量
 - (void)getNumber {
@@ -286,17 +305,29 @@
 }
 
 //弹出切换身份的页面
-- (void)jumpToSwitchVC {
-    SwitchVC *vc = [[SwitchVC alloc] init];
-    vc.sID = _switchID;
-    DDWeakSelf;
-    vc.switchBlock = ^(NSInteger tag) {
-        weakself.switchID = tag;
-        [weakself getNumber];
-        [weakself refreshType];
-        [weakself.collectionView reloadData];
-    };
-    [self presentViewController:vc animated:YES completion:nil];
+//- (void)jumpToSwitchVC {
+//    SwitchVC *vc = [[SwitchVC alloc] init];
+//    vc.sID = _switchID;
+//    DDWeakSelf;
+//    vc.switchBlock = ^(NSInteger tag) {
+//        weakself.switchID = tag;
+//        [weakself getNumber];
+//        [weakself refreshType];
+//        [weakself.collectionView reloadData];
+//    };
+//    [self presentViewController:vc animated:YES completion:nil];
+//}
+
+- (void)switchIdentity:(UIButton *)sender {
+    if (sender.tag == 100) {    //买家
+        _switchID = 0;
+    } else {    //卖家
+        _switchID = 1;
+    }
+    [self getNumber];
+    [self refreshType];
+    [self.collectionView reloadData];
+    [self btnClickSelected:sender];
 }
 
 //获取全部报价列表
@@ -320,13 +351,13 @@
 
 //切换身份，刷新按钮状态,用全局变量实现
 - (void)refreshType {
-    if (_switchID == 0) {
-        [_headerView.idBtn setTitle:@"买家中心" forState:UIControlStateNormal];
-        [_headerView.idBtn setImage:[UIImage imageNamed:@"buyer_icon"] forState:UIControlStateNormal];
-    } else {
-        [_headerView.idBtn setTitle:@"卖家中心" forState:UIControlStateNormal];
-        [_headerView.idBtn setImage:[UIImage imageNamed:@"seller_icon"] forState:UIControlStateNormal];
-    }
+//    if (_switchID == 0) {
+//        [_headerView.idBtn setTitle:@"买家中心" forState:UIControlStateNormal];
+//        [_headerView.idBtn setImage:[UIImage imageNamed:@"buyer_icon"] forState:UIControlStateNormal];
+//    } else {
+//        [_headerView.idBtn setTitle:@"卖家中心" forState:UIControlStateNormal];
+//        [_headerView.idBtn setImage:[UIImage imageNamed:@"seller_icon"] forState:UIControlStateNormal];
+//    }
 }
 
 //刷新section
@@ -353,7 +384,7 @@
 
 //注册通知
 -(void)registerNoti {
-    NSString *notiName = @"refreshMainData";
+    NSString *notiName = @"refreshAllDataWithThis";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:notiName object:nil];
     
     //修改头像监听
@@ -362,7 +393,7 @@
     
     //修改密码后重新登录
     NSString *notiName2 = @"notifiReLogin";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reLogin) name:notiName2 object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reLogin) name:notiName2 object:@"login"];
 }
 
 //改变整个页面的数据显示
@@ -373,6 +404,8 @@
     if (Get_Header) {
         NSURL *headerUrl = Get_Header;
         [_headerView.userHeader sd_setImageWithURL:headerUrl placeholderImage:nil];
+    } else {
+        _headerView.userHeader.image = DefaultImage;
     }
     
     //名字和用户类型

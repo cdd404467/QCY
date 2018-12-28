@@ -326,7 +326,9 @@
     }
     
     //倒计时
-    [self countDownWithBegin:_dataSource.startTimeStamp endTime:_dataSource.endTimeStamp];
+    NSDate *datenow = [NSDate date];
+    long long nowStamp = (long)[datenow timeIntervalSince1970] * 1000;
+    [self countDownWithBegin:nowStamp endTime:_dataSource.endTimeStamp];
     
     //已经认领
     if isRightData(_dataSource.subscribedNum)
@@ -340,11 +342,6 @@
         _progressLabel.text = [NSString stringWithFormat:@"达成%@",_dataSource.numPercent];
     }
 }
-
-
-
-
-
 
 
 //倒计时

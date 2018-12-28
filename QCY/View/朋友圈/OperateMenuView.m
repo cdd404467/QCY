@@ -7,14 +7,14 @@
 //
 
 #import "OperateMenuView.h"
-#import "UUButton.h"
 #import "Friend.h"
 #import "UIView+Geometry.h"
+#import <Masonry.h>
 
 @interface OperateMenuView()
 
 @property (nonatomic, strong) UIView *menuView;
-@property (nonatomic, strong) UIButton *menuBtn;
+
 @end
 
 @implementation OperateMenuView
@@ -23,6 +23,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.frame = CGRectMake(SCREEN_WIDTH - kOperateBtnWidth, 0, kOperateBtnWidth, kOperateHeight);
         _show = NO;
         [self setUpUI];
     }
@@ -42,66 +43,144 @@
     btn.backgroundColor = [UIColor clearColor];
     btn.titleLabel.font = [UIFont systemFontOfSize:14.0];
     btn.spacing = 3;
-    [btn setTitle:@"赞" forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [btn setImage:[UIImage imageNamed:@"menu_zan"] forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(likeClick) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btn];
+    _zanBtn = btn;
     // 分割线
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(btn.right-5, 8, 0.5, kOperateHeight-16)];
     line.backgroundColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0];
     [view addSubview:line];
     // 评论
-    btn = [[UUButton alloc] initWithFrame:CGRectMake(line.right, 0, btn.width, kOperateHeight)];
-    btn.backgroundColor = [UIColor clearColor];
-    btn.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    btn.spacing = 3;
-    [btn setTitle:@"评论" forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btn setImage:[UIImage imageNamed:@"menu_comment"] forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(commentClick) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:btn];
+    UUButton *btnComment = [[UUButton alloc] initWithFrame:CGRectMake(line.right, 0, btn.width, kOperateHeight)];
+    btnComment.backgroundColor = [UIColor clearColor];
+    btnComment.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    btnComment.spacing = 3;
+    [btnComment setTitle:@"评论" forState:UIControlStateNormal];
+    [btnComment setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btnComment setImage:[UIImage imageNamed:@"menu_comment"] forState:UIControlStateNormal];
+    [btnComment addTarget:self action:@selector(commentClick) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:btnComment];
     self.menuView = view;
     [self addSubview:self.menuView];
     // 菜单操作按钮
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(kOperateWidth - kOperateBtnWidth, 0, kOperateBtnWidth,
-                                                                  kOperateHeight)];
+//    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(kOperateWidth - kOperateBtnWidth, 0, kOperateBtnWidth,kOperateHeight)];
+    UIButton *button = [[UIButton alloc] init];
     button.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 5);
     [button setImage:[UIImage imageNamed:@"menu_nor"] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"menu_hl"] forState:UIControlStateHighlighted];
     [button addTarget:self action:@selector(menuClick) forControlEvents:UIControlEventTouchUpInside];
     self.menuBtn = button;
     [self addSubview:self.menuBtn];
+    [self.menuBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.top.mas_equalTo(0);
+        make.width.height.mas_equalTo(kOperateBtnWidth);
+    }];
 }
+
+- (void)setZanBtnTitle:(NSString *)zanBtnTitle {
+    _zanBtnTitle = zanBtnTitle;
+    [_zanBtn setTitle:zanBtnTitle forState:UIControlStateNormal];
+}
+
 
 #pragma mark - 显示/不显示
 - (void)setShow:(BOOL)show
 {
     _show = show;
+    
+    CGFloat swidth = kOperateBtnWidth;
+    CGFloat sLeft = SCREEN_WIDTH - kOperateBtnWidth;
+    
     CGFloat menu_left = kOperateWidth - kOperateBtnWidth;
     CGFloat menu_width = 0;
+    
+    
     if (_show) {
         menu_left = 0;
         menu_width = kOperateWidth - kOperateBtnWidth;
+        swidth = kOperateWidth;
+        sLeft = SCREEN_WIDTH - kOperateWidth;
     }
+    
+    self.width = swidth;
+    self.left = sLeft;
     self.menuView.width = menu_width;
     self.menuView.left = menu_left;
+}
+
+- (void)setShowAnima:(BOOL)showAnima {
+    if (!_show) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"cellMenu" object:nil];
+    }
+    _show = showAnima;
+    CGFloat swidth = kOperateBtnWidth;
+    CGFloat sLeft = SCREEN_WIDTH - kOperateBtnWidth;
+    
+    CGFloat menu_left = kOperateWidth-kOperateBtnWidth;
+    CGFloat menu_width = 0;
+    if (_show) {
+        swidth = kOperateWidth;
+        sLeft = SCREEN_WIDTH - kOperateWidth;
+        menu_left = 0;
+        menu_width = kOperateWidth-kOperateBtnWidth;
+    }
+    
+    if (_show) {
+        self.width = swidth;
+        self.left = sLeft;
+    }
+
+    [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.9 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.menuView.width = menu_width;
+        self.menuView.left = menu_left;
+    } completion:^(BOOL finished) {
+        self.width = swidth;
+        self.left = sLeft;
+    }];
+//    [UIView animateWithDuration:0.2 animations:^{
+//        self.menuView.width = menu_width;
+//        self.menuView.left = menu_left;
+//    }];
 }
 
 #pragma mark - 事件
 - (void)menuClick
 {
+    if (!_show) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"cellMenu" object:nil];
+    }
     _show = !_show;
+    CGFloat swidth = kOperateBtnWidth;
+    CGFloat sLeft = SCREEN_WIDTH - kOperateBtnWidth;
+    
     CGFloat menu_left = kOperateWidth-kOperateBtnWidth;
     CGFloat menu_width = 0;
     if (_show) {
+        swidth = kOperateWidth;
+        sLeft = SCREEN_WIDTH - kOperateWidth;
         menu_left = 0;
         menu_width = kOperateWidth-kOperateBtnWidth;
     }
-    [UIView animateWithDuration:0.2 animations:^{
+    
+    if (_show) {
+        self.width = swidth;
+        self.left = sLeft;
+    }
+
+    [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.9 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         self.menuView.width = menu_width;
         self.menuView.left = menu_left;
+    } completion:^(BOOL finished) {
+        self.width = swidth;
+        self.left = sLeft;
     }];
+   
+//    [UIView animateWithDuration:0.2 animations:^{
+//        self.menuView.width = menu_width;
+//        self.menuView.left = menu_left;
+//    }];
 }
 
 //点赞事件

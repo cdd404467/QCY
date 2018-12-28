@@ -14,6 +14,7 @@ typedef void(^RefreshDataBlock)(void);
 @interface JoinPriceVC : BaseViewController
 
 @property (nonatomic, copy)NSString *productID;
+@property (nonatomic, copy)NSString *productName;
 @property (nonatomic, copy)RefreshDataBlock refreshDataBlock;
 
 @end

@@ -16,14 +16,16 @@ target 'QCY' do
 	pod 'MBProgressHUD', '~> 1.1.0'
 	pod 'SVProgressHUD', '~> 2.2.5'
 	pod 'SGPagingView', '~> 1.5.5'
-	pod 'UITableView+FDTemplateLayoutCell', '~> 1.6'
 	pod 'YNPageViewController', '~> 0.2.3'	
 	pod 'XHWebImageAutoSize', '~> 1.1.2'
 	pod 'TZImagePickerController', '~> 3.1.5'
-	pod 'FLAnimatedImage', '~> 1.0.12'
+#	pod 'FLAnimatedImage', '~> 1.0.12'
 	pod 'YBImageBrowser', '~> 2.0.9'
 	pod 'HXPhotoPicker', '~> 2.2.3'
-	#shareSDK
+	pod 'DZNEmptyDataSet', '~> 1.8.1'	
+#识别网址的Label
+	pod 'MLLabel', '~> 1.10.5'
+#shareSDK
         pod 'mob_sharesdk'
         pod 'mob_sharesdk/ShareSDKUI'
 	pod 'mob_sharesdk/ShareSDKPlatforms/WeChatFull'

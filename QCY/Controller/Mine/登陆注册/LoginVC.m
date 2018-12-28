@@ -22,6 +22,7 @@
 #import <WXApi.h>
 #import "HelperTool.h"
 #import "BindMobileView.h"
+#import "UIView+Geometry.h"
 
 
 @interface LoginVC ()<UITextFieldDelegate>
@@ -30,6 +31,7 @@
 @property (nonatomic, strong)UITextField *checkCodeTF;
 @property (nonatomic,strong) UIImageView *checkImage;
 @property (nonatomic, strong)BindMobileView *bindView;
+@property (nonatomic, strong)UIScrollView *scrollView;
 @end
 
 @implementation LoginVC
@@ -44,11 +46,28 @@
     [self registerNoti];
 }
 
+//懒加载scrollview
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        UIScrollView *sv = [[UIScrollView alloc] init];
+        sv.backgroundColor = [UIColor whiteColor];
+        sv.frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT);
+        //150 + 680 + 6
+        sv.contentSize = CGSizeMake(SCREEN_WIDTH, 600);
+        sv.showsVerticalScrollIndicator = YES;
+        sv.showsHorizontalScrollIndicator = NO;
+        sv.bounces = NO;
+        _scrollView = sv;
+    }
+    
+    return _scrollView;
+}
+
+
 -(void)registerNoti {
     NSString *notiName = @"weixinLogin";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginWithWeiChat:) name:notiName object:nil];
 }
-
 
 - (void)jumpToRegisterVC {
     RegisterVC *vc = [[RegisterVC alloc] init];
@@ -62,7 +81,7 @@
 
 - (void)setupNav {
     CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"登陆";
+    nav.titleLabel.text = @"登录";
     [nav.backBtn addTarget:self action:@selector(disMiss) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:nav];
 }
@@ -79,7 +98,7 @@
     }];
 }
 
-//登陆
+//登录
 - (void)requestLogin {
     [self.view endEditing:YES];
     DDWeakSelf;
@@ -88,14 +107,13 @@
                            @"captcha":_checkCodeTF.text,
                            @"deviceNo":[UIDevice getDeviceID]
                            };
-    [CddHUD showWithText:@"登陆中..." view:self.view];
+    [CddHUD showWithText:@"登录中..." view:self.view];
     [ClassTool postRequest:URL_USER_LOGIN Params:[dict mutableCopy] Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
 //        NSLog(@"-----ppp %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             //用户信息存入字典
             [weakself saveInfo:json];
-            [weakself refreshMainData_notifi];
             [weakself disMiss];
             UITabBarController *tb=(UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
             if (weakself.isJump == YES) {
@@ -116,7 +134,9 @@
     NSDictionary *dict = @{@"code":notification.userInfo[@"weixinCode"]
                            };
     DDWeakSelf;
+    [CddHUD showWithText:@"登录中..." view:self.view];
     [ClassTool postRequest:URL_WeiChat_Login Params:[dict mutableCopy] Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
 //                NSLog(@"-----ppp %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             if ([To_String(json[@"data"][@"needPhone"]) isEqualToString:@"1"]) {
@@ -124,7 +144,6 @@
             } else {
                 //用户信息存入字典
                 [weakself saveInfo:json];
-                [weakself refreshMainData_notifi];
                 [weakself disMiss];
                 UITabBarController *tb=(UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
                 if (weakself.isJump == YES) {
@@ -146,6 +165,7 @@
                            @"token":_bindView.bToken,
                            @"smsCode":_bindView.passwdTF.text,
                             };
+    
     DDWeakSelf;
     [CddHUD show:_bindView];
     [ClassTool postRequest:URL_Bind_PhoneNum Params:[dict mutableCopy] Success:^(id json) {
@@ -154,11 +174,14 @@
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             //用户信息存入字典
             [weakself saveInfo:json];
-            [weakself refreshMainData_notifi];
-            [CddHUD showTextOnlyDelay:@"绑定成功" view:weakself.view];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [CddHUD showTextOnlyDelay:@"绑定成功" view:weakself.bindView];
+            });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [weakself.bindView removeSignView];
-                [weakself disMiss];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakself.bindView removeSignView];
+                    [weakself disMiss];
+                });
             });
             UITabBarController *tb=(UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
             if (weakself.isJump == YES) {
@@ -193,38 +216,36 @@
 }
 
 - (void)saveInfo:(id)json {
-    NSString *companyName = [NSString string];
-    if ([json[@"data"][@"isCompany"] boolValue] == YES) {
-        companyName = json[@"data"][@"companyName"];
-    } else {
-        companyName = @"";
-    }
-    
+    NSString *companyName = [json[@"data"][@"isCompany"] boolValue] ? json[@"data"][@"companyName"] : @"";
     NSDictionary *userDict = @{@"userName":json[@"data"][@"loginName"],
                                @"token":json[@"data"][@"token"],
                                @"companyName":companyName,
                                @"isCompany":json[@"data"][@"isCompany"]
                                };
     NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:userDict];
+    //我的头像
     if isRightData(To_String(json[@"data"][@"photo"])) {
         [mDict setObject:json[@"data"][@"photo"] forKey:@"userHeaderImage"];
     }
-    
+
     [UserDefault setObject:[mDict copy] forKey:@"userInfo"];
+    [self refreshMainData_notifi];
 }
 
-/*** 通知主页刷新数据 ***/
+/*** 通知刷新数据 ***/
 - (void)refreshMainData_notifi {
-    NSString *notiName = @"refreshMainData";
-    [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:@"exitLogin" userInfo:nil];
+    NSString *notiName = @"refreshAllDataWithThis";
+    [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:@"loginRefresh" userInfo:nil];
 }
 
 - (void)setupUI {
     //app图标
+//    CGFloat headerWidth =
     UIImageView *appHeader = [[UIImageView alloc] init];
     appHeader.layer.cornerRadius = KFit_W(87) / 2;
     appHeader.clipsToBounds = YES;
     appHeader.image = [UIImage imageNamed:@"login_header"];
+//    appHeader.frame = CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)
     [self.view addSubview:appHeader];
     [appHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view.mas_centerX);
@@ -337,13 +358,13 @@
         make.centerY.mas_equalTo(sLine.mas_centerY);
     }];
     
-    //登陆按钮
+    //登录按钮
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     CGRect rect = CGRectMake(0, 0, SCREEN_WIDTH - KFit_W(38 * 2), 49);
     [ClassTool addLayer:loginBtn frame:rect];
     loginBtn.layer.cornerRadius = 5;
     loginBtn.clipsToBounds = YES;
-    [loginBtn setTitle:@"登陆" forState:UIControlStateNormal];
+    [loginBtn setTitle:@"登录" forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateHighlighted];
     loginBtn.titleLabel.font = [UIFont systemFontOfSize:18];
@@ -384,9 +405,9 @@
     
     /*** 如果已经安装微信了，再显示第三方登录 ***/
     if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
-        //快速登陆
+        //快速登录
         UILabel *thirdLogin = [[UILabel alloc] init];
-        thirdLogin.text = @"快速登陆";
+        thirdLogin.text = @"快速登录";
         thirdLogin.textColor = HEXColor(@"#C8C8C8", 1);
         thirdLogin.font = [UIFont systemFontOfSize:12];
         [self.view addSubview:thirdLogin];

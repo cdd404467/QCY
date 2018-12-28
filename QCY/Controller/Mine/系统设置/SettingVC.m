@@ -14,6 +14,7 @@
 #import <UIImageView+WebCache.h>
 #import "CddHUD.h"
 #import "AboutQCY.h"
+#import "MyInfoCenterVC.h"
 
 @interface SettingVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
@@ -31,7 +32,7 @@
 
 - (NSMutableArray *)titleArray {
     if (!_titleArray) {
-        NSArray *arr = @[@[@"关于七彩云",@"清除缓存"],@[@"退出登录"]];
+        NSArray *arr = @[@[@"关于七彩云",@"清除缓存"],@[@"账号中心"],@[@"退出登录"]];
         _titleArray = [NSMutableArray arrayWithArray:arr];
     }
     
@@ -119,6 +120,9 @@
         } else if (indexPath.row == 1) {
             [self clearCache];
         }
+    } else if (indexPath.section == 1) {
+        MyInfoCenterVC *vc = [[MyInfoCenterVC alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     } else {
         [self exitLogin];
     }
@@ -130,14 +134,14 @@
 //}
 
 //section header的高度
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-//    return 51;
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 20;
+}
 
 //section footer的高度
-//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-//    return 0.01;
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.0001;
+}
 
 //数据源
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -149,14 +153,12 @@
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = self.titleArray[indexPath.section][indexPath.row];
-    if (indexPath.section == 0) {
-        if (indexPath.row == 0) {
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
-    }
     
-    if (indexPath.section == 1) {
+    if (indexPath.section == 2) {
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     return cell;
@@ -166,6 +168,7 @@
     [Alert alertTwo:@"确定要退出登录吗?" cancelBtn:@"取消" okBtn:@"确定" OKCallBack:^{
         if (GET_USER_TOKEN) {
             [UserDefault removeObjectForKey:@"userInfo"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshAllDataWithThis" object:@"loginRefresh" userInfo:nil];
             self.tabBarController.selectedIndex = 0;
             [self.navigationController popViewControllerAnimated:YES];
         }

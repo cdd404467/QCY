@@ -602,7 +602,9 @@ HXDatePhotoEditViewControllerDelegate
                         }
                         weakSelf.manager.configuration.useCameraComplete = ^(HXPhotoModel *model) {
                             if (model.videoDuration > weakSelf.manager.configuration.videoMaxDuration) {
-                                [weakSelf.view showImageHUDText:[NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+//                                [weakSelf.view showImageHUDText:[NSBundle hx_localizedStringForKey:@"视频过大,无法选择"]];
+                                NSInteger maxTime = self.manager.configuration.videoMaxDuration;
+                                [self.view showImageHUDText: [NSBundle hx_localizedStringForKey:[NSString stringWithFormat:@"视频不能超过%ld秒",maxTime]]];
                             }
                             [weakSelf customCameraViewController:nil didDone:model];
                         };

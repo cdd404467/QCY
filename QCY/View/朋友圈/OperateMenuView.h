@@ -7,13 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UUButton.h"
 
 NS_ASSUME_NONNULL_BEGIN
 typedef void (^LikeMoment)(void);
 typedef void (^CommentMoment)(void);
 @interface OperateMenuView : UIView
+@property (nonatomic, strong) UIButton *menuBtn;
 @property (nonatomic, assign) BOOL show;
-
+@property (nonatomic, assign) BOOL showAnima;
+@property (nonatomic, strong)UUButton *zanBtn;
+@property (nonatomic, copy)NSString *zanBtnTitle;
+- (void)menuClick;
 // 赞
 @property (nonatomic, copy)LikeMoment likeMoment;
 //@property (nonatomic, copy) void (^likeMoment)(void);

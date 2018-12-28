@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AskToBuyBottomView : UIView
+@interface AskToBuyBottomView : UIView<BEMCheckBoxDelegate>
 
 @property (nonatomic, strong)UITextField *companyNameTF;
 @property (nonatomic, strong)UITextField *productNameTF;

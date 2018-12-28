@@ -17,7 +17,7 @@
 #define kOperateBtnWidth    40
 // 操作视图的高度
 #define kOperateHeight      40
-// 操作视图的高度
+// 操作视图的宽度
 #define kOperateWidth       210
 // 名字视图高度
 #define kNameLabelH         20

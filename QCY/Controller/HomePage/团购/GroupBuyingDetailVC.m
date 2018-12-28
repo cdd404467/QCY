@@ -92,6 +92,9 @@
         UIButton *btn = [self addBottonBtn];
         [btn setTitle:@"我要团购" forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(jumpToBuy) forControlEvents:UIControlEventTouchUpInside];
+        UIView* bottom = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - Bottom_Height_Dif, SCREEN_WIDTH, Bottom_Height_Dif)];
+        bottom.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:bottom];
     }
 }
 

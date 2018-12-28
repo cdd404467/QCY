@@ -13,11 +13,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^ClickTextBlock)(NSInteger index);
+//点击名字，跳转
+typedef void (^ClickNameBlock)(NSString *userID);
 @interface PLView : UIView
 
 @property (nonatomic, strong)CommentListModel *commentModel;
 @property (nonatomic, assign)CGFloat labelWidth;
 @property (nonatomic, copy)ClickTextBlock clickTextBlock;
+@property (nonatomic, copy)ClickNameBlock clickNameBlock;
 @property (nonatomic, assign)NSInteger index;  //是这个数组里的第几条评论
 @end
 

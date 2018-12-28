@@ -11,7 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ChangeHeaderVC : BaseViewControllerNav
-
+@property (nonatomic, copy)NSString *changeType;
+@property (nonatomic, copy)NSString *fcHeaderUrl;
 @end
 
 NS_ASSUME_NONNULL_END

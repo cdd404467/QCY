@@ -30,9 +30,19 @@
 				<string>wx63410989373f8975</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.i7colors.QCY</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>arouter</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.2</string>
+	<string>1.0.5</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>weixin</string>
@@ -51,14 +61,16 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>访问您的相机来拍摄照片，用于设置头像，发布朋友圈</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>访问您的相册，用于上传头像，发布朋友圈</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>使用您的麦克风，用于拍摄视频，发布朋友圈</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>访问您的相册，用于上传头像，发布朋友圈</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarHidden</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

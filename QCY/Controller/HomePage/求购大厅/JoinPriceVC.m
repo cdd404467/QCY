@@ -120,6 +120,7 @@
 
 //设置有效时间
 - (void)setEffctiveTime {
+    [self.view endEditing:YES];
     DDWeakSelf;
     //开始日期
     NSDate *minDate = [NSDate date];
@@ -175,20 +176,20 @@
     
     //名称
     UILabel *nameLabel = [[UILabel alloc] init];
-    nameLabel.text = @"分散染料 七彩云 分散红FB 200%";
+    nameLabel.text = _productName;
     nameLabel.font = [UIFont boldSystemFontOfSize:14];
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.textColor = HEXColor(@"#1E2226", 1);
     [_scrollView addSubview:nameLabel];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(tipLabel.mas_bottom).offset(12);
-        make.width.mas_equalTo(SCREEN_WIDTH);
+        make.width.mas_equalTo(SCREEN_WIDTH - 40);
         make.height.mas_equalTo(14);
         make.centerX.mas_equalTo(self.scrollView);
     }];
 
     //for循环创建
-    NSArray *titleArr = @[@"报价方:",@"联系电话:",@"价格:", @"价格单位",@"是否包含运费:",@"有效时间:"];
+    NSArray *titleArr = @[@"报价方:",@"联系电话:",@"价格(元):", @"价格单位",@"是否包含运费:",@"有效时间:"];
     for (NSInteger i = 0; i < 6; i++) {
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.text = titleArr[i];

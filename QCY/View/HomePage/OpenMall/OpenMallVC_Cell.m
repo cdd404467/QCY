@@ -117,7 +117,7 @@
     //流水标签
     LXTagsView *tagsView = [[LXTagsView alloc]init];
     tagsView.allWidth = SCREEN_WIDTH - 150;
-    tagsView.backgroundColor = [UIColor redColor];
+//    tagsView.backgroundColor = [UIColor redColor];
     [bgView addSubview:tagsView];
     [tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(areaLabel.mas_bottom).with.offset(6);

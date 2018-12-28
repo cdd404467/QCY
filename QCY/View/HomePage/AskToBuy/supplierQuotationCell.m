@@ -179,7 +179,7 @@
     /*** 求购ststus 1 2 3，报价0 1 2 ***/
     //价格
     if isRightData(model_sup.price) {
-        _priceLabel.text = [NSString stringWithFormat:@"价格: %@",model_sup.price];
+        _priceLabel.text = [NSString stringWithFormat:@"价格: %@/KG",model_sup.price];
     } else {
         _priceLabel.text = @"价格: 保密";
     }
@@ -202,7 +202,7 @@
     //报价时间
     _timeLabel.text = [NSString stringWithFormat:@"报价时间: %@",model_sup.createdAtString];
     //判断按钮状态
-    //如果登陆
+    //如果登录
     if (GET_USER_TOKEN) {
         _cBtn.hidden = NO;
         //个人

@@ -19,6 +19,7 @@
 #import "CountDown.h"
 #import "CddHUD.h"
 #import "AES128.h"
+#import "UserProtocolVC.h"
 
 @interface RegisterVC ()<UITextFieldDelegate>
 @property (nonatomic, strong)UITextField *phoneTF;
@@ -434,7 +435,10 @@
     mText.yy_font = [UIFont systemFontOfSize:15];
     mText.yy_color = HEXColor(@"#B6B6B6", 1);
     [mText yy_setTextHighlightRange:NSMakeRange(12, 7) color:MainColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-        
+        //用户协议
+        UserProtocolVC *vc = [[UserProtocolVC alloc]init];
+        vc.webUrl = @"http://mobile.i7colors.com/groupBuyMobile/secret.html";
+        [self.navigationController pushViewController:vc animated:YES];
     }];
     
     agreementLabel.attributedText = mText;
@@ -447,7 +451,7 @@
 //设置textfield
 - (void)setTextField:(UITextField *)tf {
     if ([tf isEqual:_phoneTF]) {
-        tf.placeholder = @"请输入手机号(用于登陆/找回密码)";
+        tf.placeholder = @"请输入手机号(用于登录/找回密码)";
     } else if ([tf isEqual:_imageCodeTF]) {
         tf.placeholder = @"请输入图形验证码";
     } else if ([tf isEqual:_msgCodeTF]) {

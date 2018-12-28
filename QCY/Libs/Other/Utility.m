@@ -56,7 +56,7 @@
 + (CGSize)getSingleSize:(CGSize)singleSize
 {
     CGFloat max_width = [UIScreen mainScreen].bounds.size.width - 150;
-    CGFloat max_height = [UIScreen mainScreen].bounds.size.width - 130;
+    CGFloat max_height = [UIScreen mainScreen].bounds.size.width - 180;
     
     CGFloat image_width = singleSize.width;
     CGFloat image_height = singleSize.height;

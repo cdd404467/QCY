@@ -13,8 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TimeAbout : NSObject
 //毫秒
 +(NSString *)getNowTimeTimestamp_HM;
-//时间戳转字符串
+/*** 时间戳转字符串,年月日 ***/
 + (NSString *)timestampToString:(long long)time;
+/*** 时间戳转字符串,年月日，时分秒 ***/
++ (NSString *)timestampToString:(long long)time isSecondMin:(BOOL)isSecMin;
 //今天开始往前后推时间
 + (NSDate *)getNDay:(NSInteger)nDay;
 //nsdate转string

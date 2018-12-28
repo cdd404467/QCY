@@ -9,10 +9,11 @@
 #import "BaseViewControllerNav.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+typedef void(^AlreadyReadBlock)(NSString *dID);
 @interface MsgDetaiiVC : BaseViewControllerNav
 
 @property (nonatomic, copy)NSString *msgID;
+@property (nonatomic, copy)AlreadyReadBlock alreadyReadBlock;
 @end
 
 NS_ASSUME_NONNULL_END

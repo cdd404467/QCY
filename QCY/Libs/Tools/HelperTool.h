@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 //视频转换为mp4
 + (NSURL *)convertToMp4:(NSURL *)movUrl;
 
+//压缩视频
++ (NSURL *)yasuoVideoNewUrl: (NSURL *)url;
+
+//版本比较
++ (NSInteger)compareVersionWithOnline:(NSString *)onlineVersion oldVersion:(NSString *)oldVersion;
 @end
 
 NS_ASSUME_NONNULL_END

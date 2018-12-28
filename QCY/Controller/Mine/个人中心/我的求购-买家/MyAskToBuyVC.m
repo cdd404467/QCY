@@ -30,7 +30,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
 //    UIImageView *lineImageView = [HelperTool findNavLine:self.navigationController.navigationBar];
 //    lineImageView.hidden = NO;

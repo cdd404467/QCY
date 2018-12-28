@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FriendCricleModel : NSObject
 @property (nonatomic, copy)NSString *postUserPhoto;             //发帖人头像，如果为null则设置默认头像
 @property (nonatomic, copy)NSString *postUser;                  //发帖人
-@property (nonatomic, copy)NSString *userId;                  //发帖人ID
+@property (nonatomic, copy)NSString *userId;                    //发帖人ID
 @property (nonatomic, copy)NSString *content;                   //正文
 @property (nonatomic, copy)NSString *pic1;                      //图片
 @property (nonatomic, copy)NSString *pic2;
@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *isLike;                    //是否已点赞，0,未点赞，1 已点赞
 @property (nonatomic, copy)NSString *isFollow;                  //是否已关注，0未关注，1已关注
 @property (nonatomic, copy)NSString *isCharger;                 //是否本人发帖，0，不是；1是
+@property (nonatomic, copy)NSString *isCompanyType;             //是否企业
 @property (nonatomic, copy)NSMutableArray *likeList;            //点赞人的信息数组
 @property (nonatomic, copy)NSMutableArray *commentList;         //评论人的数组
 @property (nonatomic, copy)NSString *tieziID;                   //发布每条帖子的ID
@@ -44,19 +45,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *bossLevel;                 //大佬等级
 @property (nonatomic, copy)NSString *userNickName;              //昵称
 @property (nonatomic, copy)NSString *userCommunityPhoto;        //粉丝头像
+@property (nonatomic, copy)NSString *dyeFollowCount;            //粉丝数量
+@property (nonatomic, copy)NSString *companyName;               //如果是企业的话，返回企业名字
+@property (nonatomic, copy)NSString *dyeVName;                  //大V认证名称
+
 
 // 显示'全文'/'收起'
 @property (nonatomic, assign)BOOL isFullText;
 //缓存cell的高度
 @property (nonatomic, assign)CGFloat cellHeight;
 
-
 @end
 
 //点赞信息集合
 @interface LikeListModel : NSObject
-
 @property (nonatomic, copy)NSString *likeUserPhoto;             //点赞人的头像
+@property (nonatomic, copy)NSString *likeUser;                  //点赞人名字
+@property (nonatomic, copy)NSString *createdAtStamp;            //点赞时间
+@property (nonatomic, copy)NSString *userId;                    //点赞人ID
+
 @end
 
 //评论信息集合
@@ -65,6 +72,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *commentUser;               //评论人
 @property (nonatomic, copy)NSString *byCommentUser;             //被评论人
 @property (nonatomic, copy)NSString *commentID;                 //评论的ID
+@property (nonatomic, copy)NSString *isCharger;                 //是否是自己
+@property (nonatomic, copy)NSString *createdAtStamp;            //评论时间
+@property (nonatomic, copy)NSString *commentPhoto;              //评论人头像
+@property (nonatomic, copy)NSString *dyeId;                     //帖子id，跳转详情页
+@property (nonatomic, copy)NSString *byUserId;                  //被评论人的ID
+@property (nonatomic, copy)NSString *userId;                    //评论人的ID
+
+//帖子详情->缓存cell的高度
+@property (nonatomic, assign)CGFloat cellHeight;
 @end
 
 
@@ -73,6 +89,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *nickName;                  //用户昵称
 @property (nonatomic, copy)NSString *communityPhoto;            //用户头像
 @property (nonatomic, copy)NSString *isDyeV;                    //是否大V认证
+@property (nonatomic, copy)NSString *dyeVName;                  //大V认证名称
+@property (nonatomic, copy)NSString *companyName;               //没有大V就拿企业名称
+@property (nonatomic, copy)NSString *dyeVCreatedAtStamp;        //大V认证时间戳
+@property (nonatomic, copy)NSString *isCompanyType;             //是否企业
+@property (nonatomic, copy)NSString *isCharger;                 //是否是自己
+@property (nonatomic, copy)NSString *bossLevel;                 //大佬等级
+//@property (nonatomic, copy)NSString *postUserPhoto;             //帖子详情头像
+//@property (nonatomic, copy)NSString *postUser;                  //帖子详情昵称
+//@property (nonatomic, copy)NSString *createdAtStamp;            //发帖时间戳
+//@property (nonatomic, copy)NSString *content;                   //文本
+//@property (nonatomic, assign)CGFloat mLabelHeight;              //文本高度
 @end
 
 NS_ASSUME_NONNULL_END

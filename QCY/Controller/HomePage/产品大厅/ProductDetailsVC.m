@@ -21,8 +21,7 @@
 #import "HelperTool.h"
 #import "ShopMainPageVC.h"
 #import "MyServiceVC.h"
-#import <ShareSDK/ShareSDK.h>
-#import <ShareSDKUI/ShareSDK+SSUI.h>
+
 
 @interface ProductDetailsVC ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -63,12 +62,11 @@
         ProductDetailHeaderView *header = [[ProductDetailHeaderView alloc] initWithDataSource:_dataSource];
         header.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40 + KFit_H(210) + 60);
         _tableView.tableHeaderView = header;
-        [header.shareBtn addTarget:self action:@selector(shareSomething) forControlEvents:UIControlEventTouchUpInside];
+        [header.shareBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
         UIView *footer = [[UIView alloc] init];
         footer.backgroundColor = HEXColor(@"#d9d9d9", 1);
         footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 50);
         _tableView.tableFooterView = footer;
-        
     }
     return _tableView;
 }
@@ -94,38 +92,16 @@
 }
 
 #pragma mark - 分享
-- (void)shareSomething {
-    NSArray* imageArray = @[@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1542972983825&di=6b79f1c89c5cc410d88f782926b50d73&imgtype=0&src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F8d79f4854015fa079530b82ef841496a1b81dfd1.jpg"];
-    NSString *shareStr = [NSString stringWithFormat:@"http://www.baidu.com"];
-    NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-    [shareParams SSDKSetShareFlags:@[@"统计1"]];
-    [shareParams SSDKSetupShareParamsByText:@"我是分享内容分享内容分享内容分享内容分享内容分享内容"
-                                     images:imageArray
-                                        url:[NSURL URLWithString:shareStr]
-                                      title:@"七彩云哦哦哦"
-                                       type:SSDKContentTypeAuto];
-    DDWeakSelf;
-    [ShareSDK showShareActionSheet:nil customItems:nil shareParams:shareParams sheetConfiguration:nil onStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
-        switch (state) {
-            case SSDKResponseStateSuccess:
-            {
-                [CddHUD showTextOnlyDelay:@"分享成功" view:weakself.view];
-                break;
-            }
-            case SSDKResponseStateFail:
-            {
-                [CddHUD showTextOnlyDelay:@"分享失败" view:weakself.view];
-                break;
-            }
-            case SSDKResponseStateCancel:{
-                [CddHUD showTextOnlyDelay:@"分享已取消" view:weakself.view];
-                break;
-            }
-                
-            default:
-                break;
-        }
-    }];
+- (void)share{
+    NSMutableArray *imageArray = [NSMutableArray arrayWithCapacity:0];
+    if isRightData(_dataSource.pic) {
+        [imageArray addObject:ImgStr(_dataSource.pic)];
+    } else {
+        [imageArray addObject:Logo];
+    }
+    NSString *shareStr = [NSString stringWithFormat:@"http://%@.i7colors.com/groupBuyMobile/openApp/shopDetails.html?id=%@",ShareString,_productID];
+
+    [ClassTool shareSomething:imageArray urlStr:shareStr title:_dataSource.productName text:_dataSource.companyName];
 }
 
 //一键呼叫

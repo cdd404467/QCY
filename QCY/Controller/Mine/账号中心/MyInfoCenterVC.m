@@ -32,7 +32,7 @@
     
     [self registerNoti];
 }
-
+//个人用户信息
 - (void)registerNoti {
     //修改头像监听
     NSString *notiName1 = @"changeHeader";
@@ -63,6 +63,7 @@
     
     return _infoArray;
 }
+
 
 
 - (void)setNavBar {
@@ -128,16 +129,18 @@
     }];
     _headerImage = headerImage;
     
-    UILabel *change = [[UILabel alloc] init];
-    change.font = [UIFont systemFontOfSize:15];
-    change.textColor = HEXColor(@"#333333", 1);
-    change.text = @"更换头像";
+    UIButton *change = [[UIButton alloc] init];
+    change.titleLabel.font = [UIFont systemFontOfSize:15];
+    [change setTitleColor:HEXColor(@"#333333", 1) forState:UIControlStateNormal];
+    [change setTitle:@"更换头像" forState:UIControlStateNormal];
+    [change addTarget:self action:@selector(jumpToChangeHeader) forControlEvents:UIControlEventTouchUpInside];
     [headerInfo addSubview:change];
     [change mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(KFit_W(18));
         make.bottom.mas_equalTo(headerImage);
-        make.right.mas_equalTo(headerImage.mas_left).offset(5);
+        make.height.mas_equalTo(20);
     }];
+    [change sizeToFit];
     
     UIImageView *companyType = [[UIImageView alloc] init];
     [headerInfo addSubview:companyType];
@@ -176,6 +179,7 @@
 
 - (void)jumpToChangeHeader {
     ChangeHeaderVC *vc = [[ChangeHeaderVC alloc] init];
+    vc.changeType = @"uc";
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -263,7 +267,7 @@
     return cell;
 }
 
-//改变头像的代理方法
+//改变头像的方法
 - (void)changeHeader:(NSNotification *)notification {
     //头像
     NSURL *header = notification.userInfo[@"cHeader"];
@@ -278,4 +282,9 @@
     return UIStatusBarStyleLightContent;  //白色，默认的值是黑色的
 }
 
+
+- (void)dealloc {
+    //移除通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 @end

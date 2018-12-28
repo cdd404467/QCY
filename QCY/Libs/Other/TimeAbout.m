@@ -55,15 +55,24 @@
     return timeSp;
 }
 
-//时间戳转字符串
+//时间戳转字符串,年月日，十分秒
 + (NSString *)timestampToString:(long long)time {
+    return [self timestampToString:time isSecondMin:YES];
+}
+
+//时间戳转字符串,只有年月日
++ (NSString *)timestampToString:(long long)time isSecondMin:(BOOL)isSecMin {
     NSString *timeString = [NSString stringWithFormat:@"%ld",(long)time];
     // 格式化时间
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     formatter.timeZone = [NSTimeZone timeZoneWithName:@"shanghai"];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    if (isSecMin == YES) {
+        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    } else {
+        [formatter setDateFormat:@"yyyy-MM-dd"];
+    }
     NSDate* date = [NSDate dateWithTimeIntervalSince1970:[timeString doubleValue]/ 1000.0];
     NSString* dateString = [formatter stringFromDate:date];
     return dateString;
@@ -113,9 +122,9 @@
 //判断今天、昨天
 + (NSString *)checkTheDate:(long long)timeStamp {
     
-    NSString *string = [self timestampToString:timeStamp];
+    NSString *string = [self timestampToString:timeStamp isSecondMin:NO];
     NSDateFormatter *format = [[NSDateFormatter alloc]init];
-    [format setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [format setDateFormat:@"yyyy-MM-dd"];
     NSDate *date = [format dateFromString:string];
     BOOL isToday = [[NSCalendar currentCalendar] isDateInToday:date];
     BOOL isYesterday = [[NSCalendar currentCalendar] isDateInYesterday:date];
@@ -126,8 +135,7 @@
     } else if (isYesterday) {
         strDiff= [NSString stringWithFormat:@"昨天"];
     } else {
-        NSArray *array = [string componentsSeparatedByString:@" "];
-        strDiff = array[1];
+        strDiff = string;
     }
     
     return strDiff;

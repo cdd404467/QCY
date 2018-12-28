@@ -11,10 +11,11 @@
 #import <YYText.h>
 #import <Masonry.h>
 #import "HelperTool.h"
-#import "HYBImageCliped.h"
 #import "UIView+Border.h"
 #import "OpenMallModel.h"
 #import <YYWebImage.h>
+#import <WXApi.h>
+#import "UIView+Geometry.h"
 
 @implementation ProductDetailHeaderView {
     UIImageView *_headerImageView;
@@ -54,25 +55,33 @@
     //名字
     YYLabel *product_ch_name = [[YYLabel alloc] init];
     product_ch_name.backgroundColor = [UIColor whiteColor];
-//    product_ch_name.frame = CGRectMake(0, 0, KFit_W(310), 40);
-    product_ch_name.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
-    [product_ch_name addBorderLayer:LineColor width:1.f direction:BorderDirectionBottom];
+    product_ch_name.frame = CGRectMake(0, 0, KFit_W(310), 40);
+//    product_ch_name.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
     [self addSubview:product_ch_name];
     _product_ch_name = product_ch_name;
     
     //右边分享按钮
-//    UIButton *shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    shareBtn.backgroundColor = [UIColor whiteColor];
-//    shareBtn.frame = CGRectMake(product_ch_name.frame.size.width , 0, SCREEN_WIDTH - product_ch_name.frame.size.width, 40);
-//    [shareBtn setTitle:@"分享" forState:UIControlStateNormal];
-//    [shareBtn setTitleColor:HEXColor(@"#868686", 1) forState:UIControlStateNormal];
-//    shareBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
-//    shareBtn.layer.shadowOffset = CGSizeMake(0, 8);
-//    shareBtn.layer.shadowOpacity = 1.0f;
-//    shareBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-//    [shareBtn addBorderLayer:LineColor width:1.f direction:BorderDirectionLeft];
-//    [self addSubview:shareBtn];
-//    _shareBtn = shareBtn;
+    UIButton *shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    shareBtn.backgroundColor = [UIColor whiteColor];
+    shareBtn.hidden = YES;
+    shareBtn.frame = CGRectMake(product_ch_name.frame.size.width , 0, SCREEN_WIDTH - product_ch_name.frame.size.width, 40);
+    [shareBtn setTitle:@"分享" forState:UIControlStateNormal];
+    [shareBtn setTitleColor:HEXColor(@"#868686", 1) forState:UIControlStateNormal];
+    shareBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
+    shareBtn.layer.shadowOffset = CGSizeMake(0, 8);
+    shareBtn.layer.shadowOpacity = 1.0f;
+    shareBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [shareBtn addBorderLayer:LineColor width:1.f direction:BorderDirectionLeft];
+    [self addSubview:shareBtn];
+    _shareBtn = shareBtn;
+    
+    if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
+        _shareBtn.hidden = NO;
+        
+    } else {
+        _product_ch_name.width = SCREEN_WIDTH;
+    }
+    [_product_ch_name addBorderLayer:LineColor width:1.f direction:BorderDirectionBottom];
     
     //图片
     UIImageView *productImage = [[UIImageView alloc] init];
@@ -158,9 +167,8 @@
     
     
     //价格
-    if isRightData(model.price) {
-        NSString *price = model.price;
-//        NSString *unit = [NSString stringWithFormat:@"/%@",model.unit];
+    if (isRightData(@(model.price).stringValue) && [model.displayPrice isEqualToString:@"1"]){
+        NSString *price = [self getStringFrom:model.price];
         NSString *unit = [NSString stringWithFormat:@"/KG"];
         NSString *attPrice = [NSString stringWithFormat:@"¥%@%@",price,unit];
         NSMutableAttributedString *mutablePrice = [[NSMutableAttributedString alloc] initWithString:attPrice];
@@ -170,6 +178,12 @@
         [mutablePrice yy_setFont:[UIFont systemFontOfSize:16] range:NSMakeRange(price.length + 1,unit.length)];
         mutablePrice.yy_alignment = NSTextAlignmentCenter;
         _priceLabel.attributedText = mutablePrice;
+    } else {
+        NSMutableAttributedString *mutablePrice = [[NSMutableAttributedString alloc] initWithString:@"议价"];
+        mutablePrice.yy_color = [UIColor whiteColor];
+        mutablePrice.yy_font = [UIFont systemFontOfSize:18];
+        mutablePrice.yy_alignment = NSTextAlignmentCenter;
+        _priceLabel.attributedText = mutablePrice;
     }
     
     
@@ -177,6 +191,19 @@
     if isRightData(model.companyName)
         _companyName.text = model.companyName;
 
+}
+
+-(NSString*)getStringFrom:(double)doubleVal {
+    NSString* stringValue = @"0.00";
+    
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
+    formatter.usesSignificantDigits = true;
+    formatter.maximumSignificantDigits = 100;
+    formatter.groupingSeparator = @"";
+    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+    stringValue = [formatter stringFromNumber:@(doubleVal)];
+    
+    return stringValue;
 }
 
 @end

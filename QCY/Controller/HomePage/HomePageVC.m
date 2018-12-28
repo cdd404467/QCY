@@ -36,7 +36,8 @@
 #import "UIView+Geometry.h"
 #import "UIView+Geometry.h"
 #import "GlobalFooterView.h"
-
+#import "UpdateAppView.h"
+#import "HelperTool.h"
 
 #define sectionHeaderHeight 40
 @interface HomePageVC ()<UITableViewDelegate, UITableViewDataSource>
@@ -65,17 +66,17 @@
     [super viewDidLoad];
 //    [self registerNotifi];
     self.navigationController.navigationBar.translucent = NO;
+
     [self setRightItem];
     [self requestMultiData];
 
-//    NSLog(@"-- %lu",self.tabBarController.tabBar.items.count);
-
-//    [self.view addSubview:self.tableView];
 }
 
 //- (void)registerNotifi {
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(urlAwake:) name:@"urlJump" object:nil];
 //}
+
+
 
 - (WithoutNetView *)withoutView {
     if (!_withoutView) {
@@ -88,7 +89,6 @@
 }
 
 - (void)setRightItem {
-    
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 50, 44);
     btn.imageEdgeInsets = UIEdgeInsetsMake(0, 14, 0, -14);
@@ -105,23 +105,16 @@
 }
 
 - (void)jumpToSearch {
-    
 //    NSArray *arr = @[@"阿伦",@"封金能"];
-    PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"搜索商品标题" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
-        
+    PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"输入关键词搜索" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         HomePageSearchVC *vc = [[HomePageSearchVC alloc]init];
         vc.searchKeyWord = searchText;
         [searchViewController.navigationController pushViewController:vc animated:NO];
     }];
     //历史搜索风格
     searchViewController.searchHistoryStyle = PYSearchHistoryStyleNormalTag;
-//    searchViewController.hotSearchStyle = PYHotSearchStyleColorfulTag;
-    //    searchViewController.searchResultShowMode = PYSearchResultShowModeEmbed;
-    //    searchViewController.searchResultController = [[UIViewController alloc] init];
-    // 3. present the searchViewController
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
     [self presentViewController:nav  animated:NO completion:nil];
-    
 }
 
 //懒加载tableView
@@ -138,11 +131,11 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
         }
-//        DDWeakSelf;
-//        _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-//            [weakself.bannerArray removeAllObjects];
-//            [weakself requestMultiData];
-//        }];
+        DDWeakSelf;
+        _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+            [weakself.bannerArray removeAllObjects];
+            [weakself requestMultiData];
+        }];
         
         _tableView.tableHeaderView = [self addHeaderView];
         GlobalFooterView *footer = [[GlobalFooterView alloc] init];
@@ -177,7 +170,7 @@
     headerView.tapIconsBlock = ^(NSInteger tag) {
         switch (tag) {
             case 0: {
-                ProductMallVC *vc = [[ProductMallVC alloc] init];
+                OpenMallVC *vc = [[OpenMallVC alloc] init];
                 [weakself.navigationController pushViewController:vc animated:YES];
             }
                 break;
@@ -187,7 +180,7 @@
             }
                 break;
             case 2: {
-                OpenMallVC *vc = [[OpenMallVC alloc] init];
+                ProductMallVC *vc = [[ProductMallVC alloc] init];
                 [weakself.navigationController pushViewController:vc animated:YES];
             }
                 break;
@@ -211,13 +204,16 @@
     dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
     //首页列表
     dispatch_group_enter(group);
-    [CddHUD show:self.view];
+    if (_isFirstLoad == YES) {
+        [CddHUD show:self.view];
+    }
     dispatch_group_async(group, globalQueue, ^{
         NSString *urlString = [NSString stringWithFormat:URL_HomePage_List,User_Token];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //            NSLog(@"----1 %@",json);
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
                 weakself.dataSource = [HomePageModel mj_objectWithKeyValues:json[@"data"]];
+                [weakself checkVersion:json];
                 weakself.dataSource.enquiryList = [AskToBuyModel mj_objectArrayWithKeyValuesArray:weakself.dataSource.enquiryList];
                 weakself.dataSource.marketList = [OpenMallModel mj_objectArrayWithKeyValuesArray:weakself.dataSource.marketList];
                 for (OpenMallModel *model in weakself.dataSource.marketList) {
@@ -225,6 +221,7 @@
                 }
                 
                 if ([weakself.dataSource.login_status isEqualToString:@"NO_LOGIN"]) {
+                    [UserDefault removeObjectForKey:@"userInfo"];   //推出登陆操作
                     [weakself jumpToLogin];
                 }
             }
@@ -290,8 +287,36 @@
             [CddHUD hideHUD:weakself.view];
         });
     });
+}
+
+//版本更新
+- (void)checkVersion:(id)json {
+    //当前版本
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    NSString *current_Version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    //线上版本
+    NSString *online_Version = To_String(json[@"data"][@"iosVersion"][@"versionCode"]);
+    NSInteger result = [HelperTool compareVersionWithOnline:online_Version oldVersion:current_Version];
+    
+    if (result == 1) {
+        //更新说明，描述
+        NSString *updateText = To_String(json[@"data"][@"iosVersion"][@"description"]);
+        //是否强制更新
+        NSString *isMustUpdate = To_String(json[@"data"][@"iosVersion"][@"isForce"]);
+        //更新的url
+        NSString *updateUrl = To_String(json[@"data"][@"iosVersion"][@"url"]);
+//        NSString *updateUrl = @"https://itunes.apple.com/cn/app/id1329918420?mt=8";
+        UpdateAppView *updateView = [[UpdateAppView alloc]init];
+        updateView.updateUrl = updateUrl;
+        updateView.version = online_Version;
+        [UIApplication.sharedApplication.keyWindow addSubview:updateView];
+//        NSString *text = @"1、更新了我的页面\n2、更新了我的页面\n3、更新了我的页面\n4、更新了我的页面\n5、更新了我的页面\n6、更新了我的页面\n7、更新了我的页面\n8、更新了我的页面\n9、更新了我的页面\n10、更新了我的页面\n11、更新了我的页面\n";
+        [updateView setupUIWithText:updateText isMustUpdate:isMustUpdate];
+    }
     
 }
+
+
 
 //header不悬停
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -344,7 +369,7 @@
 
 //自定义的section header
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    NSArray *titleArr = @[@"促销活动",@"求购大厅",@"开放商城"];
+    NSArray *titleArr = @[@"促销活动",@"热门求购",@"推荐店铺"];
     HomePageSectionHeader *header = [ HomePageSectionHeader headerWithTableView:tableView];
     header.titleLabel.text = titleArr[section];
     DDWeakSelf;

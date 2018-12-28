@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D31AB8D4C570422310350FBD9FE93268"
+               BlueprintIdentifier = "A5040E3B0CFB4C507E5EA54251283A5B"
                BuildableName = "libYBImageBrowser.a"
                BlueprintName = "YBImageBrowser"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D31AB8D4C570422310350FBD9FE93268"
+            BlueprintIdentifier = "A5040E3B0CFB4C507E5EA54251283A5B"
             BuildableName = "libYBImageBrowser.a"
             BlueprintName = "YBImageBrowser"
             ReferencedContainer = "container:Pods.xcodeproj">

@@ -1041,13 +1041,17 @@
         if (model.asset.duration < 3) {
             return [NSBundle hx_localizedStringForKey:@"视频少于3秒,无法选择"];
         }else if (model.asset.duration >= self.configuration.videoMaxDuration + 1) {
-            return [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"];
+//            return [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"];
+            NSInteger maxTime = self.configuration.videoMaxDuration;
+            return [NSBundle hx_localizedStringForKey:[NSString stringWithFormat:@"视频不能超过%ld秒",maxTime]];
         }
     }else if (model.type == HXPhotoModelMediaTypeCameraVideo) {
         if (model.videoDuration < 3) {
             return [NSBundle hx_localizedStringForKey:@"视频少于3秒,无法选择"];
         }else if (model.videoDuration >= self.configuration.videoMaxDuration + 1) {
-            return [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"];
+//            return [NSBundle hx_localizedStringForKey:@"视频过大,无法选择"];
+            NSInteger maxTime = self.configuration.videoMaxDuration;
+            return [NSBundle hx_localizedStringForKey:[NSString stringWithFormat:@"视频不能超过%ld秒",maxTime]];
         }
     }
     return nil;

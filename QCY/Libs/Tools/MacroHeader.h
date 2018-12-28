@@ -13,24 +13,28 @@
 #import "UIImage+Color.h"
 
 
-#define Photo_URL @"http://192.168.0.76"
+//#define Photo_URL @"http://192.168.0.76"
 //线上测试-图片
 //#define Photo_URL @"http://static1.i7colors.com"
 //正式
-//#define Photo_URL @"http://static.i7colors.com"
+#define Photo_URL @"http://static.i7colors.com"
+
+//分享地址
+//#define ShareString @"manage"
+#define ShareString @"mobile"
 
 //公司电话
-#define CompanyContact @"4009208599"
+#define CompanyContact @"02164860217,8021"
 //图片地址
 #define ImgStr(urlStr) [NSString stringWithFormat:@"%@%@",Photo_URL,urlStr]
 #define ImgUrl(urlStr) [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",Photo_URL,urlStr]]
-
-
 
 //占位图片
 #define PlaceHolderImg [UIImage imageNamed:@"placeHolder_Img1"]
 #define PlaceHolderImgBanner [UIImage imageNamed:@"placeHolder_Img2"]
 #define DefaultImage [UIImage imageNamed:@"default_116"]
+//logo
+#define Logo [UIImage imageNamed:@"appLogo"]
 
 /*** 颜色 ***/
 #define LineColor [UIColor colorWithHexString:@"#e5e5e5"]   //全局线条颜色

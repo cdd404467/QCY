@@ -10,13 +10,13 @@
 #define NetWorkingPort_h
 
 //总地址
-#define URL_ALL_API @"http://192.168.0.206:9919/app-web/"
+//#define URL_ALL_API @"http://192.168.0.206:9919/app-web/"
 //外网
 //#define URL_ALL_API @"http://116.236.181.54:9919/app-web/"
 //线上测试
 //#define URL_ALL_API @"https://i7apptest.i7colors.com/app-web/"
 //正式
-//#define URL_ALL_API @"https://i7app.i7colors.com/app-web/"
+#define URL_ALL_API @"https://i7app.i7colors.com/app-web/"
 
 
 #define Page_Count 50
@@ -41,8 +41,10 @@
 #define URL_OFFER_LIST @"enquiryOffer/getMyEnquiryOfferList?sign=QCYDSSIGNCDD&token=%@&status=%@&pageNo=%d&pageSize=%d"
 //报价详情
 #define URL_PRICE_DETAIL @"enquiryOffer/getMyEnquiryOfferDetail?sign=QCYDSSIGNCDD&id=%@&token=%@"
-//我的求购列表
+//求购列表
 #define URL_MYASK_BUY @"enquiry/getMyEnuqiryList?sign=QCYDSSIGNCDD&token=%@&status=%@&pageNo=%d&pageSize=%d"
+//求购搜索列表
+#define URL_AskBuy_SearchList @"enquiry/getEnquiryListByKeyword?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d&productName=%@"
 //获取我的页面显示的数目
 #define URL_Get_Mine_Num @"enquiry/getAllCount?sign=QCYDSSIGNCDD&token=%@"
 
@@ -56,7 +58,7 @@
 //我的被接受报价列表
 #define URL_MyAccepted_List @"enquiryOffer/getMyAcceptEnquiryOfferList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
 //开放商城，获取店铺列表
-#define URL_Shop_List @"market/getMarketList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d"
+#define URL_Shop_List @"market/getMarketList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d&name=%@"
 //获取店铺主页产品列表
 #define URL_Shop_Product_List @"marketProduct/getMarketProductByPage?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d&marketId=%@"
 //获取店铺主页详情
@@ -87,17 +89,32 @@
 #define URL_AskBuy_Msg_Detail @"user/getMallEnquiryInformDetail?sign=QCYDSSIGNCDD&token=%@&id=%@"
 //获取朋友圈列表
 #define URL_Friend_List @"dyeCommunity/queryDyeCommunityList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
+//获取帖子详情
+#define URL_FC_Detail @"dyeCommunity/queryDyeCommunityDetail?sign=QCYDSSIGNCDD&id=%@"
 //获取用户信息
 #define URL_Friend_UserInfo @"user/getUserInfoDetail?sign=QCYDSSIGNCDD&token=%@&userId=%@"
+//获取我的用户信息
+#define URL_Friend_MyInfo @"user/getMyInfoDetail?token=%@&sign=QCYDSSIGNCDD"
 //获取其他用户帖子列表
 #define URL_User_Friend_InfoList @"dyeCommunity/queryDyeCommunityListByUserId?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d&userId=%@"
+//获取我的帖子列表
+#define URL_My_Friend_InfoList @"dyeCommunity/queryMyDyeCommunityList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
 //获取粉丝列表
 #define URL_Fans_List @"dyeFollow/queryFollowListByUserId?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d&userId=%@"
-
+//获取我的粉丝列表
+#define URL_My_Fans_List @"dyeFollow/queryMyFollowList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
+//获取未读消息个数
+#define URL_Unread_MsgCounts @"dyeCommunity/queryMyNotReadCommentCount?sign=QCYDSSIGNCDD&token=%@"
+//获取评论列表
+#define URL_Comment_List @"dyeCommunity/queryDyeCommentListByDyeId?sign=QCYDSSIGNCDD&token=%@&dyeId=%@&pageNo=%d&pageSize=%d"
+//获取点赞列表
+#define URL_Zan_List @"dyeCommunity/queryDyeLikeListByDyeId?sign=QCYDSSIGNCDD&dyeId=%@&pageNo=%d&pageSize=%d"
+//朋友圈未读消息列表
+#define URL_UnRead_MsgList @"dyeCommunity/queryMyNotReadCommentList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
 
 
 /******************************** post请求 ********************************/
-//用户登陆
+//用户登录
 #define URL_USER_LOGIN @"user/toLogin"
 //参与报价
 #define URL_JOIN_OFFER @"enquiryOffer/addEnquiryOffer"
@@ -135,6 +152,20 @@
 #define URL_Publish_Comments @"dyeCommunity/addDyeComment"
 //发朋友圈
 #define URL_Publish_FriendCircle @"dyeCommunity/addDyeCommunity"
+//添加关注
+#define URL_Add_Focus @"dyeFollow/addDyeFollowByUserId"
+//取消关注
+#define URL_Cancel_Focus @"dyeFollow/cancelDyeFollowByUserId"
+//删除帖子
+#define URL_Delete_FriendCricle @"dyeCommunity/cancelDyeCommunity"
+//删除自己的评论
+#define URL_Delete_MyComment @"dyeCommunity/cancelDyeComment"
+//点赞
+#define URL_Click_Zan @"dyeCommunity/addDyeLike"
+//大V认证
+#define URL_BigV_Cert @"user/CertV"
+//修改朋友圈信息
+#define URL_Change_FCInfo @"user/updateMyDyeInfo"
 
 
 

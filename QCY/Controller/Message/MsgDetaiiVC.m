@@ -39,7 +39,6 @@
         //允许垂直滚动
         _scrollView.alwaysBounceVertical = YES;
         _scrollView.bounces = NO;
-        
 //        _scrollView.delegate = self;
     }
     return _scrollView;
@@ -62,6 +61,9 @@
 //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [MessageModel mj_objectWithKeyValues:json[@"data"]];
+            if (weakself.alreadyReadBlock) {
+                weakself.alreadyReadBlock(weakself.msgID);
+            }
             [weakself setupUI];
         }
         
@@ -88,7 +90,7 @@
     UILabel *contentLabel = [[UILabel alloc] init];
     contentLabel.font = [UIFont systemFontOfSize:13];
     contentLabel.textColor = HEXColor(@"#868686", 1);
-//    contentLabel.numberOfLines = 0;
+    contentLabel.numberOfLines = 0;
     contentLabel.text = _dataSource.content;
     [self.scrollView addSubview:contentLabel];
     CGSize size2 = [contentLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 24, MAXFLOAT)];
@@ -127,6 +129,11 @@
     AskToBuyDetailsVC *vc = [[AskToBuyDetailsVC alloc] init];
     vc.buyID = _dataSource.enquiryId;
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+//修改statesBar 颜色
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;  //白色，默认的值是黑色的
 }
 
 @end

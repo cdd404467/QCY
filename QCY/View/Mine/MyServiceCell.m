@@ -98,7 +98,7 @@
 
 //一键呼叫
 - (void)callPhone {
-    NSString *phoneNum = @"4009208599";
+    NSString *phoneNum = CompanyContact;
     NSString *tel = [NSString stringWithFormat:@"tel://%@",phoneNum];
     //开线程，解决ios10调用慢的问题
     dispatch_async(dispatch_get_global_queue(0, 0), ^{

@@ -67,7 +67,7 @@
     CGFloat leftGap = KFit_W(8.f);
     CGFloat imageWidth = KFit_W(60.f), imageHeight = 50;
     CGFloat centerGap = (SCREEN_WIDTH - leftGap * 2 - imageWidth * 4) / 3;
-    NSArray *titleArr = @[@"产品大厅",@"求购大厅",@"开放商城",@"产业资讯"];
+    NSArray *titleArr = @[@"开放商城",@"求购大厅",@"产品大厅",@"产业资讯"];
     
     for (uint8_t i = 0; i < 4; i ++) {
         UIButton *iconbtn = [UIButton buttonWithType:UIButtonTypeCustom];

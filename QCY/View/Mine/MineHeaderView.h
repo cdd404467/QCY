@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MineHeaderView : UIView
 @property (nonatomic, strong) UIImageView *userHeader;
 @property (nonatomic, strong) YYLabel *userName;
-@property (nonatomic, strong) UIButton *switchBtn;
-@property (nonatomic, strong) UIButton *idBtn;
+@property (nonatomic, strong) UIButton *buyerBtn;
+@property (nonatomic, strong) UIButton *sellerBtn;
 @property (nonatomic, strong)PaddingLabel *historyLabel;
 - (void)configData:(NSString *)historyAsk offer:(NSString *)hisOffer;
 @end

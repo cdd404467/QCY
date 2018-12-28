@@ -211,7 +211,7 @@
     NSString *firstTimeUnit = [NSString string];
     NSString *secondTimeUnit = [NSString string];
     
-    if (isNotRightData(model.surplusDay) && isNotRightData(model.surplusHour) && isNotRightData(model.surplusMin) && isNotRightData(model.surplusSec)) {
+    if (![model.status isEqualToString:@"1"]) {
         _leftTimeLabel.backgroundColor = HEXColor(@"#E5E5E5", 1);
         _leftTimeLabel.font = [UIFont systemFontOfSize:15];
         _leftTimeLabel.textColor = HEXColor(@"#333333", 1);
@@ -222,12 +222,20 @@
             firstTimeUnit = @"天";
             secondTimeUnit = @"小时";
             firstTime = day;
-            secondTime = hour;
+            if (isRightData(hour)) {
+                secondTime = hour;
+            } else {
+                secondTime = @"0";
+            }
         } else if (isNotRightData(day) && isRightData(hour)) {
             firstTimeUnit = @"小时";
             secondTimeUnit = @"分";
             firstTime = hour;
-            secondTime = min;
+            if (isRightData(min)) {
+                secondTime = min;
+            } else {
+                secondTime = @"0";
+            }
         } else if (isNotRightData(day) && isNotRightData(hour)) {
             firstTimeUnit = @"分";
             secondTimeUnit = @"秒";

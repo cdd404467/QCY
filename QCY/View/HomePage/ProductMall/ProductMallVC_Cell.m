@@ -132,20 +132,24 @@
     if isRightData(model.productName)
         _productName.text = model.productName;
     
-    
     //供应商
-    if isRightData(model.supplierShotName)
-        _supName.text = model.supplierShotName;
-    
+    if isRightData(model.companyName)
+        _supName.text = model.companyName;
     
     //价格
-    if isRightData(model.price) {
-        NSString *price = model.price;
+    if (isRightData(@(model.price).stringValue) && [model.displayPrice isEqualToString:@"1"]){
+        NSString *price = [self getStringFrom:model.price];
         NSString *text = [NSString stringWithFormat:@"¥ %@",price];
         NSMutableAttributedString *mutableText = [[NSMutableAttributedString alloc] initWithString:text];
         mutableText.yy_color = HEXColor(@"#F10215", 1);
         mutableText.yy_font = [UIFont systemFontOfSize:12];
         [mutableText yy_setFont:[UIFont systemFontOfSize:18] range:NSMakeRange(2, price.length)];
+        _priceLabel.attributedText = mutableText;
+    } else {
+        NSString *text = @"议价";
+        NSMutableAttributedString *mutableText = [[NSMutableAttributedString alloc] initWithString:text];
+        mutableText.yy_color = HEXColor(@"#F10215", 1);
+        mutableText.yy_font = [UIFont systemFontOfSize:14];
         _priceLabel.attributedText = mutableText;
     }
     
@@ -155,6 +159,17 @@
 
 }
 
+-(NSString*)getStringFrom:(double)doubleVal {
+    NSString* stringValue = @"0.00";
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
+    formatter.usesSignificantDigits = true;
+    formatter.maximumSignificantDigits = 100;
+    formatter.groupingSeparator = @"";
+    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+    stringValue = [formatter stringFromNumber:@(doubleVal)];
+    
+    return stringValue;
+}
 
 - (void)callPhone {
     NSString *phoneNum = [NSString string];

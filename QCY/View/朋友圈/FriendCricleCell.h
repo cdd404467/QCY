@@ -35,15 +35,34 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 // 查看全文/收起
-- (void)didSelectFullText:(NSIndexPath *)indexPath;
+//- (void)didSelectFullText:(NSIndexPath *)indexPath;
+// 查看全文/收起
+- (void)didSelectFullText:(NSString *)tieziID;
 // 点赞
-- (void)didZan:(NSIndexPath *)indexPath;
+- (void)didZan:(NSString *)tieziID;
 // 评论
-- (void)didComment:(NSIndexPath *)indexPath;
+- (void)didComment:(NSString *)tieziID;
 //回复别人的评论
-- (void)commentUserComment:(NSIndexPath *)indexPath index:(NSInteger)index;
+- (void)commentUserComment:(NSString *)tieziID index:(NSInteger)index;
 //点击头像
 - (void)didClickHeaderImage:(NSString *)userID;
+//点击名字跳转到个人信息
+- (void)didClickUserName:(NSString *)userID;
+//点击头像跳转到个人信息
+- (void)didClickZanUserHeader:(NSString *)userID;
+//关注或取消关注
+- (void)focusOrCancel:(NSString *)tieziID;
+//查看详情
+- (void)didLookDetail:(NSString *)tieziID;
+// 删除动态
+- (void)didDeleteDynamic:(NSString *)tieziID;
+
+@end
+
+@interface HeaderTapGestureRecognizer : UITapGestureRecognizer
+@property (nonatomic, copy) NSString *userId;
 @end
 
 NS_ASSUME_NONNULL_END
+
+
