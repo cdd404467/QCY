@@ -170,7 +170,7 @@
 //
     ShopMainPageHeaderView *header = [[ShopMainPageHeaderView alloc] init];
     [header setupUI:_firstDateSource.creditLevel model:_firstDateSource];
-    header.frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(KFit_H(210)) + 50);
+    header.frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(KFit_W(210)) + 50);
     
     vc.headerView = header;
 //    /// 指定默认选择index 页面

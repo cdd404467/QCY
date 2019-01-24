@@ -85,7 +85,7 @@
     
     //图片
     UIImageView *productImage = [[UIImageView alloc] init];
-    productImage.frame = CGRectMake(0, 40, KFit_W(250), KFit_H(210));
+    productImage.frame = CGRectMake(0, 40, KFit_W(250), KFit_W(210));
     [productImage addBorderLayer:LineColor width:1.f direction:BorderDirectionBottom];
     [self addSubview:productImage];
     _productImage = productImage;

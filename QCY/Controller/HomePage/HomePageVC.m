@@ -22,13 +22,11 @@
 #import "OpenMallModel.h"
 #import "PYSearch.h"
 #import <MJRefresh.h>
-/** 跳转的页面 **/
 #import "OpenMallVC.h"
 #import "ProductMallVC.h"
 #import "AskToBuyVC.h"
 #import "NetWorkingPort.h"
 #import "IndustryInformationVC.h"
-#import "GroupBuyingVC.h"
 #import "AskToBuyDetailsVC.h"
 #import "ShopMainPageVC.h"
 #import "HomePageSearchVC.h"
@@ -38,6 +36,10 @@
 #import "GlobalFooterView.h"
 #import "UpdateAppView.h"
 #import "HelperTool.h"
+/*  活动页面 */
+#import "GroupBuyingVC.h"
+#import "DiscountSalesVC.h"
+#import "PrchaseLeagueVC.h"
 
 #define sectionHeaderHeight 40
 @interface HomePageVC ()<UITableViewDelegate, UITableViewDataSource>
@@ -208,7 +210,11 @@
         [CddHUD show:self.view];
     }
     dispatch_group_async(group, globalQueue, ^{
-        NSString *urlString = [NSString stringWithFormat:URL_HomePage_List,User_Token];
+        //获取当前app版本
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        NSString *current_Version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+//        NSString *urlString = [NSString stringWithFormat:URL_HomePage_List,User_Token];
+        NSString *urlString = [NSString stringWithFormat:URL_HomePage_List_CheckUpdate,User_Token,current_Version];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //            NSLog(@"----1 %@",json);
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
@@ -221,7 +227,7 @@
                 }
                 
                 if ([weakself.dataSource.login_status isEqualToString:@"NO_LOGIN"]) {
-                    [UserDefault removeObjectForKey:@"userInfo"];   //推出登陆操作
+                    [UserDefault removeObjectForKey:@"userInfo"];   //退出登陆操作
                     [weakself jumpToLogin];
                 }
             }
@@ -253,10 +259,10 @@
         }];
     });
     
-    //活动
+    //获取活动
     dispatch_group_enter(group);
     dispatch_group_async(group, globalQueue, ^{
-        NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"APP_Group_Buy"];
+        NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"APP_Sales_Promotion"];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
 //                                                 NSLog(@"----3 %@",json);
@@ -291,20 +297,17 @@
 
 //版本更新
 - (void)checkVersion:(id)json {
-    //当前版本
-    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    NSString *current_Version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    //线上版本
-    NSString *online_Version = To_String(json[@"data"][@"iosVersion"][@"versionCode"]);
-    NSInteger result = [HelperTool compareVersionWithOnline:online_Version oldVersion:current_Version];
+    NSString *isUpdate = To_String(json[@"data"][@"iosVersion"][@"hasUpdate"]);
     
-    if (result == 1) {
+    if ([isUpdate isEqualToString:@"1"]) {
         //更新说明，描述
         NSString *updateText = To_String(json[@"data"][@"iosVersion"][@"description"]);
         //是否强制更新
         NSString *isMustUpdate = To_String(json[@"data"][@"iosVersion"][@"isForce"]);
         //更新的url
         NSString *updateUrl = To_String(json[@"data"][@"iosVersion"][@"url"]);
+        //更新到的版本号
+        NSString *online_Version = To_String(json[@"data"][@"iosVersion"][@"versionCode"]);
 //        NSString *updateUrl = @"https://itunes.apple.com/cn/app/id1329918420?mt=8";
         UpdateAppView *updateView = [[UpdateAppView alloc]init];
         updateView.updateUrl = updateUrl;
@@ -315,7 +318,6 @@
     }
     
 }
-
 
 
 //header不悬停
@@ -340,7 +342,7 @@
 //每组的cell个数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
-        return _salesArray.count;
+        return 1;
     } else if (section == 1) {
         return _dataSource.enquiryList.count;
     } else {
@@ -351,7 +353,8 @@
 //cell的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return KFit_H(110) + 6;
+        int lineNum = (int)ceilf(_salesArray.count / 2.0);
+        return KFit_W(75 * lineNum) + 6;
     } else {
         return 126;
     }
@@ -386,8 +389,8 @@
     } else {
         header.moreLabel.hidden = NO;
         header.clickMoreBlock = ^{
-            OpenMallVC *vc = [[OpenMallVC alloc] init];
-            [weakself.navigationController pushViewController:vc animated:YES];
+            DiscountSalesVC *vc = [[DiscountSalesVC alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
         };
         return header;
     }
@@ -396,8 +399,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        GroupBuyingVC *vc = [[GroupBuyingVC alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
+//        GroupBuyingVC *vc = [[GroupBuyingVC alloc] init];
+//        [self.navigationController pushViewController:vc animated:YES];
     } else if (indexPath.section == 1) {
         AskToBuyDetailsVC *vc = [[AskToBuyDetailsVC alloc] init];
         AskToBuyModel *model = _dataSource.enquiryList[indexPath.row];
@@ -414,8 +417,13 @@
 //数据源
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
+        DDWeakSelf;
         PromotionsCell *cell = [PromotionsCell cellWithTableView:tableView];
-        cell.model = _salesArray[indexPath.row];
+//        cell.model = _salesArray[indexPath.row];
+        cell.dataSource = _salesArray;
+        cell.promotionsBlock = ^(NSInteger type) {
+            [weakself jumpToPromotions:type];
+        };
         return cell;
     } else if (indexPath.section == 1) {
         AskToBuyCell *cell = [AskToBuyCell cellWithTableView:tableView];
@@ -427,6 +435,34 @@
         return cell;
     }
 }
+
+- (void)jumpToPromotions:(NSInteger)type {
+    switch (type) {
+        case 0:
+        {
+            GroupBuyingVC *vc = [[GroupBuyingVC alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 1:
+        {
+            DiscountSalesVC *vc = [[DiscountSalesVC alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+            
+        case 2:
+        {
+            PrchaseLeagueVC *vc = [[PrchaseLeagueVC alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+
 #pragma mark 唤起App专用
 -(void)urlAwake:(NSNotification *)notification {
     NSString *classString = notification.userInfo[@"className"];

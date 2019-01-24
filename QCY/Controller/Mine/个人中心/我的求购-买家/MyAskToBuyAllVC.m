@@ -89,17 +89,6 @@
     return _tableView;
 }
 
-//- (NoDataView *)noDataView {
-//    if (!_noDataView) {
-//        UILabel *label = [[UILabel alloc]init];
-//        label.textColor = RGBA(153, 153, 153, 1);
-//        label.font = [UIFont boldSystemFontOfSize:KFit_H(16)];
-//        label.textAlignment = NSTextAlignmentCenter;
-//        _noLabel = label;
-//    }
-//    return _noLabel;
-//}
-
 #pragma mark -  网络请求
 - (void)requestData {
     DDWeakSelf;

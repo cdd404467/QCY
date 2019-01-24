@@ -13,13 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WeiChatPhotoView : UIView
 
 @property (nonatomic, strong) NSArray<NSString *> *urlArray;
+//缩略图
+@property (nonatomic, strong) NSArray<NSString *> *previewImgArr;
 @property (nonatomic, copy)NSString *type;
 @property (nonatomic, copy)NSString *videoURL;
 @property (nonatomic, assign)CGFloat videoPicWidth;
 @property (nonatomic, assign)CGFloat videoPicHight;
 @property (nonatomic, assign)CGFloat pic1Width;
 @property (nonatomic, assign)CGFloat pic1Hight;
-
 
 @end
 

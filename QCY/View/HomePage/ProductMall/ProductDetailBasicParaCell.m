@@ -102,7 +102,7 @@
     noneLabel.textAlignment = NSTextAlignmentCenter;
 //    noneLabel.backgroundColor = HEXColor(@"#F5F5F5", 1);
     noneLabel.font = [UIFont systemFontOfSize:14];
-    noneLabel.text = @"暂无供应商报价";
+    noneLabel.text = @"暂无产品信息";
     [self.contentView addSubview:noneLabel];
     [noneLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(KFit_W(13));

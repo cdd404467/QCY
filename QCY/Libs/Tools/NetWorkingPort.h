@@ -10,13 +10,17 @@
 #define NetWorkingPort_h
 
 //总地址
-//#define URL_ALL_API @"http://192.168.0.206:9919/app-web/"
+//#define URL_ALL_API @"http://192.168.11.54:9919/app-web/"
 //外网
 //#define URL_ALL_API @"http://116.236.181.54:9919/app-web/"
 //线上测试
-//#define URL_ALL_API @"https://i7apptest.i7colors.com/app-web/"
+#define URL_ALL_API @"https://i7apptest.i7colors.com/app-web/"
 //正式
-#define URL_ALL_API @"https://i7app.i7colors.com/app-web/"
+//#define URL_ALL_API @"https://i7app.i7colors.com/app-web/"
+
+//#define URL_ALL_API @"https://i7appmain.i7colors.com/app-web/"
+
+//#define URL_ALL_API @"https://i7appback.i7colors.com/app-web/"
 
 
 #define Page_Count 50
@@ -29,6 +33,8 @@
 #define URL_IMG_CODE @"captcha?deviceNo=%@"
 //获取首页数据
 #define URL_HomePage_List @"index/getAllData?sign=QCYDSSIGNCDD&token=%@&pageNo=1&pageSize=8"
+//获取首页数据&&检查更新
+#define URL_HomePage_List_CheckUpdate @"index/getAllDataNew?sign=QCYDSSIGNCDD&token=%@&pageNo=1&pageSize=8&iosVersionCode=%@"
 //求购列表
 #define URL_ASKTOBUY_LIST @"enquiry/getEnquiryList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
 //求购详情
@@ -111,6 +117,19 @@
 #define URL_Zan_List @"dyeCommunity/queryDyeLikeListByDyeId?sign=QCYDSSIGNCDD&dyeId=%@&pageNo=%d&pageSize=%d"
 //朋友圈未读消息列表
 #define URL_UnRead_MsgList @"dyeCommunity/queryMyNotReadCommentList?sign=QCYDSSIGNCDD&token=%@&pageNo=%d&pageSize=%d"
+//优惠展销
+#define URL_DisCount_sales @"sales/querySalesMainList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d"
+//展销详情
+#define URL_DisCount_Sales_Detail @"sales/getSalesMainById?sign=QCYDSSIGNCDD&id=%@"
+//优惠展销记录
+#define URL_Discount_sales_Already @"sales/querySalesOrderList?sign=QCYDSSIGNCDD&salesId=%@&pageNo=%d&pageSize=%d"
+//采购联盟列表
+#define URL_Purchase_League_List @"meetingName/queryMeetingNameList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d"
+//我的订货单列表
+#define URL_My_Ordergoods_list @"meetingShop/queryMeetingUserShopList?sign=QCYDSSIGNCDD&orderStatus=0&phone=%@&pageNo=%d&pageSize=%d"
+
+
+
 
 
 /******************************** post请求 ********************************/
@@ -166,7 +185,8 @@
 #define URL_BigV_Cert @"user/CertV"
 //修改朋友圈信息
 #define URL_Change_FCInfo @"user/updateMyDyeInfo"
-
+//参与认购
+#define URL_Join_Discount_Buy @"sales/addSalesOrder"
 
 
 #endif /* NetWorkingPort_h */

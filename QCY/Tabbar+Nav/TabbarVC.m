@@ -42,7 +42,7 @@
     [self addChildViewController:vc_1 tabTitle:@"首页" normalImage:@"tabbar_1" selectedImage:@"tabbar_1_selected"];
     
     FriendCircleVC *vc_2 = [[FriendCircleVC alloc] init];
-    [self addChildViewController:vc_2 tabTitle:@"朋友圈" normalImage:@"tabbar_2" selectedImage:@"tabbar_2_selected"];
+    [self addChildViewController:vc_2 tabTitle:@"印染圈" normalImage:@"tabbar_2" selectedImage:@"tabbar_2_selected"];
 
     MessageVC *vc_3 = [[MessageVC alloc] init];
     [self addChildViewController:vc_3 tabTitle:@"消息" normalImage:@"tabbar_3" selectedImage:@"tabbar_3_selected"];

@@ -55,7 +55,6 @@
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     
-
     return [WXAUTH handleOpenURL:url];
 }
 
@@ -98,6 +97,7 @@
     }];
     
 }
+
 
 - (void)guidePage {
     KSGuaidManager.images = @[[UIImage imageNamed:@"guidepage_1"],

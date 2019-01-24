@@ -93,6 +93,14 @@
 		FC89D0F421952A7D00817844 /* MyServiceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC89D0F321952A7D00817844 /* MyServiceCell.m */; };
 		FC89D0F72195542300817844 /* HomePageSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC89D0F62195542300817844 /* HomePageSearchVC.m */; };
 		FC8AD68F21CB3CB40034026A /* QCYWebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8AD68E21CB3CB40034026A /* QCYWebViewVC.m */; };
+		FC8C927221EC623E00736B55 /* DiscountSalesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8C927121EC623E00736B55 /* DiscountSalesVC.m */; };
+		FC8C927921EC810100736B55 /* DiscountSalesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8C927821EC810100736B55 /* DiscountSalesCell.m */; };
+		FC8C927C21ED7C4800736B55 /* PromotionsHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8C927B21ED7C4800736B55 /* PromotionsHeaderView.m */; };
+		FC8C927F21EDC61B00736B55 /* DiscountSalesModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8C927E21EDC61B00736B55 /* DiscountSalesModel.m */; };
+		FC8C928321EEC28F00736B55 /* DiscountSalesDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8C928221EEC28F00736B55 /* DiscountSalesDetailVC.m */; };
+		FC8C928621EEC7D100736B55 /* DiscountSalesDetailHV.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8C928521EEC7D100736B55 /* DiscountSalesDetailHV.m */; };
+		FC8C928D21EF7B4A00736B55 /* PrchaseLeagueModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8C928C21EF7B4A00736B55 /* PrchaseLeagueModel.m */; };
+		FC8C929021F0782D00736B55 /* MyManifestVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC8C928F21F0782D00736B55 /* MyManifestVC.m */; };
 		FC92B41821BD513100C18051 /* BigVCertVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC92B41721BD513100C18051 /* BigVCertVC.m */; };
 		FC92B41B21BF628E00C18051 /* FriendCircleDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC92B41A21BF628E00C18051 /* FriendCircleDetailVC.m */; };
 		FC92B41E21BF83B700C18051 /* FCDetailCommentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC92B41D21BF83B700C18051 /* FCDetailCommentVC.m */; };
@@ -152,11 +160,20 @@
 		FCBC3EF521AE6B43003A9D5D /* OperateMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBC3EF421AE6B43003A9D5D /* OperateMenuView.m */; };
 		FCBC3EF821AE6B4E003A9D5D /* UUButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBC3EF621AE6B4E003A9D5D /* UUButton.m */; };
 		FCBC3F1E21AFF144003A9D5D /* PLView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBC3F1D21AFF144003A9D5D /* PLView.m */; };
+		FCBD330621F0A91E0017AB5D /* ManiFestChildVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBD330521F0A91E0017AB5D /* ManiFestChildVC.m */; };
+		FCBD330921F0B38F0017AB5D /* ManifestScetionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBD330821F0B38F0017AB5D /* ManifestScetionHeader.m */; };
+		FCBD330C21F0B3AC0017AB5D /* ManifestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBD330B21F0B3AC0017AB5D /* ManifestCell.m */; };
+		FCBD330F21F0DF4A0017AB5D /* DiscountBuyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBD330E21F0DF4A0017AB5D /* DiscountBuyVC.m */; };
+		FCBD331221F562610017AB5D /* PromotionsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBD331121F562610017AB5D /* PromotionsModel.m */; };
+		FCBD331521F80E0D0017AB5D /* ManifestScetionFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBD331421F80E0D0017AB5D /* ManifestScetionFooter.m */; };
 		FCC575D421882018004ED61D /* ShopMainPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC575D321882018004ED61D /* ShopMainPageVC.m */; };
 		FCC575DD2188392E004ED61D /* ShopMainPageHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC575DC2188392E004ED61D /* ShopMainPageHeaderView.m */; };
 		FCC5762A21886FBC004ED61D /* AllProductsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC5762921886FBC004ED61D /* AllProductsVC.m */; };
 		FCC5762D21886FD8004ED61D /* CompanyInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC5762C21886FD8004ED61D /* CompanyInfoVC.m */; };
 		FCC5763021888DA0004ED61D /* ProductInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC5762F21888DA0004ED61D /* ProductInfoCell.m */; };
+		FCC8899921E438370020F78B /* PrchaseLeagueVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC8899821E438370020F78B /* PrchaseLeagueVC.m */; };
+		FCC8899D21E43D0E0020F78B /* PrchaseLeagueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC8899C21E43D0E0020F78B /* PrchaseLeagueCell.m */; };
+		FCC889A021E440B80020F78B /* ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC8899F21E440B80020F78B /* ProgressView.m */; };
 		FCD19DEA214A0D1F00DBC908 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD19DE9214A0D1F00DBC908 /* UIImage+Color.m */; };
 		FCF44AF1219D27260076636E /* SystemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF44AF0219D27260076636E /* SystemCell.m */; };
 		FCF7C6F921899E61009F5140 /* ProductDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C6F821899E61009F5140 /* ProductDetailHeaderView.m */; };
@@ -169,7 +186,6 @@
 		FCF7C710218ACEA8009F5140 /* ssl.cer in Resources */ = {isa = PBXBuildFile; fileRef = FCF7C70F218ACEA8009F5140 /* ssl.cer */; };
 		FCF7C713218AE46E009F5140 /* InfomationDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C712218AE46E009F5140 /* InfomationDetailVC.m */; };
 		FCF7C718218B1C2A009F5140 /* GroupBuyingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C717218B1C2A009F5140 /* GroupBuyingCell.m */; };
-		FCF7C71B218B1C83009F5140 /* GroupBuyingHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C71A218B1C83009F5140 /* GroupBuyingHeaderView.m */; };
 		FCF7C71E218B2C35009F5140 /* GroupBuyingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C71D218B2C35009F5140 /* GroupBuyingModel.m */; };
 		FCF7C721218C3120009F5140 /* GroupBuyingDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C720218C3120009F5140 /* GroupBuyingDetailVC.m */; };
 		FCF7C727218C33F5009F5140 /* GroupBuyDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C726218C33F5009F5140 /* GroupBuyDetailHeaderView.m */; };
@@ -380,6 +396,22 @@
 		FC89D0F62195542300817844 /* HomePageSearchVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomePageSearchVC.m; sourceTree = "<group>"; };
 		FC8AD68D21CB3CB40034026A /* QCYWebViewVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCYWebViewVC.h; sourceTree = "<group>"; };
 		FC8AD68E21CB3CB40034026A /* QCYWebViewVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCYWebViewVC.m; sourceTree = "<group>"; };
+		FC8C927021EC623E00736B55 /* DiscountSalesVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiscountSalesVC.h; sourceTree = "<group>"; };
+		FC8C927121EC623E00736B55 /* DiscountSalesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DiscountSalesVC.m; sourceTree = "<group>"; };
+		FC8C927721EC810100736B55 /* DiscountSalesCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiscountSalesCell.h; sourceTree = "<group>"; };
+		FC8C927821EC810100736B55 /* DiscountSalesCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DiscountSalesCell.m; sourceTree = "<group>"; };
+		FC8C927A21ED7C4800736B55 /* PromotionsHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PromotionsHeaderView.h; sourceTree = "<group>"; };
+		FC8C927B21ED7C4800736B55 /* PromotionsHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PromotionsHeaderView.m; sourceTree = "<group>"; };
+		FC8C927D21EDC61B00736B55 /* DiscountSalesModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiscountSalesModel.h; sourceTree = "<group>"; };
+		FC8C927E21EDC61B00736B55 /* DiscountSalesModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DiscountSalesModel.m; sourceTree = "<group>"; };
+		FC8C928121EEC28F00736B55 /* DiscountSalesDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiscountSalesDetailVC.h; sourceTree = "<group>"; };
+		FC8C928221EEC28F00736B55 /* DiscountSalesDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DiscountSalesDetailVC.m; sourceTree = "<group>"; };
+		FC8C928421EEC7D100736B55 /* DiscountSalesDetailHV.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiscountSalesDetailHV.h; sourceTree = "<group>"; };
+		FC8C928521EEC7D100736B55 /* DiscountSalesDetailHV.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DiscountSalesDetailHV.m; sourceTree = "<group>"; };
+		FC8C928B21EF7B4A00736B55 /* PrchaseLeagueModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrchaseLeagueModel.h; sourceTree = "<group>"; };
+		FC8C928C21EF7B4A00736B55 /* PrchaseLeagueModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrchaseLeagueModel.m; sourceTree = "<group>"; };
+		FC8C928E21F0782D00736B55 /* MyManifestVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyManifestVC.h; sourceTree = "<group>"; };
+		FC8C928F21F0782D00736B55 /* MyManifestVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyManifestVC.m; sourceTree = "<group>"; };
 		FC92B41621BD513100C18051 /* BigVCertVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BigVCertVC.h; sourceTree = "<group>"; };
 		FC92B41721BD513100C18051 /* BigVCertVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BigVCertVC.m; sourceTree = "<group>"; };
 		FC92B41921BF628E00C18051 /* FriendCircleDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendCircleDetailVC.h; sourceTree = "<group>"; };
@@ -500,6 +532,18 @@
 		FCBC3EF721AE6B4E003A9D5D /* UUButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUButton.h; sourceTree = "<group>"; };
 		FCBC3F1C21AFF144003A9D5D /* PLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLView.h; sourceTree = "<group>"; };
 		FCBC3F1D21AFF144003A9D5D /* PLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLView.m; sourceTree = "<group>"; };
+		FCBD330421F0A91E0017AB5D /* ManiFestChildVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManiFestChildVC.h; sourceTree = "<group>"; };
+		FCBD330521F0A91E0017AB5D /* ManiFestChildVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManiFestChildVC.m; sourceTree = "<group>"; };
+		FCBD330721F0B38F0017AB5D /* ManifestScetionHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManifestScetionHeader.h; sourceTree = "<group>"; };
+		FCBD330821F0B38F0017AB5D /* ManifestScetionHeader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManifestScetionHeader.m; sourceTree = "<group>"; };
+		FCBD330A21F0B3AC0017AB5D /* ManifestCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManifestCell.h; sourceTree = "<group>"; };
+		FCBD330B21F0B3AC0017AB5D /* ManifestCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManifestCell.m; sourceTree = "<group>"; };
+		FCBD330D21F0DF4A0017AB5D /* DiscountBuyVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiscountBuyVC.h; sourceTree = "<group>"; };
+		FCBD330E21F0DF4A0017AB5D /* DiscountBuyVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DiscountBuyVC.m; sourceTree = "<group>"; };
+		FCBD331021F562610017AB5D /* PromotionsModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PromotionsModel.h; sourceTree = "<group>"; };
+		FCBD331121F562610017AB5D /* PromotionsModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PromotionsModel.m; sourceTree = "<group>"; };
+		FCBD331321F80E0D0017AB5D /* ManifestScetionFooter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManifestScetionFooter.h; sourceTree = "<group>"; };
+		FCBD331421F80E0D0017AB5D /* ManifestScetionFooter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManifestScetionFooter.m; sourceTree = "<group>"; };
 		FCC575D221882018004ED61D /* ShopMainPageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShopMainPageVC.h; sourceTree = "<group>"; };
 		FCC575D321882018004ED61D /* ShopMainPageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShopMainPageVC.m; sourceTree = "<group>"; };
 		FCC575DB2188392E004ED61D /* ShopMainPageHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShopMainPageHeaderView.h; sourceTree = "<group>"; };
@@ -510,6 +554,12 @@
 		FCC5762C21886FD8004ED61D /* CompanyInfoVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CompanyInfoVC.m; sourceTree = "<group>"; };
 		FCC5762E21888DA0004ED61D /* ProductInfoCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductInfoCell.h; sourceTree = "<group>"; };
 		FCC5762F21888DA0004ED61D /* ProductInfoCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductInfoCell.m; sourceTree = "<group>"; };
+		FCC8899721E438370020F78B /* PrchaseLeagueVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrchaseLeagueVC.h; sourceTree = "<group>"; };
+		FCC8899821E438370020F78B /* PrchaseLeagueVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrchaseLeagueVC.m; sourceTree = "<group>"; };
+		FCC8899B21E43D0E0020F78B /* PrchaseLeagueCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrchaseLeagueCell.h; sourceTree = "<group>"; };
+		FCC8899C21E43D0E0020F78B /* PrchaseLeagueCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrchaseLeagueCell.m; sourceTree = "<group>"; };
+		FCC8899E21E440B80020F78B /* ProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgressView.h; sourceTree = "<group>"; };
+		FCC8899F21E440B80020F78B /* ProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProgressView.m; sourceTree = "<group>"; };
 		FCD19DE8214A0D1F00DBC908 /* UIImage+Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		FCD19DE9214A0D1F00DBC908 /* UIImage+Color.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
 		FCF44AEF219D27260076636E /* SystemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemCell.h; sourceTree = "<group>"; };
@@ -533,8 +583,6 @@
 		FCF7C712218AE46E009F5140 /* InfomationDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfomationDetailVC.m; sourceTree = "<group>"; };
 		FCF7C716218B1C2A009F5140 /* GroupBuyingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupBuyingCell.h; sourceTree = "<group>"; };
 		FCF7C717218B1C2A009F5140 /* GroupBuyingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupBuyingCell.m; sourceTree = "<group>"; };
-		FCF7C719218B1C83009F5140 /* GroupBuyingHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupBuyingHeaderView.h; sourceTree = "<group>"; };
-		FCF7C71A218B1C83009F5140 /* GroupBuyingHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupBuyingHeaderView.m; sourceTree = "<group>"; };
 		FCF7C71C218B2C35009F5140 /* GroupBuyingModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupBuyingModel.h; sourceTree = "<group>"; };
 		FCF7C71D218B2C35009F5140 /* GroupBuyingModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupBuyingModel.m; sourceTree = "<group>"; };
 		FCF7C71F218C3120009F5140 /* GroupBuyingDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupBuyingDetailVC.h; sourceTree = "<group>"; };
@@ -613,6 +661,7 @@
 		3A412000213CBFDD003191F1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FC8C928021EDC62800736B55 /* 活动 */,
 				FCB9E44121781A360039AE04 /* HomePageModel.h */,
 				FCB9E44221781A360039AE04 /* HomePageModel.m */,
 				FC142A9E217DAD7600E00A47 /* MinePageModel.h */,
@@ -621,8 +670,6 @@
 				FC48F4712186EE9900C69B49 /* OpenMallModel.m */,
 				FCF7C70C218AA9C3009F5140 /* InfomationModel.h */,
 				FCF7C70D218AA9C3009F5140 /* InfomationModel.m */,
-				FCF7C71C218B2C35009F5140 /* GroupBuyingModel.h */,
-				FCF7C71D218B2C35009F5140 /* GroupBuyingModel.m */,
 				FC2A941B219BFB0000096A67 /* MessageModel.h */,
 				FC2A941C219BFB0000096A67 /* MessageModel.m */,
 				FC98508B21AAF0510047F8BF /* FriendCricleModel.h */,
@@ -634,6 +681,8 @@
 		3A412001213CBFF5003191F1 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FCC8899E21E440B80020F78B /* ProgressView.h */,
+				FCC8899F21E440B80020F78B /* ProgressView.m */,
 				FC98508721AAEFBD0047F8BF /* 朋友圈 */,
 				FC98507021A541890047F8BF /* 全局 */,
 				FC98506621A3B3CB0047F8BF /* Other */,
@@ -716,7 +765,7 @@
 		3A412019213E154D003191F1 /* HomePage */ = {
 			isa = PBXGroup;
 			children = (
-				FCF7C714218B16D0009F5140 /* 团购 */,
+				FC8C926D21E88AF700736B55 /* 促销活动 */,
 				FCF7C701218A8F2B009F5140 /* 产业资讯 */,
 				FCF7C6F621897906009F5140 /* 产品大厅 */,
 				FCC575CE21881E7D004ED61D /* 开放商城 */,
@@ -761,7 +810,7 @@
 		3A41202A213F8411003191F1 /* HomePage */ = {
 			isa = PBXGroup;
 			children = (
-				FCF7C715218B1BFB009F5140 /* GroupBuying */,
+				FC8C926E21E88B2F00736B55 /* 促销活动 */,
 				FCF7C708218AA4EB009F5140 /* Information */,
 				FCB9E41F2175902B0039AE04 /* AskToBuy */,
 				FC7E110C2159F55E006FCDEF /* ProductMall */,
@@ -1109,6 +1158,67 @@
 			path = "系统设置";
 			sourceTree = "<group>";
 		};
+		FC8C926D21E88AF700736B55 /* 促销活动 */ = {
+			isa = PBXGroup;
+			children = (
+				FC8C926F21E88B5400736B55 /* 优惠展销 */,
+				FCF7C714218B16D0009F5140 /* 团购 */,
+				FCC8899621E4371A0020F78B /* 采购联盟 */,
+			);
+			path = "促销活动";
+			sourceTree = "<group>";
+		};
+		FC8C926E21E88B2F00736B55 /* 促销活动 */ = {
+			isa = PBXGroup;
+			children = (
+				FC8C927621EC80CA00736B55 /* 优惠展销 */,
+				FCF7C715218B1BFB009F5140 /* 团购 */,
+				FCC8899A21E43CCF0020F78B /* 采购联盟 */,
+				FC8C927A21ED7C4800736B55 /* PromotionsHeaderView.h */,
+				FC8C927B21ED7C4800736B55 /* PromotionsHeaderView.m */,
+			);
+			path = "促销活动";
+			sourceTree = "<group>";
+		};
+		FC8C926F21E88B5400736B55 /* 优惠展销 */ = {
+			isa = PBXGroup;
+			children = (
+				FC8C927021EC623E00736B55 /* DiscountSalesVC.h */,
+				FC8C927121EC623E00736B55 /* DiscountSalesVC.m */,
+				FC8C928121EEC28F00736B55 /* DiscountSalesDetailVC.h */,
+				FC8C928221EEC28F00736B55 /* DiscountSalesDetailVC.m */,
+				FCBD330D21F0DF4A0017AB5D /* DiscountBuyVC.h */,
+				FCBD330E21F0DF4A0017AB5D /* DiscountBuyVC.m */,
+			);
+			path = "优惠展销";
+			sourceTree = "<group>";
+		};
+		FC8C927621EC80CA00736B55 /* 优惠展销 */ = {
+			isa = PBXGroup;
+			children = (
+				FC8C927721EC810100736B55 /* DiscountSalesCell.h */,
+				FC8C927821EC810100736B55 /* DiscountSalesCell.m */,
+				FC8C928421EEC7D100736B55 /* DiscountSalesDetailHV.h */,
+				FC8C928521EEC7D100736B55 /* DiscountSalesDetailHV.m */,
+			);
+			path = "优惠展销";
+			sourceTree = "<group>";
+		};
+		FC8C928021EDC62800736B55 /* 活动 */ = {
+			isa = PBXGroup;
+			children = (
+				FC8C927D21EDC61B00736B55 /* DiscountSalesModel.h */,
+				FC8C927E21EDC61B00736B55 /* DiscountSalesModel.m */,
+				FCF7C71C218B2C35009F5140 /* GroupBuyingModel.h */,
+				FCF7C71D218B2C35009F5140 /* GroupBuyingModel.m */,
+				FC8C928B21EF7B4A00736B55 /* PrchaseLeagueModel.h */,
+				FC8C928C21EF7B4A00736B55 /* PrchaseLeagueModel.m */,
+				FCBD331021F562610017AB5D /* PromotionsModel.h */,
+				FCBD331121F562610017AB5D /* PromotionsModel.m */,
+			);
+			path = "活动";
+			sourceTree = "<group>";
+		};
 		FC98505C21A3A6670047F8BF /* Weinxin */ = {
 			isa = PBXGroup;
 			children = (
@@ -1301,6 +1411,34 @@
 			path = "开放商城";
 			sourceTree = "<group>";
 		};
+		FCC8899621E4371A0020F78B /* 采购联盟 */ = {
+			isa = PBXGroup;
+			children = (
+				FCC8899721E438370020F78B /* PrchaseLeagueVC.h */,
+				FCC8899821E438370020F78B /* PrchaseLeagueVC.m */,
+				FC8C928E21F0782D00736B55 /* MyManifestVC.h */,
+				FC8C928F21F0782D00736B55 /* MyManifestVC.m */,
+				FCBD330421F0A91E0017AB5D /* ManiFestChildVC.h */,
+				FCBD330521F0A91E0017AB5D /* ManiFestChildVC.m */,
+			);
+			path = "采购联盟";
+			sourceTree = "<group>";
+		};
+		FCC8899A21E43CCF0020F78B /* 采购联盟 */ = {
+			isa = PBXGroup;
+			children = (
+				FCC8899B21E43D0E0020F78B /* PrchaseLeagueCell.h */,
+				FCC8899C21E43D0E0020F78B /* PrchaseLeagueCell.m */,
+				FCBD330721F0B38F0017AB5D /* ManifestScetionHeader.h */,
+				FCBD330821F0B38F0017AB5D /* ManifestScetionHeader.m */,
+				FCBD330A21F0B3AC0017AB5D /* ManifestCell.h */,
+				FCBD330B21F0B3AC0017AB5D /* ManifestCell.m */,
+				FCBD331321F80E0D0017AB5D /* ManifestScetionFooter.h */,
+				FCBD331421F80E0D0017AB5D /* ManifestScetionFooter.m */,
+			);
+			path = "采购联盟";
+			sourceTree = "<group>";
+		};
 		FCF7C6F621897906009F5140 /* 产品大厅 */ = {
 			isa = PBXGroup;
 			children = (
@@ -1355,13 +1493,11 @@
 			path = "团购";
 			sourceTree = "<group>";
 		};
-		FCF7C715218B1BFB009F5140 /* GroupBuying */ = {
+		FCF7C715218B1BFB009F5140 /* 团购 */ = {
 			isa = PBXGroup;
 			children = (
 				FCF7C716218B1C2A009F5140 /* GroupBuyingCell.h */,
 				FCF7C717218B1C2A009F5140 /* GroupBuyingCell.m */,
-				FCF7C719218B1C83009F5140 /* GroupBuyingHeaderView.h */,
-				FCF7C71A218B1C83009F5140 /* GroupBuyingHeaderView.m */,
 				FCF7C725218C33F5009F5140 /* GroupBuyDetailHeaderView.h */,
 				FCF7C726218C33F5009F5140 /* GroupBuyDetailHeaderView.m */,
 				FC4B2F9A219027A100854678 /* GroupBuyDetailBaseCell.h */,
@@ -1371,7 +1507,7 @@
 				FC4B2FA32192D45500854678 /* GroupBuyAlreadyCell.h */,
 				FC4B2FA42192D45500854678 /* GroupBuyAlreadyCell.m */,
 			);
-			path = GroupBuying;
+			path = "团购";
 			sourceTree = "<group>";
 		};
 		FCF95E5521B83115006E99A7 /* 朋友圈个人信息 */ = {
@@ -1591,6 +1727,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FCF7C6F921899E61009F5140 /* ProductDetailHeaderView.m in Sources */,
+				FCBD330921F0B38F0017AB5D /* ManifestScetionHeader.m in Sources */,
 				FC98508D21AAF0510047F8BF /* FriendCricleModel.m in Sources */,
 				FC4B2FA52192D45500854678 /* GroupBuyAlreadyCell.m in Sources */,
 				FC98508A21AAEFF20047F8BF /* FriendCricleCell.m in Sources */,
@@ -1603,6 +1740,7 @@
 				FCF7C6FC2189A8EC009F5140 /* ProductDetailBasicParaCell.m in Sources */,
 				FC48F4662186E4DC00C69B49 /* LXTagsView.m in Sources */,
 				FCB9E4342175DD7B0039AE04 /* AskToBuySectionHeader.m in Sources */,
+				FC8C928321EEC28F00736B55 /* DiscountSalesDetailVC.m in Sources */,
 				FC98505021A28DA30047F8BF /* CompanyApproveVC.m in Sources */,
 				FC07C93921C7FE7100FA77F3 /* BaseTableView.m in Sources */,
 				3ACD0FE92138CADF00E83D3C /* ViewController.m in Sources */,
@@ -1613,7 +1751,7 @@
 				FCBC3EF821AE6B4E003A9D5D /* UUButton.m in Sources */,
 				FC98504D219E62B30047F8BF /* MobilePhone.m in Sources */,
 				FC142B0C217F7F3600E00A47 /* MyOfferPriceAllVC.m in Sources */,
-				FCF7C71B218B1C83009F5140 /* GroupBuyingHeaderView.m in Sources */,
+				FCBD330C21F0B3AC0017AB5D /* ManifestCell.m in Sources */,
 				FC7E11152159F9A4006FCDEF /* ProductMallVC.m in Sources */,
 				FC2A9420219C386300096A67 /* MessageVC.m in Sources */,
 				FCB9E43A217607790039AE04 /* supplierQuotationCell.m in Sources */,
@@ -1621,6 +1759,7 @@
 				FC2A940C2199CD3000096A67 /* YYImageClipViewController.m in Sources */,
 				FCB9E422217590620039AE04 /* AskToBuyBottomView.m in Sources */,
 				FC807DE121B1019B0033160B /* WXKeyBoardView.m in Sources */,
+				FC8C927C21ED7C4800736B55 /* PromotionsHeaderView.m in Sources */,
 				FC9F33FB218041A300B11D6D /* SwitchVC.m in Sources */,
 				FC4B2F9321901E5F00854678 /* BaseParameterVC.m in Sources */,
 				FC33C31C214BA66400D26C97 /* BaseNavigationController.m in Sources */,
@@ -1629,6 +1768,7 @@
 				FCFFB4BD21C6686200A006FF /* FCDetailZanCell.m in Sources */,
 				FC89D0F121951F8700817844 /* MyServiceVC.m in Sources */,
 				FCFFB4B621C3908900A006FF /* FCUnReadMsgListVC.m in Sources */,
+				FCC8899921E438370020F78B /* PrchaseLeagueVC.m in Sources */,
 				FC85E4F8217B983B00CA119C /* CddHUD.m in Sources */,
 				FCF95E4B21B7B33D006E99A7 /* MyFriendCircleInfoVC.m in Sources */,
 				FC744AB6219D85770065F642 /* MsgDetaiiVC.m in Sources */,
@@ -1641,6 +1781,7 @@
 				FC9FB9D22194132B0008A90E /* UIView+PYExtension.m in Sources */,
 				FC98506421A3A85C0047F8BF /* WXAuth.m in Sources */,
 				FC92B42121BF83D100C18051 /* FCDetailZanVC.m in Sources */,
+				FC8C927221EC623E00736B55 /* DiscountSalesVC.m in Sources */,
 				FCF7C70B218AA51C009F5140 /* InformationChildCell.m in Sources */,
 				FC142AAD217EBABF00E00A47 /* BEMCheckBox.m in Sources */,
 				3A412020213E1B46003191F1 /* HomePageVC.m in Sources */,
@@ -1661,6 +1802,7 @@
 				FC142AAC217EBABF00E00A47 /* BEMPathManager.m in Sources */,
 				FC142AB7217EED1800E00A47 /* MyAskToBuyAllVC.m in Sources */,
 				FC33C334214F72C800D26C97 /* OpenMallVC_Cell.m in Sources */,
+				FC8C928621EEC7D100736B55 /* DiscountSalesDetailHV.m in Sources */,
 				FC98508621A78D6D0047F8BF /* LookOverHowToUseVC.m in Sources */,
 				FCB8A69021C737B600048A9B /* FCUnReadMsgCell.m in Sources */,
 				FCF44AF1219D27260076636E /* SystemCell.m in Sources */,
@@ -1681,6 +1823,7 @@
 				FCB9E42521759F810039AE04 /* SelectedView.m in Sources */,
 				FC48F4722186EE9900C69B49 /* OpenMallModel.m in Sources */,
 				FC142B09217F7EAD00E00A47 /* MyOfferPriceVC.m in Sources */,
+				FC8C929021F0782D00736B55 /* MyManifestVC.m in Sources */,
 				FC17E0792141143900219452 /* PromotionsCell.m in Sources */,
 				FC7E10C421535444006FCDEF /* LoginVC.m in Sources */,
 				FC05CC2621707BB8005F666B /* TimeAbout.m in Sources */,
@@ -1692,6 +1835,7 @@
 				FC7E1118215A1A2F006FCDEF /* ProductDetailsVC.m in Sources */,
 				FC33C330214F667C00D26C97 /* OpenMallVC.m in Sources */,
 				FC9FB9D62194413D0008A90E /* TestVC1.m in Sources */,
+				FCBD331221F562610017AB5D /* PromotionsModel.m in Sources */,
 				FC92B41E21BF83B700C18051 /* FCDetailCommentVC.m in Sources */,
 				FCF95E5B21B90BA6006E99A7 /* FansCell.m in Sources */,
 				FC07C93D21CA201000FA77F3 /* SearchResultPageVC.m in Sources */,
@@ -1699,8 +1843,10 @@
 				FC7E112B215F0997006FCDEF /* UIView+Border.m in Sources */,
 				FC8AD68F21CB3CB40034026A /* QCYWebViewVC.m in Sources */,
 				FCF7C721218C3120009F5140 /* GroupBuyingDetailVC.m in Sources */,
+				FCBD330F21F0DF4A0017AB5D /* DiscountBuyVC.m in Sources */,
 				FC4B2F9921901EB800854678 /* GroupBuyRecordVC.m in Sources */,
 				FCF7C6FF2189BDD7009F5140 /* ProductDetailSectionHeader.m in Sources */,
+				FC8C928D21EF7B4A00736B55 /* PrchaseLeagueModel.m in Sources */,
 				FC2A94032199145C00096A67 /* MyInfoCenterVC.m in Sources */,
 				FCF95E5121B7E2EE006E99A7 /* FansVC.m in Sources */,
 				3A412015213D1181003191F1 /* UIColor+Hex.m in Sources */,
@@ -1728,10 +1874,13 @@
 				FC4B2F9C219027A100854678 /* GroupBuyDetailBaseCell.m in Sources */,
 				FC9F33F82180228000B11D6D /* Alert.m in Sources */,
 				FCF7C713218AE46E009F5140 /* InfomationDetailVC.m in Sources */,
+				FCC8899D21E43D0E0020F78B /* PrchaseLeagueCell.m in Sources */,
 				FC17E06F2140F60B00219452 /* HomePageSectionHeader.m in Sources */,
 				FC142A5F217CD49E00E00A47 /* MineCollectionCell.m in Sources */,
 				3ACD0FE62138CADF00E83D3C /* AppDelegate.m in Sources */,
+				FCBD330621F0A91E0017AB5D /* ManiFestChildVC.m in Sources */,
 				FCBC3F1E21AFF144003A9D5D /* PLView.m in Sources */,
+				FC8C927F21EDC61B00736B55 /* DiscountSalesModel.m in Sources */,
 				FCF7C707218A9A7F009F5140 /* InformationChildVC.m in Sources */,
 				FCC5762D21886FD8004ED61D /* CompanyInfoVC.m in Sources */,
 				FCB9E4282175B0E90039AE04 /* UITextView+Placeholder.m in Sources */,
@@ -1754,12 +1903,15 @@
 				FC98507B21A556260047F8BF /* KSGuaidViewController.m in Sources */,
 				FC98506521A3A85C0047F8BF /* WXApiManager.m in Sources */,
 				FC142AA0217DAD7600E00A47 /* MinePageModel.m in Sources */,
+				FCBD331521F80E0D0017AB5D /* ManifestScetionFooter.m in Sources */,
 				FC48F46E2186E5DF00C69B49 /* UIColor+LXExpand.m in Sources */,
 				FC142A9A217D756200E00A47 /* AskToBuyOfferCell.m in Sources */,
 				FCBC3EF521AE6B43003A9D5D /* OperateMenuView.m in Sources */,
 				FC89D0F421952A7D00817844 /* MyServiceCell.m in Sources */,
 				FC85E4FF217C69EA00CA119C /* MineSectionHeader.m in Sources */,
+				FCC889A021E440B80020F78B /* ProgressView.m in Sources */,
 				FC2A941D219BFB0000096A67 /* MessageModel.m in Sources */,
+				FC8C927921EC810100736B55 /* DiscountSalesCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1931,7 +2083,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY;
+				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "";
@@ -1953,7 +2105,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY;
+				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "";

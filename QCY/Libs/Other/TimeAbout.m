@@ -12,20 +12,6 @@
 
 //获取当前时间戳  （以毫秒为单位）
 + (NSString *)getNowTimeTimestamp_HM {
-    
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-//
-//    [formatter setDateStyle:NSDateFormatterMediumStyle];
-//
-//    [formatter setTimeStyle:NSDateFormatterShortStyle];
-//
-//    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss SSS"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
-//
-//    //设置时区,这个对于时间的处理有时很重要
-//    NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
-//
-//    [formatter setTimeZone:timeZone];
-    
     NSDate *datenow = [NSDate date];//现在时间,你可以输出来看下是什么格式
     NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[datenow timeIntervalSince1970] * 1000];
     
@@ -34,30 +20,10 @@
 
 //获取当前时间戳有两种方法(以秒为单位)
 + (NSString *)getNowTimeTimestamp_M {
-    
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-//
-//    [formatter setDateStyle:NSDateFormatterMediumStyle];
-//
-//    [formatter setTimeStyle:NSDateFormatterShortStyle];
-//
-//    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
-//
-//    //设置时区,这个对于时间的处理有时很重要
-//
-//    NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
-//
-//    [formatter setTimeZone:timeZone];
-    
     NSDate *datenow = [NSDate date];//现在时间,你可以输出来看下是什么格式
     NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[datenow timeIntervalSince1970]];
     
     return timeSp;
-}
-
-//时间戳转字符串,年月日，十分秒
-+ (NSString *)timestampToString:(long long)time {
-    return [self timestampToString:time isSecondMin:YES];
 }
 
 //时间戳转字符串,只有年月日
@@ -76,6 +42,11 @@
     NSDate* date = [NSDate dateWithTimeIntervalSince1970:[timeString doubleValue]/ 1000.0];
     NSString* dateString = [formatter stringFromDate:date];
     return dateString;
+}
+
+//时间戳转字符串,年月日，十分秒
++ (NSString *)timestampToString:(long long)time {
+    return [self timestampToString:time isSecondMin:YES];
 }
 
 //今天开始往前后推时间

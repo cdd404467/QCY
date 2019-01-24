@@ -80,7 +80,7 @@
         nav.backgroundColor = HEXColor(@"#ffffff", 0);
         nav.bottomLine.hidden = YES;
         nav.leftBtnTintColor = [UIColor whiteColor];
-        nav.titleLabel.text = @"朋友圈个人信息";
+        nav.titleLabel.text = @"印染圈个人信息";
         [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
         _nav = nav;
     }
@@ -322,7 +322,7 @@
 }
 
 - (NSArray *)getArrayTitles {
-    return @[@"朋友圈记录", @"粉丝"];
+    return @[@"印染圈记录", @"粉丝"];
 }
 
 #pragma mark - 代理方法

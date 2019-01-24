@@ -38,6 +38,17 @@
     [view.layer insertSublayer:gradientLayer atIndex:0];
 }
 
+//添加水平渐变
++ (void)addLayerHorizontal:(UIView *)view frame:(CGRect)frame startColor:(UIColor *)sColor endColor:(UIColor *)eColor {
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.colors = @[(__bridge id)sColor.CGColor, (__bridge id)eColor.CGColor];
+    gradientLayer.locations = @[@0.0, @1.0];
+    gradientLayer.startPoint = CGPointMake(0.0, 0.0);
+    gradientLayer.endPoint = CGPointMake(1.0,0.0);
+    gradientLayer.frame = frame;
+    [view.layer insertSublayer:gradientLayer atIndex:0];
+}
+
 + (void)addLayer:(UIView *)view frame:(CGRect)frame {
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
     gradientLayer.colors = @[(__bridge id)[UIColor colorWithHexString:@"#f26c27"].CGColor, (__bridge id)[UIColor colorWithHexString:@"#ee2788"].CGColor];
@@ -64,6 +75,79 @@
     [view.layer insertSublayer:gradientLayer atIndex:0];
 }
 
++ (UIImage*)getGradedImage:(UIView *)view colors:(NSArray<UIColor *> *)colors gradientType:(GradientType)type {
+    NSMutableArray *ar = [NSMutableArray array];
+    for(UIColor *c in colors) {
+        [ar addObject:(id)c.CGColor];
+    }
+    UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, 1);
+//    UIGraphicsBeginImageContext(view.frame.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    CGColorSpaceRef colorSpace = CGColorGetColorSpace([[colors lastObject] CGColor]);
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)ar, NULL);
+    CGPoint start ;
+    CGPoint end ;
+    switch (type) {
+        case 0:
+            start = CGPointMake(0.0, 0.0);
+            end = CGPointMake(0.0, view.frame.size.height);
+            break;
+        case 1:
+            start = CGPointMake(0.0, 0.0);
+            end = CGPointMake(view.frame.size.width, 0.0);
+            break;
+        case 2:
+            start = CGPointMake(0.0, 0.0);
+            end = CGPointMake(view.frame.size.width, view.frame.size.height);
+            break;
+        case 3:
+            start = CGPointMake(view.frame.size.width, 0.0);
+            end = CGPointMake(0.0, view.frame.size.height);
+            break;
+        default:
+            break;
+    }
+    CGContextDrawLinearGradient(context, gradient, start, end, kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    CGGradientRelease(gradient);
+    CGContextRestoreGState(context);
+    CGColorSpaceRelease(colorSpace);
+    UIGraphicsEndImageContext();
+    return image;
+}
+
++ (UIImage *)layerFromStartColor:(UIColor *)startColor stopColor:(UIColor *)stopColor view:(UIView *)view
+{
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.colors = @[(__bridge id)startColor.CGColor,(__bridge id)stopColor.CGColor];
+    gradientLayer.locations = @[@0.0,@1.0];
+    gradientLayer.startPoint = CGPointMake(0, 0);
+    gradientLayer.endPoint = CGPointMake(1.0, 0);
+    gradientLayer.frame = view.frame;
+    
+//    return gradientLayer;
+    UIGraphicsBeginImageContextWithOptions(gradientLayer.frame.size, NO, 0);
+    
+    [gradientLayer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return outputImage;
+}
+
+//+ (UIImage *)imageFromLayer:(CALayer *)layer
+//{
+//    UIGraphicsBeginImageContextWithOptions(layer.frame.size, NO, 0);
+//    
+//    [layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+//    
+//    UIGraphicsEndImageContext();
+//    
+//    return outputImage;
+//}
 
 + (void)afnErrorState:(NSInteger)errorCode {
     //获取状态吗
@@ -87,7 +171,6 @@
 }
 
 //获取apiToken,先判断本地
-
 + (NSString *)getApiToken:(BOOL)isGetFromNet {
     
     NSString *apiName = [NSString stringWithFormat:URL_API_TOKEN,[AES128 AES128Encrypt]];
@@ -364,7 +447,10 @@
                                     fileName:data.fileName
                                     mimeType:data.fileType];
         }
-    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    } progress:^(NSProgress * _Nonnull uploadProgress) {
+        float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
+        percent(progress);
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
         if ([code isEqualToString:@"INVALID_SIGN"]) {
             //修改第二次请求字典中的apiToken
@@ -375,7 +461,10 @@
 //                [params setValue:[ClassTool getAutograph:params] forKey:@"sign"];
 //            }
             //再次请求
-            [manager POST:urlString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [manager POST:urlString parameters:params progress:^(NSProgress * _Nonnull uploadProgress) {
+                float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
+                percent(progress);
+            } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 if (success) {
                     success(responseObject);
                     if(![To_String(responseObject[@"code"]) isEqualToString:@"SUCCESS"]) {

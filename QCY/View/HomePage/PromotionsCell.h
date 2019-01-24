@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-@class BannerModel;
+//@class BannerModel;
+
+typedef void(^PromotionsBlock)(NSInteger type);
 
 @interface PromotionsCell : UITableViewCell
 + (instancetype)cellWithTableView:(UITableView *)tableView;
-@property (nonatomic, strong)BannerModel *model;
+//@property (nonatomic, strong)BannerModel *model;
+@property (nonatomic, strong)NSMutableArray *dataSource;
+
+@property (nonatomic, copy)PromotionsBlock promotionsBlock;
 @end

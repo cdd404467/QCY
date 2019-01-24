@@ -53,7 +53,7 @@
 //                     @"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=889553397,2093664619&fm=26&gp=0.jpg",
 //                     @"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1397299872,1564665821&fm=26&gp=0.jpg",
 //                     @"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4225846828,2497659140&fm=11&gp=0.jpg"];
-    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(KFit_H(210)));
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(KFit_W(210)));
     SDCycleScrollView *bannerView = [SDCycleScrollView cycleScrollViewWithFrame:frame imageURLStringsGroup:bannerArr];
     bannerView.delegate = self;
     bannerView.autoScrollTimeInterval = 3.f;

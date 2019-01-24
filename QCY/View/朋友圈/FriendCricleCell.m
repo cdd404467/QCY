@@ -389,6 +389,7 @@ CGFloat maxLimitHeight = 110;
     }
     //9个图片
     NSMutableArray *imgArr = [self addPic:model];
+    
     _photoGroup.videoURL = [NSString stringWithFormat:@"%@%@",Photo_URL,model.url];
     _photoGroup.videoPicWidth = model.videoPicWidth;
     _photoGroup.videoPicHight = model.videoPicHigh;
@@ -554,41 +555,56 @@ CGFloat maxLimitHeight = 110;
 //添加图片.......
 - (NSMutableArray *)addPic:(FriendCricleModel *)model {
     NSMutableArray *imgArr = [NSMutableArray arrayWithCapacity:0];
+//    NSMutableArray *previewImgArr = [NSMutableArray arrayWithCapacity:0];
     if ([model.type isEqualToString:@"photo"]) {
         if isRightData(model.pic1) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic1]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic1]];
         }
         if isRightData(model.pic2) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic2]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic2]];
         }
         if isRightData(model.pic3) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic3]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic3]];
         }
         if isRightData(model.pic4) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic4]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic4]];
         }
         if isRightData(model.pic5) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic5]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic5]];
         }
         if isRightData(model.pic6) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic6]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic6]];
         }
         if isRightData(model.pic7) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic7]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic7]];
         }
         if isRightData(model.pic8) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic8]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic8]];
         }
         if isRightData(model.pic9) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.pic9]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@/dye_community_compress%@",Photo_URL,model.pic9]];
         }
     } else {
         if isRightData(model.videoPicUrl) {
             [imgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.videoPicUrl]];
+//            [previewImgArr addObject:[NSString stringWithFormat:@"%@%@",Photo_URL,model.videoPicUrl]];
         }
     }
 
-    return imgArr;
+//    if (isOriginal == YES) {
+        return imgArr;
+//    } else {
+//        return previewImgArr;
+//    }
 }
 
 #pragma mark - 点击事件

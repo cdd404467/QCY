@@ -15,9 +15,9 @@
 
 //#define Photo_URL @"http://192.168.0.76"
 //线上测试-图片
-//#define Photo_URL @"http://static1.i7colors.com"
+#define Photo_URL @"http://static1.i7colors.com"
 //正式
-#define Photo_URL @"http://static.i7colors.com"
+//#define Photo_URL @"http://static.i7colors.com"
 
 //分享地址
 //#define ShareString @"manage"
@@ -61,11 +61,10 @@
 #define Scale_W [UIScreen mainScreen].bounds.size.width / 375.f
 //iPhoneXR 和 iPhoneXS Max
 #define XP (SCREEN_WIDTH == 414.f && SCREEN_HEIGHT == 896.f ? 736.f/667.f : [UIScreen mainScreen].bounds.size.height / 667.f)
-#define Scale_H (SCREEN_WIDTH == 375.f && SCREEN_HEIGHT == 812.f ? 1.0 : XP)
+
 //宽适配
 #define KFit_W(variate) Scale_W * variate
-//高适配
-#define KFit_H(variate) Scale_H * variate
+
 //判断是否是iPhoneX系列
 #define iPhoneX (((SCREEN_WIDTH == 375.f && SCREEN_HEIGHT == 812.f) || (SCREEN_WIDTH == 414.f && SCREEN_HEIGHT == 896.f)) ? YES : NO)
 

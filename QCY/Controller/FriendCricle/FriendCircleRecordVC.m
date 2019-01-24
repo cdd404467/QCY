@@ -59,7 +59,7 @@
 }
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
-    NSString *title = @"暂无朋友圈记录";
+    NSString *title = @"暂无印染圈记录";
     NSDictionary *attributes = @{
                                  NSFontAttributeName:[UIFont boldSystemFontOfSize:16.0f],
                                  NSForegroundColorAttributeName:HEXColor(@"#708090", 1)

@@ -35,6 +35,7 @@ static dispatch_once_t _onceToken;
 
 - (void)begin{
     
+    
     NSAssert(self.images && self.images.count != 0, SETIMAGEASSERTSTRING);
     
 //    NSAssert(self.shouldDismissWhenDragging || self.dismissButtonImage , SETDISMISSBUTTONIMAGEASSERTSTRING);
@@ -91,8 +92,6 @@ if (![userDefaults objectForKey:@"isFirstLaunch"]) {
 - (void)dealloc{
     KSLog(@"[DEBUG] delloc:%@",self);
 }
-
-
 
 
 //NS_INLINE

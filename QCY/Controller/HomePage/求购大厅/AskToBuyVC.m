@@ -157,8 +157,6 @@
     [textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(0);
     }];
-    
-    
 }
 
 #pragma mark - 获取列表数据

@@ -23,7 +23,7 @@
 - (void)setupUI {
     UILabel *noLabel = [[UILabel alloc]init];
     noLabel.textColor = RGBA(153, 153, 153, 1);
-    noLabel.font = [UIFont boldSystemFontOfSize:KFit_H(16)];
+    noLabel.font = [UIFont boldSystemFontOfSize:KFit_W(16)];
     noLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:noLabel];
     [noLabel mas_makeConstraints:^(MASConstraintMaker *make) {

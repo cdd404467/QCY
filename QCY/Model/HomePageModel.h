@@ -87,6 +87,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface BannerModel : NSObject
 
 @property (nonatomic, copy)NSString *ad_image;                  //轮播图
+@property (nonatomic, copy)NSString *plate_code;                //活动名字
+@property (nonatomic, copy)NSString *ad_name;                   //活动名字
 @end
 
 NS_ASSUME_NONNULL_END

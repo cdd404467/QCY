@@ -29,7 +29,7 @@
     
     CGFloat width = SCREEN_WIDTH - KFit_W(13) * 2;
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.frame = CGRectMake(KFit_H(13), 0, width, 40);
+    titleLabel.frame = CGRectMake(KFit_W(13), 0, width, 40);
     titleLabel.backgroundColor = [UIColor whiteColor];
     titleLabel.font = [UIFont systemFontOfSize:14];
     titleLabel.textColor = HEXColor(@"#818181", 1);
@@ -39,7 +39,7 @@
     
     //分割线
     UIImageView *lineImage = [[UIImageView alloc] init];
-    lineImage.frame = CGRectMake(KFit_H(13), 39, width, 1);
+    lineImage.frame = CGRectMake(KFit_W(13), 39, width, 1);
     lineImage.image = [UIImage imageNamed:@"line_header"];
     [bgView addSubview:lineImage];
     

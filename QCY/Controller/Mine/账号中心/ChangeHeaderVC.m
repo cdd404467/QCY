@@ -34,7 +34,7 @@
 }
 
 - (void)setNavBar {
-    self.nav.titleLabel.text = [_changeType isEqualToString:@"uc"] ? @"用户头像" : @"朋友圈头像";
+    self.nav.titleLabel.text = [_changeType isEqualToString:@"uc"] ? @"用户头像" : @"印染圈头像";
     self.nav.titleLabel.textColor = [UIColor whiteColor];
     [self.nav.backBtn setImage:[UIImage imageNamed:@"back_white"] forState:UIControlStateNormal];
     [self.nav.rightBtn addTarget:self action:@selector(selectedPhoto) forControlEvents:UIControlEventTouchUpInside];

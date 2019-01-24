@@ -60,7 +60,7 @@
         }
         _tableView.rowHeight = UITableViewAutomaticDimension;
         ProductDetailHeaderView *header = [[ProductDetailHeaderView alloc] initWithDataSource:_dataSource];
-        header.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40 + KFit_H(210) + 60);
+        header.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40 + KFit_W(210) + 60);
         _tableView.tableHeaderView = header;
         [header.shareBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
         UIView *footer = [[UIView alloc] init];

@@ -17,6 +17,14 @@
 @property(nonatomic,copy)NSString * fileType;//文件类型
 @end
 
+
+typedef enum  {
+    topToBottom = 0,//从上到小
+    leftToRight = 1,//从左到右
+    upleftTolowRight = 2,//左上到右下
+    uprightTolowLeft = 3,//右上到左下
+} GradientType;
+
 @interface ClassTool : NSObject
 + (NSString *)getApiToken:(BOOL)isGetFromNet;
 + (UIButton *)customBackBtn;
@@ -25,8 +33,15 @@
     (0,0)(0,1.0) 垂直 ***/
 + (void)addLayer:(UIView *)view;
 + (void)addLayer:(UIView *)view frame:(CGRect)frame;
-+ (void)addLayerVertical:(UIView *)view frame:(CGRect)frame startColor:(UIColor *)sColor endColor:(UIColor *) eColor;
 + (void)addLayer:(UIView *)view frame:(CGRect)frame startPoint:(CGPoint)sPoint endPoint:(CGPoint)ePoint;
+//水平渐变
++ (void)addLayerHorizontal:(UIView *)view frame:(CGRect)frame startColor:(UIColor *)sColor endColor:(UIColor *)eColor;
+//垂直渐变
++ (void)addLayerVertical:(UIView *)view frame:(CGRect)frame startColor:(UIColor *)sColor endColor:(UIColor *) eColor;
+
++ (UIImage*)getGradedImage:(UIView *)view colors:(NSArray<UIColor *> *)colors gradientType:(GradientType)type;
+
++ (UIImage *)layerFromStartColor:(UIColor *)startColor stopColor:(UIColor *)stopColor view:(UIView *)view;
 /**
  get请求
  

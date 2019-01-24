@@ -118,7 +118,7 @@
 }
 
 - (void)setNavBar {
-    self.nav.titleLabel.text = @"朋友圈";
+    self.nav.titleLabel.text = @"印染圈";
     self.nav.backBtn.hidden = YES;
     [self.nav.rightBtn setTitle:@"我要发布" forState:UIControlStateNormal];
     [self.nav.rightBtn setTitleColor:MainColor forState:UIControlStateNormal];
@@ -303,6 +303,7 @@
     }];
 }
 
+//刷新
 - (void)refreshList {
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
     self.isRefresh = YES;
@@ -332,6 +333,7 @@
     dispatch_group_enter(group);
     dispatch_group_async(group, globalQueue, ^{
         [weakself requestList:group];
+//        dispatch_group_leave(group);
     });
     
     //全部任务完成后，就可以在这吊了
@@ -362,7 +364,7 @@
     NSString *urlString = [NSString stringWithFormat:URL_Friend_List,User_Token,_page,Page_Count];
     DDWeakSelf;
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-//                            NSLog(@"---- %@",json);
+                            NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.totalNum = [json[@"totalCount"] intValue];
             if (weakself.isRefresh == YES) {
@@ -374,10 +376,13 @@
                 model.likeList = [LikeListModel mj_objectArrayWithKeyValuesArray:model.likeList];
                 model.commentList = [CommentListModel mj_objectArrayWithKeyValuesArray:model.commentList];
             }
+            NSLog(@"kkkkk");
+        } else {
+            NSLog(@"jjjjj");
         }
         dispatch_group_leave(group);
     } Failure:^(NSError *error) {
-        NSLog(@" Error : %@",error);
+//        NSLog(@" Error : %@",error);
         dispatch_group_leave(group);
     }];
 }
@@ -387,7 +392,7 @@
     DDWeakSelf;
     NSString *urlString = [NSString stringWithFormat:URL_Friend_MyInfo,User_Token];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-        //                NSLog(@"---- %@",json);
+//                        NSLog(@"---===- %@",json);
         weakself.myInfoDataSource = [FriendCricleInfoModel mj_objectWithKeyValues:json[@"data"]];
         dispatch_group_leave(group);
     } Failure:^(NSError *error) {
@@ -839,23 +844,10 @@
     // 获取键盘动画时间
     CGFloat animationTime  = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
 
-    // 定义好动作
-//    void (^animation)(void) = ^void(void) {
-//
-//        self.kbView.transform = CGAffineTransformMakeTranslation(0, -(keyBoardHeight + self.kbView.height));
-//    };
     DDWeakSelf;
     [UIView animateWithDuration:animationTime animations:^{
         weakself.kbView.top = SCREEN_HEIGHT - keyBoardHeight - weakself.kbView.height;
     }];
-    
-    
-//    if (animationTime > 0) {
-//        [UIView animateWithDuration:animationTime animations:animation];
-//    } else {
-//        animation();
-//    }
-//    NSLog(@"---- %f",keyBoardHeight + self.kbView.height);
 }
 
 - (void)keyBoardWillHide:(NSNotification *)notificaiton
@@ -868,16 +860,6 @@
     [UIView animateWithDuration:animationTime animations:^{
         weakself.kbView.top = SCREEN_HEIGHT;
     }];
-    // 定义好动作
-//    void (^animation)(void) = ^void(void) {
-//        self.kbView.transform = CGAffineTransformIdentity;
-//    };
-//
-//    if (animationTime > 0) {
-//        [UIView animateWithDuration:animationTime animations:animation];
-//    } else {
-//        animation();
-//    }
 }
 
 //键盘消失

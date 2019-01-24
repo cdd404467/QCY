@@ -17,6 +17,8 @@
 #import "HelperTool.h"
 #import "UIView+Geometry.h"
 #import "UITextView+Placeholder.h"
+#import "ProgressView.h"
+
 
 #define LeftGap 35
 #define PhotoViewWidth SCREEN_WIDTH - LeftGap * 2
@@ -33,6 +35,7 @@
 @property (nonatomic, strong)HXPhotoManager *manager;
 @property (nonatomic, strong)HXPhotoView *photoView;
 @property (nonatomic, strong)HXDatePhotoToolManager *toolManager;
+@property (nonatomic, strong)ProgressView *progressView;
 @property (nonatomic, assign)BOOL needDeleteItem;
 @end
 
@@ -74,6 +77,14 @@
     return _videoArray;
 }
 
+- (ProgressView *)progressView {
+    if (!_progressView) {
+        _progressView = [[ProgressView alloc] init];
+        
+    }
+    return _progressView;
+}
+
 - (UIButton *)bottomView {
     if (!_bottomView) {
         _bottomView = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -95,7 +106,8 @@
         _manager.configuration.photoMaxNum = 9;
         _manager.configuration.videoMaxNum = 1;
         _manager.configuration.maxNum = 9;
-        _manager.configuration.videoMaxDuration = 15.f;
+        _manager.configuration.videoMaxDuration = 16.f;
+        _manager.configuration.videoMaximumDuration = 14.f;
         _manager.configuration.saveSystemAblum = YES;
         _manager.configuration.showDateSectionHeader = NO;
         //视频和照片不能同时选择
@@ -116,13 +128,18 @@
 
 #pragma mark - 发布朋友圈
 - (void)publishFriendCircle {
+    
+//    _progressView = [[ProgressView alloc] init];
+//    _progressView.progressView.progress = 0.5;
+    
+    
     [_textView resignFirstResponder];
     NSString *type = [NSString string];
     NSMutableArray *imageArray = [NSMutableArray arrayWithCapacity:0];
     if (_photoArray.count > 0) {
         for (int i = 0; i < _photoArray.count; i++) {
             FormData *formData = [[FormData alloc] init];
-            formData.fileData = UIImageJPEGRepresentation(_photoArray[i],0.1);
+            formData.fileData = UIImageJPEGRepresentation(_photoArray[i],0.2);
             formData.name = @"files";
             formData.fileName = @"1.png";
             formData.fileType = @"image/png";
@@ -159,12 +176,23 @@
             if (weakself.refreshFCBlock) {
                 weakself.refreshFCBlock();
             }
+//            [weakself.progressView removeView];
             [weakself exit];
         }
         weakself.publishBtn.userInteractionEnabled = YES;
     } Failure:^(NSError *error) {
         weakself.publishBtn.userInteractionEnabled = YES;
-    } Progress:nil];
+    } Progress:^(float percent) {
+//        NSLog(@"--- %f",percent);
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [weakself progressView];
+//            weakself.progressView.progressView.progress = percent;
+//            NSString *temStr = [NSString stringWithFormat:@"%.2f",percent * 100];
+//            NSString *per = @"%";
+//            NSString *progress = [NSString stringWithFormat:@"%@%@",@([temStr floatValue]),per];
+//            weakself.progressView.percentLabel.text = [NSString stringWithFormat:@"上传进度: %@",progress];
+//        });
+    }];
 }
 
 #pragma mark - 照片代理方法
@@ -324,7 +352,6 @@
     _photoView = photoView;
     
     [self.view addSubview:self.bottomView];
-    
 }
 
 

@@ -27,6 +27,7 @@
 @property (nonatomic, strong)UITextField *msgCodeTF;
 @property (nonatomic, strong)UITextField *setPassTF;
 @property (nonatomic, strong)UITextField *setPassAgainTF;
+@property (nonatomic, strong)UITextField *registerNumTF;
 @property (nonatomic, strong)UIScrollView *scrollView;
 @property (nonatomic, strong)UIImageView *checkImage;
 @property (nonatomic, strong)UIButton *countDownbtn;
@@ -105,14 +106,14 @@
                            };
     DDWeakSelf;
     [ClassTool postRequest:URL_Msg_Code_Register Params:[dict mutableCopy] Success:^(id json) {
-//                NSLog(@"----- %@",json);
+        //                NSLog(@"----- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             BOOL isSuc = [json[@"data"] boolValue];
             if (isSuc == YES) {
                 [weakself countDown:weakself.countDownbtn];
             }
         }else if ([json[@"code"] isEqualToString:@"CAPTCHA_ERROR"]) {
-
+            
         }
         
     } Failure:^(NSError *error) {
@@ -128,13 +129,14 @@
     
     NSDictionary *dict = @{@"phone":_phoneTF.text,
                            @"password":[AES128 AES128Encrypt:_setPassTF.text],
-                           @"smsCode":_msgCodeTF.text
+                           @"smsCode":_msgCodeTF.text,
+                           @"inviteCode":_registerNumTF.text
                            };
     DDWeakSelf;
     [CddHUD show:self.view];
     [ClassTool postRequest:URL_User_Register Params:[dict mutableCopy] Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
-//        NSLog(@"----- %@",json);
+        //        NSLog(@"----- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [CddHUD showTextOnlyDelay:@"注册成功" view:self.view];
@@ -167,7 +169,7 @@
     DDWeakSelf;
     CountDown *countDown = [[CountDown alloc] init];
     [countDown countDownWithStratDate:strtDate finishDate:finishDate completeBlock:^(NSInteger day, NSInteger hour, NSInteger minute, NSInteger second) {
-//        NSLog(@"second = %li",second);
+        //        NSLog(@"second = %li",second);
         NSInteger totoalSecond =day*24*60*60+hour*60*60 + minute*60+second;
         if (totoalSecond == 0) {
             weakself.countDownbtn.enabled = YES;
@@ -376,13 +378,33 @@
     }];
     _countDownbtn = countDownbtn;
     
+    //邀请码
+    UITextField *registerNumTF = [[UITextField alloc] init];
+    registerNumTF.keyboardType = UIKeyboardTypeASCIICapable;
+    [_scrollView addSubview:registerNumTF];
+    [registerNumTF mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(bgView2.mas_bottom).offset(15);
+        make.height.mas_equalTo(phoneTF.mas_height);
+        make.left.mas_equalTo(phoneTF.mas_left);
+        make.right.mas_equalTo(phoneTF.mas_right);
+    }];
+    //限制字数
+    [registerNumTF lengthLimit:^{
+        if (registerNumTF.text.length > 6) {
+            registerNumTF.text = [registerNumTF.text substringToIndex:6];
+        }
+    }];
+    _registerNumTF = registerNumTF;
+    [self setTextField:registerNumTF];
+    
+    
     //设置密码
     UITextField *setPassTF = [[UITextField alloc] init];
     setPassTF.keyboardType = UIKeyboardTypeASCIICapable;
     setPassTF.secureTextEntry = YES;
     [_scrollView addSubview:setPassTF];
     [setPassTF mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(bgView2.mas_bottom).offset(15);
+        make.top.mas_equalTo(registerNumTF.mas_bottom).offset(15);
         make.height.mas_equalTo(phoneTF.mas_height);
         make.left.mas_equalTo(phoneTF.mas_left);
         make.right.mas_equalTo(phoneTF.mas_right);
@@ -456,6 +478,8 @@
         tf.placeholder = @"请输入图形验证码";
     } else if ([tf isEqual:_msgCodeTF]) {
         tf.placeholder = @"请输入手机验证码";
+    } else if ([tf isEqual:_registerNumTF]) {
+        tf.placeholder = @"请输入邀请码(非必填)";
     } else if ([tf isEqual:_setPassTF]) {
         tf.placeholder = @"设置密码";
     } else {
@@ -463,7 +487,7 @@
     }
     //添加leftView
     UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, KFit_W(18), 50)];
-//    leftView.image = [UIImage imageNamed:imageName];
+    //    leftView.image = [UIImage imageNamed:imageName];
     leftView.contentMode = UIViewContentModeCenter;
     tf.leftView = leftView;
     tf.leftViewMode = UITextFieldViewModeAlways;
@@ -493,3 +517,4 @@
 }
 
 @end
+

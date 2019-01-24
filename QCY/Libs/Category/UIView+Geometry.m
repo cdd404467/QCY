@@ -110,8 +110,10 @@
 
 - (void)setBottom:(CGFloat)newbottom
 {
+    CGFloat rightY = [self superview].frame.size.height - newbottom;
+    CGFloat deltY = rightY - (self.frame.origin.y + self.frame.size.height);
     CGRect newframe = self.frame;
-    newframe.origin.y = newbottom - self.frame.size.height;
+    newframe.origin.y += deltY;
     self.frame = newframe;
 }
 
@@ -122,9 +124,10 @@
 
 - (void)setRight:(CGFloat)newright
 {
-    CGFloat delta = newright - (self.frame.origin.x + self.frame.size.width);
+    CGFloat rightX = [self superview].frame.size.width - newright;
+    CGFloat deltX = rightX - (self.frame.origin.x + self.frame.size.width);
     CGRect newframe = self.frame;
-    newframe.origin.x += delta ;
+    newframe.origin.x += deltX ;
     self.frame = newframe;
 }
 
@@ -136,7 +139,7 @@
 - (void)setCenterX:(CGFloat)centetX
 {
     CGPoint center = self.center;
-    center.x = centetX;
+    center.x = centetX - [self superview].frame.origin.x;
     self.center = center;
 }
 
@@ -148,7 +151,7 @@
 - (void)setCenterY:(CGFloat)centetY
 {
     CGPoint center = self.center;
-    center.y = centetY;
+    center.y = centetY - [self superview].frame.origin.y;
     self.center = center;
 }
 
