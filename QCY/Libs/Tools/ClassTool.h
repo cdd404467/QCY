@@ -71,4 +71,7 @@ typedef enum  {
 
 //分享
 + (void)shareSomething:(NSMutableArray<NSString *> *)imageArray urlStr:(NSString *)urlStr title:(NSString *)title text:(NSString *)text;
+
+//数组转json字符串
++ (NSString *)arrayToJSONString:(NSArray *)array;
 @end

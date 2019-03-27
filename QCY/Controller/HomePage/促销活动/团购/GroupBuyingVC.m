@@ -7,7 +7,6 @@
 //
 
 #import "GroupBuyingVC.h"
-#import "CommonNav.h"
 #import "MacroHeader.h"
 #import "ClassTool.h"
 #import "CddHUD.h"
@@ -46,33 +45,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-    [self setNavBar];
+    self.title = @"七彩云团购惠";
+    
     [self loadData];
 }
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-}
-
-- (void)setNavBar {
-    CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"七彩云团购惠";
-    [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nav];
-}
-
 
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -82,7 +63,12 @@
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
 
         PromotionsHeaderView *header = [[PromotionsHeaderView alloc] init];
         header.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_W(144));
@@ -128,7 +114,7 @@
     //第一个线程获取banner
     dispatch_group_enter(group);
     dispatch_group_async(group, globalQueue, ^{
-        NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"XCX_Group_Buy"];
+        NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"APP_Group_Buy"];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
 //                 NSLog(@"---- %@",json);
@@ -234,11 +220,6 @@
     cell.model = _dataSource[indexPath.row];
     
     return cell;
-}
-
-
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LookOverHowToUseVC : BaseViewControllerNav
+@interface LookOverHowToUseVC : BaseViewController
 
 @end
 

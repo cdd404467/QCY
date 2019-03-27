@@ -138,7 +138,7 @@
     
     //价格
     if (isRightData(@(model.price).stringValue) && [model.displayPrice isEqualToString:@"1"]){
-        NSString *price = [self getStringFrom:model.price];
+        NSString *price = [HelperTool getStringFrom:model.price];
         NSString *text = [NSString stringWithFormat:@"¥ %@",price];
         NSMutableAttributedString *mutableText = [[NSMutableAttributedString alloc] initWithString:text];
         mutableText.yy_color = HEXColor(@"#F10215", 1);
@@ -159,18 +159,7 @@
 
 }
 
--(NSString*)getStringFrom:(double)doubleVal {
-    NSString* stringValue = @"0.00";
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
-    formatter.usesSignificantDigits = true;
-    formatter.maximumSignificantDigits = 100;
-    formatter.groupingSeparator = @"";
-    formatter.numberStyle = NSNumberFormatterDecimalStyle;
-    stringValue = [formatter stringFromNumber:@(doubleVal)];
-    
-    return stringValue;
-}
-
+//拨号
 - (void)callPhone {
     NSString *phoneNum = [NSString string];
     if isRightData(_model.phone) {

@@ -41,12 +41,12 @@
     bindView.layer.cornerRadius = 8;
     [self addSubview:bindView];
     
-    CGFloat width = KFit_W(290);
-    CGFloat height = KFit_W(260);
+    CGFloat width = 290;
+    CGFloat height = 320;
     bindView.frame = CGRectMake( (SCREEN_WIDTH - width) / 2 , SCREEN_HEIGHT + height, width, height);
     [UIView animateWithDuration:0.3 animations:^{
 //        bindView.center = weakself.center;
-        CGFloat dis = SCREEN_HEIGHT / 2 - height / 2 - KFit_W(25);
+        CGFloat dis = SCREEN_HEIGHT / 2 - height / 2 - 25;
         bindView.frame = CGRectMake( (SCREEN_WIDTH - width) / 2 , dis, width, height);
     }];
     
@@ -57,9 +57,9 @@
     bindText.textColor = [UIColor blackColor];
     [bindView addSubview:bindText];
     [bindText mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@(KFit_W(18)));
-        make.top.mas_equalTo(@(KFit_W(20)));
-        make.centerX.equalTo(bindView);
+        make.height.mas_equalTo(18);
+        make.top.mas_equalTo(20);
+        make.centerX.mas_equalTo(bindView);
     }];
     
     //手机号tf
@@ -81,12 +81,33 @@
     [phoneTF addTarget:self action:@selector(phoneTFChange:) forControlEvents:UIControlEventEditingChanged];
     [bindView addSubview:phoneTF];
     [phoneTF mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(@(KFit_W(60)));
-        make.left.equalTo(@(KFit_W(20)));
-        make.right.equalTo(@(KFit_W(-20)));
-        make.height.equalTo(@(KFit_W(40)));
+        make.top.mas_equalTo(60);
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(40);
     }];
     _phoneTF = phoneTF;
+    
+    //手机号tf
+    UITextField *inviteTF = [[UITextField alloc]init];
+    inviteTF.leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 19, 30)];;
+    inviteTF.leftViewMode = UITextFieldViewModeAlways;
+    inviteTF.backgroundColor = RGBA(239, 244, 248, 1);
+    inviteTF.layer.cornerRadius = 5;
+    inviteTF.keyboardType = UIKeyboardTypeASCIICapable;
+    inviteTF.font = [UIFont systemFontOfSize:14];
+    [inviteTF setValue:RGBA(122, 122, 122, 1) forKeyPath:@"_placeholderLabel.textColor"];
+    inviteTF.layer.borderColor= RGBA(219, 222, 224, 1).CGColor;
+    inviteTF.layer.borderWidth= 0.5f;
+    inviteTF.placeholder = @"邀请码(非必填)";
+    inviteTF.tintColor = MainColor;
+//    [inviteTF addTarget:self action:@selector(phoneTFChange:) forControlEvents:UIControlEventEditingChanged];
+    [bindView addSubview:inviteTF];
+    [inviteTF mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.phoneTF.mas_bottom).with.offset(20);
+        make.left.height.width.equalTo(phoneTF);
+    }];
+    _inviteTF = inviteTF;
     
     //验证码tf
     UITextField *passwdTF = [[UITextField alloc]init];
@@ -107,10 +128,10 @@
     [passwdTF addTarget:self action:@selector(passTFChange:) forControlEvents:UIControlEventEditingChanged];
     [bindView addSubview:passwdTF];
     [passwdTF mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.phoneTF.mas_bottom).with.offset(KFit_W(20));
-        make.left.equalTo(@(KFit_W(20)));
-        make.width.equalTo(@((width - KFit_W(50)) / 2 ));
-        make.height.equalTo(@(KFit_W(40)));
+        make.top.equalTo(self.inviteTF.mas_bottom).with.offset(20);
+        make.left.mas_equalTo(20);
+        make.width.mas_equalTo((width - 50) / 2 );
+        make.height.mas_equalTo(40);
     }];
     _passwdTF = passwdTF;
     
@@ -128,8 +149,8 @@
     [bindView addSubview:codeBtn];
     [codeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.height.mas_equalTo(passwdTF);
-        make.left.equalTo(passwdTF.mas_right).with.offset(KFit_W(10));
-        make.right.equalTo(@(KFit_W(-20)));
+        make.left.mas_equalTo(passwdTF.mas_right).with.offset(10);
+        make.right.mas_equalTo(-20);
     }];
     _codeBtn = codeBtn;
     
@@ -143,14 +164,14 @@
     cancelBtn.titleLabel.font = [UIFont systemFontOfSize:16];
     [bindView addSubview:cancelBtn];
     [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@(KFit_W(40)));
-        make.left.equalTo(@(KFit_W(20)));
-        make.width.equalTo(@((width - KFit_W(50)) / 2 ));
-        make.top.mas_equalTo(self.passwdTF.mas_bottom).with.offset(KFit_W(30));
+        make.height.mas_equalTo(40);
+        make.right.mas_equalTo(bindView.mas_centerX).offset(-10);
+        make.width.mas_equalTo((width - 50) / 2 );
+        make.top.mas_equalTo(self.passwdTF.mas_bottom).with.offset(30);
     }];
     _cancelBtn = cancelBtn;
     
-    //登录按钮
+    //绑定按钮
     UIButton *loginBtn = [[UIButton alloc]init];
     [loginBtn setTitle:@"绑定" forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -164,10 +185,8 @@
     [bindView addSubview:loginBtn];
     loginBtn.enabled = NO;
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@(KFit_W(40)));
-        make.left.equalTo(cancelBtn.mas_right).with.offset(KFit_W(10));
-        make.right.equalTo(@(KFit_W(-20)));
-        make.top.mas_equalTo(cancelBtn.mas_top);
+        make.left.mas_equalTo(cancelBtn.mas_right).with.offset(20);
+        make.top.height.width.mas_equalTo(cancelBtn);
     }];
     _loginBtn = loginBtn;
 }
@@ -254,7 +273,7 @@
 
     if (textField.text.length == 11 && [_codeBtn.titleLabel.text isEqualToString:@"获取验证码"]) {
         self.codeBtn.enabled = YES;
-        [self.passwdTF becomeFirstResponder];
+//        [self.passwdTF becomeFirstResponder];
     } else {
         self.codeBtn.enabled = NO;
     }

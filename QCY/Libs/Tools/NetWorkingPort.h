@@ -14,9 +14,9 @@
 //外网
 //#define URL_ALL_API @"http://116.236.181.54:9919/app-web/"
 //线上测试
-#define URL_ALL_API @"https://i7apptest.i7colors.com/app-web/"
+//#define URL_ALL_API @"https://i7apptest.i7colors.com/app-web/"
 //正式
-//#define URL_ALL_API @"https://i7app.i7colors.com/app-web/"
+#define URL_ALL_API @"https://i7app.i7colors.com/app-web/"
 
 //#define URL_ALL_API @"https://i7appmain.i7colors.com/app-web/"
 
@@ -125,12 +125,25 @@
 #define URL_Discount_sales_Already @"sales/querySalesOrderList?sign=QCYDSSIGNCDD&salesId=%@&pageNo=%d&pageSize=%d"
 //采购联盟列表
 #define URL_Purchase_League_List @"meetingName/queryMeetingNameList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d"
-//我的订货单列表
-#define URL_My_Ordergoods_list @"meetingShop/queryMeetingUserShopList?sign=QCYDSSIGNCDD&orderStatus=0&phone=%@&pageNo=%d&pageSize=%d"
+//我的订/供货单列表 - 0 是订货，1是供货
+#define URL_My_Ordergoods_list @"meetingShop/queryMeetingUserShopList?sign=QCYDSSIGNCDD&orderStatus=%@&phone=%@&pageNo=%d&pageSize=%d"
+//获取系统采购或供货的列表
+#define URL_System_Goods_List @"meetingShop/queryAddMeetingShopList?sign=QCYDSSIGNCDD&meetingId=%@&orderStatus=%@"
+//投票
+#define URL_Vote_NameList @"voteMain/queryVoteMainList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d"
+//活动详情
+#define URL_Vote_Detail @"voteMain/getVoteMainById?sign=QCYDSSIGNCDD&id=%@"
+//参赛人员列表
+#define URL_Vote_Participant_List @"voteApplication/queryVoteApplicationList?sign=QCYDSSIGNCDD&token=%@&mainId=%@&name=%@&number=%@&pageNo=%d&pageSize=%d"
+//参赛人员详情
+#define URL_Vote_Joiner_Detail @"voteApplication/getVoteApplicationById?sign=QCYDSSIGNCDD&token=%@&mainId=%@&id=%@"
 
-
-
-
+//获取竞拍列表
+#define URL_Auction_List @"auction/queryAuctionList?sign=QCYDSSIGNCDD&pageNo=%d&pageSize=%d"
+//竞拍详情
+#define URL_Auction_Detail @"auction/getAuctionById?sign=QCYDSSIGNCDD&id=%@"
+//竞拍出价记录
+#define URL_Auction_PriceRecord @"auction/queryAuctionBuyerList?sign=QCYDSSIGNCDD&auctionId=%@&pageNo=%d&pageSize=%d"
 
 /******************************** post请求 ********************************/
 //用户登录
@@ -187,6 +200,18 @@
 #define URL_Change_FCInfo @"user/updateMyDyeInfo"
 //参与认购
 #define URL_Join_Discount_Buy @"sales/addSalesOrder"
+//订货
+#define URL_Order_Goods @"meetingShop/addMeetingShop"
+//发起投票
+#define URL_Vote_Start @"voteJoin/addVoteJoin"
+//申请参与投票
+#define URL_Apply_JoinVote @"voteApplication/addVoteApplication"
+//查看我的货单时获取短信验证码
+#define URL_Cglm_Get_SMS @"meetingShop/registerCode"
+//采购联盟验证短信
+#define URL_Cglm_Check_SMS @"meetingShop/verifycode"
+//参与竞拍
+#define URL_Join_Auction @"auction/addAuctionBuyer"
 
 
 #endif /* NetWorkingPort_h */

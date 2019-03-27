@@ -54,10 +54,28 @@
 		FC2A9420219C386300096A67 /* MessageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2A941F219C386300096A67 /* MessageVC.m */; };
 		FC2A9423219C612600096A67 /* MsgChildVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2A9422219C612600096A67 /* MsgChildVC.m */; };
 		FC2AACAF216CA40800E443F3 /* CommonNav.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2AACAE216CA40800E443F3 /* CommonNav.m */; };
+		FC2DCF20221CF95F0077DB50 /* AddCustomGoodsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF1F221CF95F0077DB50 /* AddCustomGoodsVC.m */; };
+		FC2DCF26221E7F1F0077DB50 /* ContactsInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF25221E7F1F0077DB50 /* ContactsInfoCell.m */; };
+		FC2DCF2C221F9D240077DB50 /* SelectStandardView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF2B221F9D240077DB50 /* SelectStandardView.m */; };
+		FC2DCF2F221FD9520077DB50 /* SelectStandardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF2E221FD9520077DB50 /* SelectStandardCell.m */; };
+		FC2DCF33222380F10077DB50 /* VoteVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF32222380F10077DB50 /* VoteVC.m */; };
+		FC2DCF372223857B0077DB50 /* VoteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF362223857B0077DB50 /* VoteCell.m */; };
+		FC2DCF3A22238FEB0077DB50 /* VoteModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF3922238FEB0077DB50 /* VoteModel.m */; };
+		FC2DCF3D2223D0CF0077DB50 /* VoteDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF3C2223D0CF0077DB50 /* VoteDetailVC.m */; };
+		FC2DCF402223D7DD0077DB50 /* VoteDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF3F2223D7DD0077DB50 /* VoteDetailHeaderView.m */; };
+		FC2DCF432223E2EC0077DB50 /* ContestantsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF422223E2EC0077DB50 /* ContestantsVC.m */; };
+		FC2DCF462223E3490077DB50 /* ApplyForJoinVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF452223E3490077DB50 /* ApplyForJoinVC.m */; };
+		FC2DCF492223E37B0077DB50 /* ActivityRulesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF482223E37B0077DB50 /* ActivityRulesVC.m */; };
+		FC2DCF4C22243E3F0077DB50 /* ContestantsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC2DCF4B22243E3F0077DB50 /* ContestantsCell.m */; };
+		FC31053A2245E080002E8886 /* BasePresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC3105392245E080002E8886 /* BasePresentViewController.m */; };
+		FC31053D224615C7002E8886 /* CustomNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FC31053C224615C7002E8886 /* CustomNavigationBar.m */; };
+		FC310540224B1E93002E8886 /* AutoImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC31053F224B1E93002E8886 /* AutoImageCell.m */; };
 		FC33C31C214BA66400D26C97 /* BaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C31B214BA66400D26C97 /* BaseNavigationController.m */; };
 		FC33C32D214F65FA00D26C97 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C32C214F65FA00D26C97 /* BaseViewController.m */; };
 		FC33C330214F667C00D26C97 /* OpenMallVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C32F214F667C00D26C97 /* OpenMallVC.m */; };
 		FC33C334214F72C800D26C97 /* OpenMallVC_Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC33C333214F72C800D26C97 /* OpenMallVC_Cell.m */; };
+		FC36AB1F21F9622D0097B915 /* ManifestSupplyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC36AB1E21F9622D0097B915 /* ManifestSupplyCell.m */; };
+		FC36AB2221F964640097B915 /* StandardView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC36AB2121F964640097B915 /* StandardView.m */; };
 		FC48F45C21820B0F00C69B49 /* MyAskBuyListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC48F45B21820B0F00C69B49 /* MyAskBuyListVC.m */; };
 		FC48F45F2182A37800C69B49 /* MyAcceptedOfferListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC48F45E2182A37800C69B49 /* MyAcceptedOfferListVC.m */; };
 		FC48F4662186E4DC00C69B49 /* LXTagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC48F4642186E4DC00C69B49 /* LXTagsView.m */; };
@@ -72,6 +90,13 @@
 		FC4B2FA22192B82900854678 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4B2FA12192B82900854678 /* ImageCell.m */; };
 		FC4B2FA52192D45500854678 /* GroupBuyAlreadyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4B2FA42192D45500854678 /* GroupBuyAlreadyCell.m */; };
 		FC4E91E521C757A5000472C7 /* UserProtocolVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC4E91E321C757A5000472C7 /* UserProtocolVC.m */; };
+		FC6E8DBF223F386200DD0B87 /* VHLNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6E8DBD223F386200DD0B87 /* VHLNavigation.m */; };
+		FC6E8DC2223F60D400DD0B87 /* UIButton+EnlargeEdge.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6E8DC1223F60D400DD0B87 /* UIButton+EnlargeEdge.m */; };
+		FC6E8DC5223F73AD00DD0B87 /* UIViewController+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6E8DC4223F73AD00DD0B87 /* UIViewController+Extension.m */; };
+		FC6E8DED22428CEF00DD0B87 /* NSObject+SXRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6E8DE922428CEF00DD0B87 /* NSObject+SXRuntime.m */; };
+		FC6E8DEE22428CEF00DD0B87 /* UINavigation+SXFixSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6E8DEA22428CEF00DD0B87 /* UINavigation+SXFixSpace.m */; };
+		FC6E8DEF22428CEF00DD0B87 /* UIViewController+BarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6E8DEC22428CEF00DD0B87 /* UIViewController+BarButton.m */; };
+		FC6E8DF2224361BA00DD0B87 /* CircleClassifyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6E8DF1224361BA00DD0B87 /* CircleClassifyVC.m */; };
 		FC744AB6219D85770065F642 /* MsgDetaiiVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC744AB5219D85770065F642 /* MsgDetaiiVC.m */; };
 		FC7E10B12150DB22006FCDEF /* HelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10B02150DB22006FCDEF /* HelperTool.m */; };
 		FC7E10BA2150DF9C006FCDEF /* MineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7E10B92150DF9C006FCDEF /* MineVC.m */; };
@@ -139,6 +164,11 @@
 		FC9FB9D92194414F0008A90E /* TestVC2.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9FB9D82194414F0008A90E /* TestVC2.m */; };
 		FCB8A68D21C7360800048A9B /* FCUnReadMsgVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8A68C21C7360800048A9B /* FCUnReadMsgVC.m */; };
 		FCB8A69021C737B600048A9B /* FCUnReadMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8A68F21C737B600048A9B /* FCUnReadMsgCell.m */; };
+		FCB8EE6122267C68007A28DD /* RankDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8EE6022267C68007A28DD /* RankDetailVC.m */; };
+		FCB8EE6422278423007A28DD /* BaseParameterTextVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8EE6322278423007A28DD /* BaseParameterTextVC.m */; };
+		FCB8EE67222786C1007A28DD /* BaseParameterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8EE66222786C1007A28DD /* BaseParameterCell.m */; };
+		FCB8EE6A2227B1C8007A28DD /* ContestantsSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8EE692227B1C8007A28DD /* ContestantsSearchVC.m */; };
+		FCB8EE732228C932007A28DD /* AddStandardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8EE722228C932007A28DD /* AddStandardCell.m */; };
 		FCB9E414217258460039AE04 /* UIDevice+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB9E413217258460039AE04 /* UIDevice+UUID.m */; };
 		FCB9E41B2174F58B0039AE04 /* AskToBuyDetailsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB9E41A2174F58B0039AE04 /* AskToBuyDetailsVC.m */; };
 		FCB9E41E217573C10039AE04 /* PostBuyingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB9E41D217573C10039AE04 /* PostBuyingVC.m */; };
@@ -173,8 +203,23 @@
 		FCC5763021888DA0004ED61D /* ProductInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC5762F21888DA0004ED61D /* ProductInfoCell.m */; };
 		FCC8899921E438370020F78B /* PrchaseLeagueVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC8899821E438370020F78B /* PrchaseLeagueVC.m */; };
 		FCC8899D21E43D0E0020F78B /* PrchaseLeagueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC8899C21E43D0E0020F78B /* PrchaseLeagueCell.m */; };
-		FCC889A021E440B80020F78B /* ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCC8899F21E440B80020F78B /* ProgressView.m */; };
 		FCD19DEA214A0D1F00DBC908 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD19DE9214A0D1F00DBC908 /* UIImage+Color.m */; };
+		FCD7E052222F741F002E3908 /* AuctionDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD7E051222F741F002E3908 /* AuctionDetailVC.m */; };
+		FCD7E05B222F99DC002E3908 /* AuctionDetailHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD7E05A222F99DC002E3908 /* AuctionDetailHeader.m */; };
+		FCD7E061222FA34F002E3908 /* GoodsDescribeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD7E060222FA34F002E3908 /* GoodsDescribeVC.m */; };
+		FCD7E0642230F5B5002E3908 /* AuctionPriceRecordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD7E0632230F5B5002E3908 /* AuctionPriceRecordVC.m */; };
+		FCD7E0672230F92E002E3908 /* AuctionPriceRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD7E0662230F92E002E3908 /* AuctionPriceRecordCell.m */; };
+		FCD7E06A2231107E002E3908 /* AuctionRulesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD7E0692231107E002E3908 /* AuctionRulesVC.m */; };
+		FCD7E06D2231721D002E3908 /* JoinAuctionVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD7E06C2231721D002E3908 /* JoinAuctionVC.m */; };
+		FCD7E07022323929002E3908 /* GoodsDescribeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD7E06F22323929002E3908 /* GoodsDescribeCell.m */; };
+		FCE7EEE022299CF9008BDAB0 /* OrderGoodsTBCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE7EEDF22299CF9008BDAB0 /* OrderGoodsTBCell.m */; };
+		FCE7EEE322299EB8008BDAB0 /* SupplyGoodsTBCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE7EEE222299EB8008BDAB0 /* SupplyGoodsTBCell.m */; };
+		FCE7EEE6222A4322008BDAB0 /* OrderGoodsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE7EEE5222A4322008BDAB0 /* OrderGoodsVC.m */; };
+		FCE7EEE9222A4463008BDAB0 /* SupplyGoodsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE7EEE8222A4463008BDAB0 /* SupplyGoodsVC.m */; };
+		FCE7EEEC222A9133008BDAB0 /* CGLMMobileView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE7EEEB222A9133008BDAB0 /* CGLMMobileView.m */; };
+		FCEF809D222CBEBD0065678B /* AuctionVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCEF809C222CBEBD0065678B /* AuctionVC.m */; };
+		FCEF80A1222CCD5E0065678B /* AuctionTBCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCEF80A0222CCD5E0065678B /* AuctionTBCell.m */; };
+		FCEF80A4222CF3D20065678B /* AuctionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FCEF80A3222CF3D20065678B /* AuctionModel.m */; };
 		FCF44AF1219D27260076636E /* SystemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF44AF0219D27260076636E /* SystemCell.m */; };
 		FCF7C6F921899E61009F5140 /* ProductDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C6F821899E61009F5140 /* ProductDetailHeaderView.m */; };
 		FCF7C6FC2189A8EC009F5140 /* ProductDetailBasicParaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF7C6FB2189A8EC009F5140 /* ProductDetailBasicParaCell.m */; };
@@ -197,7 +242,6 @@
 		FCF95E5821B831C7006E99A7 /* FCRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF95E5721B831C7006E99A7 /* FCRecordCell.m */; };
 		FCF95E5B21B90BA6006E99A7 /* FansCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF95E5A21B90BA6006E99A7 /* FansCell.m */; };
 		FCFFB4B321C353E400A006FF /* FCUnReadMsgView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFFB4B221C353E400A006FF /* FCUnReadMsgView.m */; };
-		FCFFB4B621C3908900A006FF /* FCUnReadMsgListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFFB4B521C3908900A006FF /* FCUnReadMsgListVC.m */; };
 		FCFFB4BA21C64B7800A006FF /* FCDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFFB4B921C64B7800A006FF /* FCDetailCell.m */; };
 		FCFFB4BD21C6686200A006FF /* FCDetailZanCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFFB4BC21C6686200A006FF /* FCDetailZanCell.m */; };
 /* End PBXBuildFile section */
@@ -318,6 +362,38 @@
 		FC2A9422219C612600096A67 /* MsgChildVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MsgChildVC.m; sourceTree = "<group>"; };
 		FC2AACAD216CA40800E443F3 /* CommonNav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonNav.h; sourceTree = "<group>"; };
 		FC2AACAE216CA40800E443F3 /* CommonNav.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommonNav.m; sourceTree = "<group>"; };
+		FC2DCF1E221CF95F0077DB50 /* AddCustomGoodsVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddCustomGoodsVC.h; sourceTree = "<group>"; };
+		FC2DCF1F221CF95F0077DB50 /* AddCustomGoodsVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddCustomGoodsVC.m; sourceTree = "<group>"; };
+		FC2DCF24221E7F1F0077DB50 /* ContactsInfoCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactsInfoCell.h; sourceTree = "<group>"; };
+		FC2DCF25221E7F1F0077DB50 /* ContactsInfoCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactsInfoCell.m; sourceTree = "<group>"; };
+		FC2DCF2A221F9D240077DB50 /* SelectStandardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectStandardView.h; sourceTree = "<group>"; };
+		FC2DCF2B221F9D240077DB50 /* SelectStandardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectStandardView.m; sourceTree = "<group>"; };
+		FC2DCF2D221FD9520077DB50 /* SelectStandardCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectStandardCell.h; sourceTree = "<group>"; };
+		FC2DCF2E221FD9520077DB50 /* SelectStandardCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectStandardCell.m; sourceTree = "<group>"; };
+		FC2DCF31222380F10077DB50 /* VoteVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoteVC.h; sourceTree = "<group>"; };
+		FC2DCF32222380F10077DB50 /* VoteVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoteVC.m; sourceTree = "<group>"; };
+		FC2DCF352223857B0077DB50 /* VoteCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoteCell.h; sourceTree = "<group>"; };
+		FC2DCF362223857B0077DB50 /* VoteCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoteCell.m; sourceTree = "<group>"; };
+		FC2DCF3822238FEB0077DB50 /* VoteModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoteModel.h; sourceTree = "<group>"; };
+		FC2DCF3922238FEB0077DB50 /* VoteModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoteModel.m; sourceTree = "<group>"; };
+		FC2DCF3B2223D0CF0077DB50 /* VoteDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoteDetailVC.h; sourceTree = "<group>"; };
+		FC2DCF3C2223D0CF0077DB50 /* VoteDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoteDetailVC.m; sourceTree = "<group>"; };
+		FC2DCF3E2223D7DD0077DB50 /* VoteDetailHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoteDetailHeaderView.h; sourceTree = "<group>"; };
+		FC2DCF3F2223D7DD0077DB50 /* VoteDetailHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoteDetailHeaderView.m; sourceTree = "<group>"; };
+		FC2DCF412223E2EC0077DB50 /* ContestantsVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContestantsVC.h; sourceTree = "<group>"; };
+		FC2DCF422223E2EC0077DB50 /* ContestantsVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContestantsVC.m; sourceTree = "<group>"; };
+		FC2DCF442223E3490077DB50 /* ApplyForJoinVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplyForJoinVC.h; sourceTree = "<group>"; };
+		FC2DCF452223E3490077DB50 /* ApplyForJoinVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplyForJoinVC.m; sourceTree = "<group>"; };
+		FC2DCF472223E37B0077DB50 /* ActivityRulesVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivityRulesVC.h; sourceTree = "<group>"; };
+		FC2DCF482223E37B0077DB50 /* ActivityRulesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivityRulesVC.m; sourceTree = "<group>"; };
+		FC2DCF4A22243E3F0077DB50 /* ContestantsCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContestantsCell.h; sourceTree = "<group>"; };
+		FC2DCF4B22243E3F0077DB50 /* ContestantsCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContestantsCell.m; sourceTree = "<group>"; };
+		FC3105382245E080002E8886 /* BasePresentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BasePresentViewController.h; sourceTree = "<group>"; };
+		FC3105392245E080002E8886 /* BasePresentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BasePresentViewController.m; sourceTree = "<group>"; };
+		FC31053B224615C7002E8886 /* CustomNavigationBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomNavigationBar.h; sourceTree = "<group>"; };
+		FC31053C224615C7002E8886 /* CustomNavigationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationBar.m; sourceTree = "<group>"; };
+		FC31053E224B1E93002E8886 /* AutoImageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AutoImageCell.h; sourceTree = "<group>"; };
+		FC31053F224B1E93002E8886 /* AutoImageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AutoImageCell.m; sourceTree = "<group>"; };
 		FC33C31A214BA66400D26C97 /* BaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseNavigationController.h; sourceTree = "<group>"; };
 		FC33C31B214BA66400D26C97 /* BaseNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseNavigationController.m; sourceTree = "<group>"; };
 		FC33C32B214F65FA00D26C97 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
@@ -326,6 +402,10 @@
 		FC33C32F214F667C00D26C97 /* OpenMallVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenMallVC.m; sourceTree = "<group>"; };
 		FC33C332214F72C800D26C97 /* OpenMallVC_Cell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenMallVC_Cell.h; sourceTree = "<group>"; };
 		FC33C333214F72C800D26C97 /* OpenMallVC_Cell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenMallVC_Cell.m; sourceTree = "<group>"; };
+		FC36AB1D21F9622D0097B915 /* ManifestSupplyCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManifestSupplyCell.h; sourceTree = "<group>"; };
+		FC36AB1E21F9622D0097B915 /* ManifestSupplyCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManifestSupplyCell.m; sourceTree = "<group>"; };
+		FC36AB2021F964640097B915 /* StandardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StandardView.h; sourceTree = "<group>"; };
+		FC36AB2121F964640097B915 /* StandardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StandardView.m; sourceTree = "<group>"; };
 		FC48F45A21820B0F00C69B49 /* MyAskBuyListVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyAskBuyListVC.h; sourceTree = "<group>"; };
 		FC48F45B21820B0F00C69B49 /* MyAskBuyListVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAskBuyListVC.m; sourceTree = "<group>"; };
 		FC48F45D2182A37800C69B49 /* MyAcceptedOfferListVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyAcceptedOfferListVC.h; sourceTree = "<group>"; };
@@ -354,6 +434,23 @@
 		FC4B2FA42192D45500854678 /* GroupBuyAlreadyCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupBuyAlreadyCell.m; sourceTree = "<group>"; };
 		FC4E91E321C757A5000472C7 /* UserProtocolVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProtocolVC.m; sourceTree = "<group>"; };
 		FC4E91E421C757A5000472C7 /* UserProtocolVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProtocolVC.h; sourceTree = "<group>"; };
+		FC6E8DBB223A060200DD0B87 /* QCY.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QCY.entitlements; sourceTree = "<group>"; };
+		FC6E8DBD223F386200DD0B87 /* VHLNavigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VHLNavigation.m; sourceTree = "<group>"; };
+		FC6E8DBE223F386200DD0B87 /* VHLNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VHLNavigation.h; sourceTree = "<group>"; };
+		FC6E8DC0223F60D400DD0B87 /* UIButton+EnlargeEdge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+EnlargeEdge.h"; sourceTree = "<group>"; };
+		FC6E8DC1223F60D400DD0B87 /* UIButton+EnlargeEdge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+EnlargeEdge.m"; sourceTree = "<group>"; };
+		FC6E8DC3223F73AD00DD0B87 /* UIViewController+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Extension.h"; sourceTree = "<group>"; };
+		FC6E8DC4223F73AD00DD0B87 /* UIViewController+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Extension.m"; sourceTree = "<group>"; };
+		FC6E8DCA223F7ED700DD0B87 /* NavControllerSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavControllerSet.h; sourceTree = "<group>"; };
+		FC6E8DE722428CEE00DD0B87 /* UINavigation+SXFixSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigation+SXFixSpace.h"; sourceTree = "<group>"; };
+		FC6E8DE822428CEE00DD0B87 /* NSObject+SXRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SXRuntime.h"; sourceTree = "<group>"; };
+		FC6E8DE922428CEF00DD0B87 /* NSObject+SXRuntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SXRuntime.m"; sourceTree = "<group>"; };
+		FC6E8DEA22428CEF00DD0B87 /* UINavigation+SXFixSpace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigation+SXFixSpace.m"; sourceTree = "<group>"; };
+		FC6E8DEB22428CEF00DD0B87 /* UIViewController+BarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+BarButton.h"; sourceTree = "<group>"; };
+		FC6E8DEC22428CEF00DD0B87 /* UIViewController+BarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+BarButton.m"; sourceTree = "<group>"; };
+		FC6E8DF0224361BA00DD0B87 /* CircleClassifyVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleClassifyVC.h; sourceTree = "<group>"; };
+		FC6E8DF1224361BA00DD0B87 /* CircleClassifyVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleClassifyVC.m; sourceTree = "<group>"; };
+		FC6E8DF32243775F00DD0B87 /* FriendCircleDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendCircleDelegate.h; sourceTree = "<group>"; };
 		FC744AB4219D85770065F642 /* MsgDetaiiVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MsgDetaiiVC.h; sourceTree = "<group>"; };
 		FC744AB5219D85770065F642 /* MsgDetaiiVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MsgDetaiiVC.m; sourceTree = "<group>"; };
 		FC7E10AF2150DB22006FCDEF /* HelperTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelperTool.h; sourceTree = "<group>"; };
@@ -490,6 +587,16 @@
 		FCB8A68C21C7360800048A9B /* FCUnReadMsgVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCUnReadMsgVC.m; sourceTree = "<group>"; };
 		FCB8A68E21C737B600048A9B /* FCUnReadMsgCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCUnReadMsgCell.h; sourceTree = "<group>"; };
 		FCB8A68F21C737B600048A9B /* FCUnReadMsgCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCUnReadMsgCell.m; sourceTree = "<group>"; };
+		FCB8EE5F22267C68007A28DD /* RankDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RankDetailVC.h; sourceTree = "<group>"; };
+		FCB8EE6022267C68007A28DD /* RankDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RankDetailVC.m; sourceTree = "<group>"; };
+		FCB8EE6222278423007A28DD /* BaseParameterTextVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseParameterTextVC.h; sourceTree = "<group>"; };
+		FCB8EE6322278423007A28DD /* BaseParameterTextVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseParameterTextVC.m; sourceTree = "<group>"; };
+		FCB8EE65222786C1007A28DD /* BaseParameterCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseParameterCell.h; sourceTree = "<group>"; };
+		FCB8EE66222786C1007A28DD /* BaseParameterCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseParameterCell.m; sourceTree = "<group>"; };
+		FCB8EE682227B1C8007A28DD /* ContestantsSearchVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContestantsSearchVC.h; sourceTree = "<group>"; };
+		FCB8EE692227B1C8007A28DD /* ContestantsSearchVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContestantsSearchVC.m; sourceTree = "<group>"; };
+		FCB8EE712228C932007A28DD /* AddStandardCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddStandardCell.h; sourceTree = "<group>"; };
+		FCB8EE722228C932007A28DD /* AddStandardCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddStandardCell.m; sourceTree = "<group>"; };
 		FCB9E412217258460039AE04 /* UIDevice+UUID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIDevice+UUID.h"; sourceTree = "<group>"; };
 		FCB9E413217258460039AE04 /* UIDevice+UUID.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+UUID.m"; sourceTree = "<group>"; };
 		FCB9E4192174F58B0039AE04 /* AskToBuyDetailsVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AskToBuyDetailsVC.h; sourceTree = "<group>"; };
@@ -558,10 +665,40 @@
 		FCC8899821E438370020F78B /* PrchaseLeagueVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrchaseLeagueVC.m; sourceTree = "<group>"; };
 		FCC8899B21E43D0E0020F78B /* PrchaseLeagueCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrchaseLeagueCell.h; sourceTree = "<group>"; };
 		FCC8899C21E43D0E0020F78B /* PrchaseLeagueCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrchaseLeagueCell.m; sourceTree = "<group>"; };
-		FCC8899E21E440B80020F78B /* ProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgressView.h; sourceTree = "<group>"; };
-		FCC8899F21E440B80020F78B /* ProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProgressView.m; sourceTree = "<group>"; };
 		FCD19DE8214A0D1F00DBC908 /* UIImage+Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		FCD19DE9214A0D1F00DBC908 /* UIImage+Color.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
+		FCD7E050222F741F002E3908 /* AuctionDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuctionDetailVC.h; sourceTree = "<group>"; };
+		FCD7E051222F741F002E3908 /* AuctionDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuctionDetailVC.m; sourceTree = "<group>"; };
+		FCD7E059222F99DC002E3908 /* AuctionDetailHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuctionDetailHeader.h; sourceTree = "<group>"; };
+		FCD7E05A222F99DC002E3908 /* AuctionDetailHeader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuctionDetailHeader.m; sourceTree = "<group>"; };
+		FCD7E05F222FA34F002E3908 /* GoodsDescribeVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoodsDescribeVC.h; sourceTree = "<group>"; };
+		FCD7E060222FA34F002E3908 /* GoodsDescribeVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GoodsDescribeVC.m; sourceTree = "<group>"; };
+		FCD7E0622230F5B5002E3908 /* AuctionPriceRecordVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuctionPriceRecordVC.h; sourceTree = "<group>"; };
+		FCD7E0632230F5B5002E3908 /* AuctionPriceRecordVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuctionPriceRecordVC.m; sourceTree = "<group>"; };
+		FCD7E0652230F92E002E3908 /* AuctionPriceRecordCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuctionPriceRecordCell.h; sourceTree = "<group>"; };
+		FCD7E0662230F92E002E3908 /* AuctionPriceRecordCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuctionPriceRecordCell.m; sourceTree = "<group>"; };
+		FCD7E0682231107E002E3908 /* AuctionRulesVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuctionRulesVC.h; sourceTree = "<group>"; };
+		FCD7E0692231107E002E3908 /* AuctionRulesVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuctionRulesVC.m; sourceTree = "<group>"; };
+		FCD7E06B2231721D002E3908 /* JoinAuctionVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JoinAuctionVC.h; sourceTree = "<group>"; };
+		FCD7E06C2231721D002E3908 /* JoinAuctionVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JoinAuctionVC.m; sourceTree = "<group>"; };
+		FCD7E06E22323929002E3908 /* GoodsDescribeCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoodsDescribeCell.h; sourceTree = "<group>"; };
+		FCD7E06F22323929002E3908 /* GoodsDescribeCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GoodsDescribeCell.m; sourceTree = "<group>"; };
+		FCE7EEDE22299CF9008BDAB0 /* OrderGoodsTBCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderGoodsTBCell.h; sourceTree = "<group>"; };
+		FCE7EEDF22299CF9008BDAB0 /* OrderGoodsTBCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderGoodsTBCell.m; sourceTree = "<group>"; };
+		FCE7EEE122299EB8008BDAB0 /* SupplyGoodsTBCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SupplyGoodsTBCell.h; sourceTree = "<group>"; };
+		FCE7EEE222299EB8008BDAB0 /* SupplyGoodsTBCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SupplyGoodsTBCell.m; sourceTree = "<group>"; };
+		FCE7EEE4222A4322008BDAB0 /* OrderGoodsVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderGoodsVC.h; sourceTree = "<group>"; };
+		FCE7EEE5222A4322008BDAB0 /* OrderGoodsVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderGoodsVC.m; sourceTree = "<group>"; };
+		FCE7EEE7222A4463008BDAB0 /* SupplyGoodsVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SupplyGoodsVC.h; sourceTree = "<group>"; };
+		FCE7EEE8222A4463008BDAB0 /* SupplyGoodsVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SupplyGoodsVC.m; sourceTree = "<group>"; };
+		FCE7EEEA222A9133008BDAB0 /* CGLMMobileView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGLMMobileView.h; sourceTree = "<group>"; };
+		FCE7EEEB222A9133008BDAB0 /* CGLMMobileView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CGLMMobileView.m; sourceTree = "<group>"; };
+		FCEF809B222CBEBD0065678B /* AuctionVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuctionVC.h; sourceTree = "<group>"; };
+		FCEF809C222CBEBD0065678B /* AuctionVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuctionVC.m; sourceTree = "<group>"; };
+		FCEF809F222CCD5E0065678B /* AuctionTBCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuctionTBCell.h; sourceTree = "<group>"; };
+		FCEF80A0222CCD5E0065678B /* AuctionTBCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuctionTBCell.m; sourceTree = "<group>"; };
+		FCEF80A2222CF3D20065678B /* AuctionModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuctionModel.h; sourceTree = "<group>"; };
+		FCEF80A3222CF3D20065678B /* AuctionModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuctionModel.m; sourceTree = "<group>"; };
 		FCF44AEF219D27260076636E /* SystemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemCell.h; sourceTree = "<group>"; };
 		FCF44AF0219D27260076636E /* SystemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SystemCell.m; sourceTree = "<group>"; };
 		FCF7C6F721899E60009F5140 /* ProductDetailHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductDetailHeaderView.h; sourceTree = "<group>"; };
@@ -605,8 +742,6 @@
 		FCF95E5A21B90BA6006E99A7 /* FansCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FansCell.m; sourceTree = "<group>"; };
 		FCFFB4B121C353E400A006FF /* FCUnReadMsgView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCUnReadMsgView.h; sourceTree = "<group>"; };
 		FCFFB4B221C353E400A006FF /* FCUnReadMsgView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCUnReadMsgView.m; sourceTree = "<group>"; };
-		FCFFB4B421C3908900A006FF /* FCUnReadMsgListVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCUnReadMsgListVC.h; sourceTree = "<group>"; };
-		FCFFB4B521C3908900A006FF /* FCUnReadMsgListVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCUnReadMsgListVC.m; sourceTree = "<group>"; };
 		FCFFB4B821C64B7800A006FF /* FCDetailCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCDetailCell.h; sourceTree = "<group>"; };
 		FCFFB4B921C64B7800A006FF /* FCDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCDetailCell.m; sourceTree = "<group>"; };
 		FCFFB4BB21C6686200A006FF /* FCDetailZanCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCDetailZanCell.h; sourceTree = "<group>"; };
@@ -650,10 +785,15 @@
 		3A411FFC213CBEFA003191F1 /* Tabbar+Nav */ = {
 			isa = PBXGroup;
 			children = (
+				FC6E8DCB22421F4600DD0B87 /* UIViewController+NavBar */,
+				FC6E8DBC223F383700DD0B87 /* NavLib */,
 				3A411FFD213CBFCD003191F1 /* TabbarVC.h */,
 				3A411FFE213CBFCD003191F1 /* TabbarVC.m */,
 				FC2AACAD216CA40800E443F3 /* CommonNav.h */,
 				FC2AACAE216CA40800E443F3 /* CommonNav.m */,
+				FC31053B224615C7002E8886 /* CustomNavigationBar.h */,
+				FC31053C224615C7002E8886 /* CustomNavigationBar.m */,
+				FC6E8DCA223F7ED700DD0B87 /* NavControllerSet.h */,
 			);
 			path = "Tabbar+Nav";
 			sourceTree = "<group>";
@@ -681,8 +821,6 @@
 		3A412001213CBFF5003191F1 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				FCC8899E21E440B80020F78B /* ProgressView.h */,
-				FCC8899F21E440B80020F78B /* ProgressView.m */,
 				FC98508721AAEFBD0047F8BF /* 朋友圈 */,
 				FC98507021A541890047F8BF /* 全局 */,
 				FC98506621A3B3CB0047F8BF /* Other */,
@@ -742,6 +880,10 @@
 				FCB9E413217258460039AE04 /* UIDevice+UUID.m */,
 				FCF7C728218C6B4A009F5140 /* NSString+Class.h */,
 				FCF7C729218C6B4A009F5140 /* NSString+Class.m */,
+				FC6E8DC0223F60D400DD0B87 /* UIButton+EnlargeEdge.h */,
+				FC6E8DC1223F60D400DD0B87 /* UIButton+EnlargeEdge.m */,
+				FC6E8DC3223F73AD00DD0B87 /* UIViewController+Extension.h */,
+				FC6E8DC4223F73AD00DD0B87 /* UIViewController+Extension.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -817,8 +959,6 @@
 				FC33C331214F725700D26C97 /* OpenMall */,
 				3A41202B213F850A003191F1 /* HomePageHeaderView.h */,
 				3A41202C213F850A003191F1 /* HomePageHeaderView.m */,
-				FC17E07A21425ACB00219452 /* AskToBuyCell.h */,
-				FC17E07B21425ACB00219452 /* AskToBuyCell.m */,
 				FC17E06D2140F60B00219452 /* HomePageSectionHeader.h */,
 				FC17E06E2140F60B00219452 /* HomePageSectionHeader.m */,
 				FC17E0772141143900219452 /* PromotionsCell.h */,
@@ -852,12 +992,13 @@
 		3ACD0FE32138CADF00E83D3C /* QCY */ = {
 			isa = PBXGroup;
 			children = (
+				FC6E8DBB223A060200DD0B87 /* QCY.entitlements */,
 				FC9FB9D3219441220008A90E /* Test */,
 				FC33C319214BA63C00D26C97 /* Base */,
+				3A411FFC213CBEFA003191F1 /* Tabbar+Nav */,
 				3A412000213CBFDD003191F1 /* Model */,
 				3A412001213CBFF5003191F1 /* View */,
 				3A412002213CBFFD003191F1 /* Controller */,
-				3A411FFC213CBEFA003191F1 /* Tabbar+Nav */,
 				3A412003213CDD21003191F1 /* Libs */,
 				3ACD10172139021B00E83D3C /* System&Resource */,
 			);
@@ -994,6 +1135,40 @@
 			path = Message;
 			sourceTree = "<group>";
 		};
+		FC2DCF30222380780077DB50 /* 投票 */ = {
+			isa = PBXGroup;
+			children = (
+				FC2DCF31222380F10077DB50 /* VoteVC.h */,
+				FC2DCF32222380F10077DB50 /* VoteVC.m */,
+				FC2DCF3B2223D0CF0077DB50 /* VoteDetailVC.h */,
+				FC2DCF3C2223D0CF0077DB50 /* VoteDetailVC.m */,
+				FC2DCF412223E2EC0077DB50 /* ContestantsVC.h */,
+				FC2DCF422223E2EC0077DB50 /* ContestantsVC.m */,
+				FC2DCF442223E3490077DB50 /* ApplyForJoinVC.h */,
+				FC2DCF452223E3490077DB50 /* ApplyForJoinVC.m */,
+				FC2DCF472223E37B0077DB50 /* ActivityRulesVC.h */,
+				FC2DCF482223E37B0077DB50 /* ActivityRulesVC.m */,
+				FCB8EE5F22267C68007A28DD /* RankDetailVC.h */,
+				FCB8EE6022267C68007A28DD /* RankDetailVC.m */,
+				FCB8EE682227B1C8007A28DD /* ContestantsSearchVC.h */,
+				FCB8EE692227B1C8007A28DD /* ContestantsSearchVC.m */,
+			);
+			path = "投票";
+			sourceTree = "<group>";
+		};
+		FC2DCF34222385370077DB50 /* 投票 */ = {
+			isa = PBXGroup;
+			children = (
+				FC2DCF352223857B0077DB50 /* VoteCell.h */,
+				FC2DCF362223857B0077DB50 /* VoteCell.m */,
+				FC2DCF3E2223D7DD0077DB50 /* VoteDetailHeaderView.h */,
+				FC2DCF3F2223D7DD0077DB50 /* VoteDetailHeaderView.m */,
+				FC2DCF4A22243E3F0077DB50 /* ContestantsCell.h */,
+				FC2DCF4B22243E3F0077DB50 /* ContestantsCell.m */,
+			);
+			path = "投票";
+			sourceTree = "<group>";
+		};
 		FC33C319214BA63C00D26C97 /* Base */ = {
 			isa = PBXGroup;
 			children = (
@@ -1005,6 +1180,8 @@
 				FC9F33EE21800D7B00B11D6D /* BaseViewControllerNav.m */,
 				FC07C93721C7FE7100FA77F3 /* BaseTableView.h */,
 				FC07C93821C7FE7100FA77F3 /* BaseTableView.m */,
+				FC3105382245E080002E8886 /* BasePresentViewController.h */,
+				FC3105392245E080002E8886 /* BasePresentViewController.m */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1079,6 +1256,28 @@
 				FC48F4642186E4DC00C69B49 /* LXTagsView.m */,
 			);
 			path = LXTagsView;
+			sourceTree = "<group>";
+		};
+		FC6E8DBC223F383700DD0B87 /* NavLib */ = {
+			isa = PBXGroup;
+			children = (
+				FC6E8DBE223F386200DD0B87 /* VHLNavigation.h */,
+				FC6E8DBD223F386200DD0B87 /* VHLNavigation.m */,
+			);
+			path = NavLib;
+			sourceTree = "<group>";
+		};
+		FC6E8DCB22421F4600DD0B87 /* UIViewController+NavBar */ = {
+			isa = PBXGroup;
+			children = (
+				FC6E8DE822428CEE00DD0B87 /* NSObject+SXRuntime.h */,
+				FC6E8DE922428CEF00DD0B87 /* NSObject+SXRuntime.m */,
+				FC6E8DE722428CEE00DD0B87 /* UINavigation+SXFixSpace.h */,
+				FC6E8DEA22428CEF00DD0B87 /* UINavigation+SXFixSpace.m */,
+				FC6E8DEB22428CEF00DD0B87 /* UIViewController+BarButton.h */,
+				FC6E8DEC22428CEF00DD0B87 /* UIViewController+BarButton.m */,
+			);
+			path = "UIViewController+NavBar";
 			sourceTree = "<group>";
 		};
 		FC7E10C121535405006FCDEF /* 登陆注册 */ = {
@@ -1161,6 +1360,8 @@
 		FC8C926D21E88AF700736B55 /* 促销活动 */ = {
 			isa = PBXGroup;
 			children = (
+				FCEF809A222CBE3E0065678B /* 竞拍 */,
+				FC2DCF30222380780077DB50 /* 投票 */,
 				FC8C926F21E88B5400736B55 /* 优惠展销 */,
 				FCF7C714218B16D0009F5140 /* 团购 */,
 				FCC8899621E4371A0020F78B /* 采购联盟 */,
@@ -1171,6 +1372,8 @@
 		FC8C926E21E88B2F00736B55 /* 促销活动 */ = {
 			isa = PBXGroup;
 			children = (
+				FCEF809E222CCD090065678B /* 竞拍view */,
+				FC2DCF34222385370077DB50 /* 投票 */,
 				FC8C927621EC80CA00736B55 /* 优惠展销 */,
 				FCF7C715218B1BFB009F5140 /* 团购 */,
 				FCC8899A21E43CCF0020F78B /* 采购联盟 */,
@@ -1189,6 +1392,8 @@
 				FC8C928221EEC28F00736B55 /* DiscountSalesDetailVC.m */,
 				FCBD330D21F0DF4A0017AB5D /* DiscountBuyVC.h */,
 				FCBD330E21F0DF4A0017AB5D /* DiscountBuyVC.m */,
+				FCB8EE6222278423007A28DD /* BaseParameterTextVC.h */,
+				FCB8EE6322278423007A28DD /* BaseParameterTextVC.m */,
 			);
 			path = "优惠展销";
 			sourceTree = "<group>";
@@ -1200,6 +1405,8 @@
 				FC8C927821EC810100736B55 /* DiscountSalesCell.m */,
 				FC8C928421EEC7D100736B55 /* DiscountSalesDetailHV.h */,
 				FC8C928521EEC7D100736B55 /* DiscountSalesDetailHV.m */,
+				FCB8EE65222786C1007A28DD /* BaseParameterCell.h */,
+				FCB8EE66222786C1007A28DD /* BaseParameterCell.m */,
 			);
 			path = "优惠展销";
 			sourceTree = "<group>";
@@ -1215,6 +1422,10 @@
 				FC8C928C21EF7B4A00736B55 /* PrchaseLeagueModel.m */,
 				FCBD331021F562610017AB5D /* PromotionsModel.h */,
 				FCBD331121F562610017AB5D /* PromotionsModel.m */,
+				FC2DCF3822238FEB0077DB50 /* VoteModel.h */,
+				FC2DCF3922238FEB0077DB50 /* VoteModel.m */,
+				FCEF80A2222CF3D20065678B /* AuctionModel.h */,
+				FCEF80A3222CF3D20065678B /* AuctionModel.m */,
 			);
 			path = "活动";
 			sourceTree = "<group>";
@@ -1298,6 +1509,9 @@
 			isa = PBXGroup;
 			children = (
 				FC98509321ABBFEC0047F8BF /* Friend.h */,
+				FC6E8DF32243775F00DD0B87 /* FriendCircleDelegate.h */,
+				FC6E8DF0224361BA00DD0B87 /* CircleClassifyVC.h */,
+				FC6E8DF1224361BA00DD0B87 /* CircleClassifyVC.m */,
 				FC98505821A2B4930047F8BF /* FriendCircleVC.h */,
 				FC98505921A2B4930047F8BF /* FriendCircleVC.m */,
 				FCF95E4621B53DC5006E99A7 /* PublishFriendCircleVC.h */,
@@ -1318,8 +1532,6 @@
 				FC92B42021BF83D100C18051 /* FCDetailZanVC.m */,
 				FCBA1FE021C21EF600897933 /* ChangeNickNameVC.h */,
 				FCBA1FE121C21EF600897933 /* ChangeNickNameVC.m */,
-				FCFFB4B421C3908900A006FF /* FCUnReadMsgListVC.h */,
-				FCFFB4B521C3908900A006FF /* FCUnReadMsgListVC.m */,
 				FCB8A68B21C7360800048A9B /* FCUnReadMsgVC.h */,
 				FCB8A68C21C7360800048A9B /* FCUnReadMsgVC.m */,
 			);
@@ -1376,6 +1588,8 @@
 		FCB9E41F2175902B0039AE04 /* AskToBuy */ = {
 			isa = PBXGroup;
 			children = (
+				FC17E07A21425ACB00219452 /* AskToBuyCell.h */,
+				FC17E07B21425ACB00219452 /* AskToBuyCell.m */,
 				FCB9E420217590620039AE04 /* AskToBuyBottomView.h */,
 				FCB9E421217590620039AE04 /* AskToBuyBottomView.m */,
 				FCB9E42321759F810039AE04 /* SelectedView.h */,
@@ -1420,6 +1634,12 @@
 				FC8C928F21F0782D00736B55 /* MyManifestVC.m */,
 				FCBD330421F0A91E0017AB5D /* ManiFestChildVC.h */,
 				FCBD330521F0A91E0017AB5D /* ManiFestChildVC.m */,
+				FC2DCF1E221CF95F0077DB50 /* AddCustomGoodsVC.h */,
+				FC2DCF1F221CF95F0077DB50 /* AddCustomGoodsVC.m */,
+				FCE7EEE4222A4322008BDAB0 /* OrderGoodsVC.h */,
+				FCE7EEE5222A4322008BDAB0 /* OrderGoodsVC.m */,
+				FCE7EEE7222A4463008BDAB0 /* SupplyGoodsVC.h */,
+				FCE7EEE8222A4463008BDAB0 /* SupplyGoodsVC.m */,
 			);
 			path = "采购联盟";
 			sourceTree = "<group>";
@@ -1431,12 +1651,66 @@
 				FCC8899C21E43D0E0020F78B /* PrchaseLeagueCell.m */,
 				FCBD330721F0B38F0017AB5D /* ManifestScetionHeader.h */,
 				FCBD330821F0B38F0017AB5D /* ManifestScetionHeader.m */,
-				FCBD330A21F0B3AC0017AB5D /* ManifestCell.h */,
-				FCBD330B21F0B3AC0017AB5D /* ManifestCell.m */,
 				FCBD331321F80E0D0017AB5D /* ManifestScetionFooter.h */,
 				FCBD331421F80E0D0017AB5D /* ManifestScetionFooter.m */,
+				FCBD330A21F0B3AC0017AB5D /* ManifestCell.h */,
+				FCBD330B21F0B3AC0017AB5D /* ManifestCell.m */,
+				FC36AB1D21F9622D0097B915 /* ManifestSupplyCell.h */,
+				FC36AB1E21F9622D0097B915 /* ManifestSupplyCell.m */,
+				FC36AB2021F964640097B915 /* StandardView.h */,
+				FC36AB2121F964640097B915 /* StandardView.m */,
+				FC2DCF24221E7F1F0077DB50 /* ContactsInfoCell.h */,
+				FC2DCF25221E7F1F0077DB50 /* ContactsInfoCell.m */,
+				FC2DCF2A221F9D240077DB50 /* SelectStandardView.h */,
+				FC2DCF2B221F9D240077DB50 /* SelectStandardView.m */,
+				FC2DCF2D221FD9520077DB50 /* SelectStandardCell.h */,
+				FC2DCF2E221FD9520077DB50 /* SelectStandardCell.m */,
+				FCB8EE712228C932007A28DD /* AddStandardCell.h */,
+				FCB8EE722228C932007A28DD /* AddStandardCell.m */,
+				FCE7EEDE22299CF9008BDAB0 /* OrderGoodsTBCell.h */,
+				FCE7EEDF22299CF9008BDAB0 /* OrderGoodsTBCell.m */,
+				FCE7EEE122299EB8008BDAB0 /* SupplyGoodsTBCell.h */,
+				FCE7EEE222299EB8008BDAB0 /* SupplyGoodsTBCell.m */,
+				FCE7EEEA222A9133008BDAB0 /* CGLMMobileView.h */,
+				FCE7EEEB222A9133008BDAB0 /* CGLMMobileView.m */,
+				FC31053E224B1E93002E8886 /* AutoImageCell.h */,
+				FC31053F224B1E93002E8886 /* AutoImageCell.m */,
 			);
 			path = "采购联盟";
+			sourceTree = "<group>";
+		};
+		FCEF809A222CBE3E0065678B /* 竞拍 */ = {
+			isa = PBXGroup;
+			children = (
+				FCEF809B222CBEBD0065678B /* AuctionVC.h */,
+				FCEF809C222CBEBD0065678B /* AuctionVC.m */,
+				FCD7E050222F741F002E3908 /* AuctionDetailVC.h */,
+				FCD7E051222F741F002E3908 /* AuctionDetailVC.m */,
+				FCD7E05F222FA34F002E3908 /* GoodsDescribeVC.h */,
+				FCD7E060222FA34F002E3908 /* GoodsDescribeVC.m */,
+				FCD7E0622230F5B5002E3908 /* AuctionPriceRecordVC.h */,
+				FCD7E0632230F5B5002E3908 /* AuctionPriceRecordVC.m */,
+				FCD7E0682231107E002E3908 /* AuctionRulesVC.h */,
+				FCD7E0692231107E002E3908 /* AuctionRulesVC.m */,
+				FCD7E06B2231721D002E3908 /* JoinAuctionVC.h */,
+				FCD7E06C2231721D002E3908 /* JoinAuctionVC.m */,
+			);
+			path = "竞拍";
+			sourceTree = "<group>";
+		};
+		FCEF809E222CCD090065678B /* 竞拍view */ = {
+			isa = PBXGroup;
+			children = (
+				FCEF809F222CCD5E0065678B /* AuctionTBCell.h */,
+				FCEF80A0222CCD5E0065678B /* AuctionTBCell.m */,
+				FCD7E059222F99DC002E3908 /* AuctionDetailHeader.h */,
+				FCD7E05A222F99DC002E3908 /* AuctionDetailHeader.m */,
+				FCD7E0652230F92E002E3908 /* AuctionPriceRecordCell.h */,
+				FCD7E0662230F92E002E3908 /* AuctionPriceRecordCell.m */,
+				FCD7E06E22323929002E3908 /* GoodsDescribeCell.h */,
+				FCD7E06F22323929002E3908 /* GoodsDescribeCell.m */,
+			);
+			path = "竞拍view";
 			sourceTree = "<group>";
 		};
 		FCF7C6F621897906009F5140 /* 产品大厅 */ = {
@@ -1601,6 +1875,14 @@
 				TargetAttributes = {
 					3ACD0FE02138CADF00E83D3C = {
 						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 0;
+							};
+						};
 					};
 					3ACD0FF82138CAE000E83D3C = {
 						CreatedOnToolsVersion = 9.4.1;
@@ -1728,6 +2010,7 @@
 			files = (
 				FCF7C6F921899E61009F5140 /* ProductDetailHeaderView.m in Sources */,
 				FCBD330921F0B38F0017AB5D /* ManifestScetionHeader.m in Sources */,
+				FCE7EEE022299CF9008BDAB0 /* OrderGoodsTBCell.m in Sources */,
 				FC98508D21AAF0510047F8BF /* FriendCricleModel.m in Sources */,
 				FC4B2FA52192D45500854678 /* GroupBuyAlreadyCell.m in Sources */,
 				FC98508A21AAEFF20047F8BF /* FriendCricleCell.m in Sources */,
@@ -1738,9 +2021,12 @@
 				FC9FB9D12194132B0008A90E /* UIColor+PYExtension.m in Sources */,
 				FC7E10C0215241FB006FCDEF /* UIImageView+CornerRadius.m in Sources */,
 				FCF7C6FC2189A8EC009F5140 /* ProductDetailBasicParaCell.m in Sources */,
+				FC2DCF3A22238FEB0077DB50 /* VoteModel.m in Sources */,
+				FCD7E06A2231107E002E3908 /* AuctionRulesVC.m in Sources */,
 				FC48F4662186E4DC00C69B49 /* LXTagsView.m in Sources */,
 				FCB9E4342175DD7B0039AE04 /* AskToBuySectionHeader.m in Sources */,
 				FC8C928321EEC28F00736B55 /* DiscountSalesDetailVC.m in Sources */,
+				FC2DCF402223D7DD0077DB50 /* VoteDetailHeaderView.m in Sources */,
 				FC98505021A28DA30047F8BF /* CompanyApproveVC.m in Sources */,
 				FC07C93921C7FE7100FA77F3 /* BaseTableView.m in Sources */,
 				3ACD0FE92138CADF00E83D3C /* ViewController.m in Sources */,
@@ -1751,6 +2037,8 @@
 				FCBC3EF821AE6B4E003A9D5D /* UUButton.m in Sources */,
 				FC98504D219E62B30047F8BF /* MobilePhone.m in Sources */,
 				FC142B0C217F7F3600E00A47 /* MyOfferPriceAllVC.m in Sources */,
+				FCD7E0672230F92E002E3908 /* AuctionPriceRecordCell.m in Sources */,
+				FC31053A2245E080002E8886 /* BasePresentViewController.m in Sources */,
 				FCBD330C21F0B3AC0017AB5D /* ManifestCell.m in Sources */,
 				FC7E11152159F9A4006FCDEF /* ProductMallVC.m in Sources */,
 				FC2A9420219C386300096A67 /* MessageVC.m in Sources */,
@@ -1760,36 +2048,47 @@
 				FCB9E422217590620039AE04 /* AskToBuyBottomView.m in Sources */,
 				FC807DE121B1019B0033160B /* WXKeyBoardView.m in Sources */,
 				FC8C927C21ED7C4800736B55 /* PromotionsHeaderView.m in Sources */,
+				FCB8EE6422278423007A28DD /* BaseParameterTextVC.m in Sources */,
 				FC9F33FB218041A300B11D6D /* SwitchVC.m in Sources */,
 				FC4B2F9321901E5F00854678 /* BaseParameterVC.m in Sources */,
+				FCD7E06D2231721D002E3908 /* JoinAuctionVC.m in Sources */,
 				FC33C31C214BA66400D26C97 /* BaseNavigationController.m in Sources */,
 				FCF7C70E218AA9C3009F5140 /* InfomationModel.m in Sources */,
 				FCF7C71E218B2C35009F5140 /* GroupBuyingModel.m in Sources */,
+				FCE7EEEC222A9133008BDAB0 /* CGLMMobileView.m in Sources */,
+				FCEF80A4222CF3D20065678B /* AuctionModel.m in Sources */,
 				FCFFB4BD21C6686200A006FF /* FCDetailZanCell.m in Sources */,
 				FC89D0F121951F8700817844 /* MyServiceVC.m in Sources */,
-				FCFFB4B621C3908900A006FF /* FCUnReadMsgListVC.m in Sources */,
+				FC36AB1F21F9622D0097B915 /* ManifestSupplyCell.m in Sources */,
 				FCC8899921E438370020F78B /* PrchaseLeagueVC.m in Sources */,
 				FC85E4F8217B983B00CA119C /* CddHUD.m in Sources */,
 				FCF95E4B21B7B33D006E99A7 /* MyFriendCircleInfoVC.m in Sources */,
 				FC744AB6219D85770065F642 /* MsgDetaiiVC.m in Sources */,
 				FCD19DEA214A0D1F00DBC908 /* UIImage+Color.m in Sources */,
+				FCB8EE6A2227B1C8007A28DD /* ContestantsSearchVC.m in Sources */,
 				FCBC3EEF21AD20C7003A9D5D /* WeiChatPhotoView.m in Sources */,
 				FCB8A68D21C7360800048A9B /* FCUnReadMsgVC.m in Sources */,
 				FC2A941A219BCBF200096A67 /* MessageCell.m in Sources */,
 				FCF95E4821B53DC5006E99A7 /* PublishFriendCircleVC.m in Sources */,
 				FC142A5C217CCE4600E00A47 /* MineHeaderReusableView.m in Sources */,
 				FC9FB9D22194132B0008A90E /* UIView+PYExtension.m in Sources */,
+				FCE7EEE6222A4322008BDAB0 /* OrderGoodsVC.m in Sources */,
 				FC98506421A3A85C0047F8BF /* WXAuth.m in Sources */,
+				FC2DCF2F221FD9520077DB50 /* SelectStandardCell.m in Sources */,
 				FC92B42121BF83D100C18051 /* FCDetailZanVC.m in Sources */,
 				FC8C927221EC623E00736B55 /* DiscountSalesVC.m in Sources */,
 				FCF7C70B218AA51C009F5140 /* InformationChildCell.m in Sources */,
+				FCD7E0642230F5B5002E3908 /* AuctionPriceRecordVC.m in Sources */,
 				FC142AAD217EBABF00E00A47 /* BEMCheckBox.m in Sources */,
 				3A412020213E1B46003191F1 /* HomePageVC.m in Sources */,
 				FC92B41821BD513100C18051 /* BigVCertVC.m in Sources */,
+				FC2DCF33222380F10077DB50 /* VoteVC.m in Sources */,
 				FC98509021AB8BAB0047F8BF /* FriendHeaderView.m in Sources */,
+				FCD7E05B222F99DC002E3908 /* AuctionDetailHeader.m in Sources */,
 				3A41202D213F850A003191F1 /* HomePageHeaderView.m in Sources */,
 				FC9FB9CD2194132B0008A90E /* PYSearchConst.m in Sources */,
 				FC89D0F72195542300817844 /* HomePageSearchVC.m in Sources */,
+				FC6E8DED22428CEF00DD0B87 /* NSObject+SXRuntime.m in Sources */,
 				3ACD0FF42138CAE000E83D3C /* main.m in Sources */,
 				FC9FB9D02194132B0008A90E /* PYSearchViewController.m in Sources */,
 				FC2AACAF216CA40800E443F3 /* CommonNav.m in Sources */,
@@ -1803,6 +2102,8 @@
 				FC142AB7217EED1800E00A47 /* MyAskToBuyAllVC.m in Sources */,
 				FC33C334214F72C800D26C97 /* OpenMallVC_Cell.m in Sources */,
 				FC8C928621EEC7D100736B55 /* DiscountSalesDetailHV.m in Sources */,
+				FCD7E052222F741F002E3908 /* AuctionDetailVC.m in Sources */,
+				FCB8EE732228C932007A28DD /* AddStandardCell.m in Sources */,
 				FC98508621A78D6D0047F8BF /* LookOverHowToUseVC.m in Sources */,
 				FCB8A69021C737B600048A9B /* FCUnReadMsgCell.m in Sources */,
 				FCF44AF1219D27260076636E /* SystemCell.m in Sources */,
@@ -1814,6 +2115,7 @@
 				FC9FB9D92194414F0008A90E /* TestVC2.m in Sources */,
 				FCC5762A21886FBC004ED61D /* AllProductsVC.m in Sources */,
 				FC98507C21A556260047F8BF /* KSGuaidViewManager.m in Sources */,
+				FCE7EEE9222A4463008BDAB0 /* SupplyGoodsVC.m in Sources */,
 				FC9E6FCD219D120D00D359C1 /* MsgSystemVC.m in Sources */,
 				FC142AAB217EBABF00E00A47 /* BEMCheckBoxGroup.m in Sources */,
 				FC05CC2321704C94005F666B /* AES128.m in Sources */,
@@ -1821,13 +2123,16 @@
 				FCF7C727218C33F5009F5140 /* GroupBuyDetailHeaderView.m in Sources */,
 				FCBA1FE221C21EF600897933 /* ChangeNickNameVC.m in Sources */,
 				FCB9E42521759F810039AE04 /* SelectedView.m in Sources */,
+				FC6E8DF2224361BA00DD0B87 /* CircleClassifyVC.m in Sources */,
 				FC48F4722186EE9900C69B49 /* OpenMallModel.m in Sources */,
+				FCEF809D222CBEBD0065678B /* AuctionVC.m in Sources */,
 				FC142B09217F7EAD00E00A47 /* MyOfferPriceVC.m in Sources */,
 				FC8C929021F0782D00736B55 /* MyManifestVC.m in Sources */,
 				FC17E0792141143900219452 /* PromotionsCell.m in Sources */,
 				FC7E10C421535444006FCDEF /* LoginVC.m in Sources */,
 				FC05CC2621707BB8005F666B /* TimeAbout.m in Sources */,
 				FC9FB9CF2194132B0008A90E /* PYSearchSuggestionViewController.m in Sources */,
+				FC2DCF372223857B0077DB50 /* VoteCell.m in Sources */,
 				FCF7C704218A908C009F5140 /* IndustryInformationVC.m in Sources */,
 				FC98506C21A3FC990047F8BF /* AboutQCY.m in Sources */,
 				FC4B2F9F2192B00600854678 /* GroupBuyNeedKnowVC.m in Sources */,
@@ -1841,21 +2146,28 @@
 				FC07C93D21CA201000FA77F3 /* SearchResultPageVC.m in Sources */,
 				FC142AC6217EF73400E00A47 /* MyAskToBuyCell.m in Sources */,
 				FC7E112B215F0997006FCDEF /* UIView+Border.m in Sources */,
+				FCD7E07022323929002E3908 /* GoodsDescribeCell.m in Sources */,
 				FC8AD68F21CB3CB40034026A /* QCYWebViewVC.m in Sources */,
 				FCF7C721218C3120009F5140 /* GroupBuyingDetailVC.m in Sources */,
 				FCBD330F21F0DF4A0017AB5D /* DiscountBuyVC.m in Sources */,
+				FC2DCF4C22243E3F0077DB50 /* ContestantsCell.m in Sources */,
 				FC4B2F9921901EB800854678 /* GroupBuyRecordVC.m in Sources */,
 				FCF7C6FF2189BDD7009F5140 /* ProductDetailSectionHeader.m in Sources */,
 				FC8C928D21EF7B4A00736B55 /* PrchaseLeagueModel.m in Sources */,
+				FC2DCF432223E2EC0077DB50 /* ContestantsVC.m in Sources */,
 				FC2A94032199145C00096A67 /* MyInfoCenterVC.m in Sources */,
+				FC2DCF3D2223D0CF0077DB50 /* VoteDetailVC.m in Sources */,
 				FCF95E5121B7E2EE006E99A7 /* FansVC.m in Sources */,
 				3A412015213D1181003191F1 /* UIColor+Hex.m in Sources */,
 				FC2A94092199757000096A67 /* ChangeHeaderVC.m in Sources */,
 				FC05CBDA216DD25C005F666B /* ResetPassword.m in Sources */,
 				FCB9E4372175F2460039AE04 /* ExplainCell.m in Sources */,
 				FC85E4FC217C63A100CA119C /* MineHeaderView.m in Sources */,
+				FCE7EEE322299EB8008BDAB0 /* SupplyGoodsTBCell.m in Sources */,
 				FC7E1121215C7128006FCDEF /* FindPasswordVC.m in Sources */,
 				3A411FFF213CBFCD003191F1 /* TabbarVC.m in Sources */,
+				FCEF80A1222CCD5E0065678B /* AuctionTBCell.m in Sources */,
+				FC6E8DC5223F73AD00DD0B87 /* UIViewController+Extension.m in Sources */,
 				FC142AB3217EDB6100E00A47 /* AskToBuyPriceDetailHeaderView.m in Sources */,
 				FC48F46D2186E5DF00C69B49 /* UIButton+LXExpandBtn.m in Sources */,
 				FC98508021A568B40047F8BF /* GlobalFooterView.m in Sources */,
@@ -1864,32 +2176,42 @@
 				FC7E10BA2150DF9C006FCDEF /* MineVC.m in Sources */,
 				FC98507D21A556260047F8BF /* KSGuaidViewCell.m in Sources */,
 				FC17E07C21425ACB00219452 /* AskToBuyCell.m in Sources */,
+				FCB8EE6122267C68007A28DD /* RankDetailVC.m in Sources */,
 				FC9F33EF21800D7B00B11D6D /* BaseViewControllerNav.m in Sources */,
 				FCB9E44321781A360039AE04 /* HomePageModel.m in Sources */,
 				FC7E11122159F5CE006FCDEF /* ProductMallVC_Cell.m in Sources */,
+				FC6E8DC2223F60D400DD0B87 /* UIButton+EnlargeEdge.m in Sources */,
 				FCC575DD2188392E004ED61D /* ShopMainPageHeaderView.m in Sources */,
+				FC2DCF462223E3490077DB50 /* ApplyForJoinVC.m in Sources */,
 				FC98506921A3B3EA0047F8BF /* BindMobileView.m in Sources */,
 				FC7E10B12150DB22006FCDEF /* HelperTool.m in Sources */,
+				FC36AB2221F964640097B915 /* StandardView.m in Sources */,
 				FC98507321A541A90047F8BF /* WithoutNetView.m in Sources */,
+				FC2DCF2C221F9D240077DB50 /* SelectStandardView.m in Sources */,
 				FC4B2F9C219027A100854678 /* GroupBuyDetailBaseCell.m in Sources */,
 				FC9F33F82180228000B11D6D /* Alert.m in Sources */,
 				FCF7C713218AE46E009F5140 /* InfomationDetailVC.m in Sources */,
 				FCC8899D21E43D0E0020F78B /* PrchaseLeagueCell.m in Sources */,
+				FC2DCF20221CF95F0077DB50 /* AddCustomGoodsVC.m in Sources */,
 				FC17E06F2140F60B00219452 /* HomePageSectionHeader.m in Sources */,
 				FC142A5F217CD49E00E00A47 /* MineCollectionCell.m in Sources */,
+				FCB8EE67222786C1007A28DD /* BaseParameterCell.m in Sources */,
 				3ACD0FE62138CADF00E83D3C /* AppDelegate.m in Sources */,
 				FCBD330621F0A91E0017AB5D /* ManiFestChildVC.m in Sources */,
 				FCBC3F1E21AFF144003A9D5D /* PLView.m in Sources */,
 				FC8C927F21EDC61B00736B55 /* DiscountSalesModel.m in Sources */,
 				FCF7C707218A9A7F009F5140 /* InformationChildVC.m in Sources */,
 				FCC5762D21886FD8004ED61D /* CompanyInfoVC.m in Sources */,
+				FC310540224B1E93002E8886 /* AutoImageCell.m in Sources */,
 				FCB9E4282175B0E90039AE04 /* UITextView+Placeholder.m in Sources */,
 				FCB9E4312175D2410039AE04 /* PaddingLabel.m in Sources */,
 				FC33C32D214F65FA00D26C97 /* BaseViewController.m in Sources */,
 				FC142A9D217DA58700E00A47 /* CountDown.m in Sources */,
+				FC6E8DEF22428CEF00DD0B87 /* UIViewController+BarButton.m in Sources */,
 				FC48F45C21820B0F00C69B49 /* MyAskBuyListVC.m in Sources */,
 				FC142AAA217EBABF00E00A47 /* BEMAnimationManager.m in Sources */,
 				FCFFB4BA21C64B7800A006FF /* FCDetailCell.m in Sources */,
+				FC31053D224615C7002E8886 /* CustomNavigationBar.m in Sources */,
 				FCB9E42E2175C8F90039AE04 /* AskToBuyInfoCell.m in Sources */,
 				FCC5763021888DA0004ED61D /* ProductInfoCell.m in Sources */,
 				FCF7C718218B1C2A009F5140 /* GroupBuyingCell.m in Sources */,
@@ -1905,11 +2227,15 @@
 				FC142AA0217DAD7600E00A47 /* MinePageModel.m in Sources */,
 				FCBD331521F80E0D0017AB5D /* ManifestScetionFooter.m in Sources */,
 				FC48F46E2186E5DF00C69B49 /* UIColor+LXExpand.m in Sources */,
+				FC2DCF26221E7F1F0077DB50 /* ContactsInfoCell.m in Sources */,
+				FC6E8DBF223F386200DD0B87 /* VHLNavigation.m in Sources */,
 				FC142A9A217D756200E00A47 /* AskToBuyOfferCell.m in Sources */,
+				FC2DCF492223E37B0077DB50 /* ActivityRulesVC.m in Sources */,
 				FCBC3EF521AE6B43003A9D5D /* OperateMenuView.m in Sources */,
+				FC6E8DEE22428CEF00DD0B87 /* UINavigation+SXFixSpace.m in Sources */,
 				FC89D0F421952A7D00817844 /* MyServiceCell.m in Sources */,
+				FCD7E061222FA34F002E3908 /* GoodsDescribeVC.m in Sources */,
 				FC85E4FF217C69EA00CA119C /* MineSectionHeader.m in Sources */,
-				FCC889A021E440B80020F78B /* ProgressView.m in Sources */,
 				FC2A941D219BFB0000096A67 /* MessageModel.m in Sources */,
 				FC8C927921EC810100736B55 /* DiscountSalesCell.m in Sources */,
 			);
@@ -2083,7 +2409,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "";
@@ -2097,6 +2423,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C7ECPUDY72;
 				INFOPLIST_FILE = QCY/Info.plist;
@@ -2105,7 +2432,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.i7colors.QCY;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "";

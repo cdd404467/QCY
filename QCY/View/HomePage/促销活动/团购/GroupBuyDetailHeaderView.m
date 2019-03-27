@@ -14,6 +14,7 @@
 #import <Masonry.h>
 #import "UIView+Border.h"
 #import "CountDown.h"
+#import "HelperTool.h"
 
 @interface GroupBuyDetailHeaderView()
 
@@ -286,7 +287,7 @@
     }
     
     //原价
-    NSString *oPrice = _dataSource.oldPrice;
+    NSString *oPrice = [HelperTool getStringFrom:_dataSource.oldPrice];
     NSString *oText = [NSString stringWithFormat:@"原价: ¥%@元/%@",oPrice,_dataSource.priceUnit];
     NSMutableAttributedString *mutableOriginal = [[NSMutableAttributedString alloc] initWithString:oText];
     mutableOriginal.yy_color = HEXColor(@"#868686", 1);

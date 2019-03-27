@@ -42,12 +42,11 @@
 @property (nonatomic, assign)BOOL isCommentUser;    //是否是回复别人的评论
 @property (nonatomic, assign)BOOL isRefresh;        //是否是刷新
 @property (nonatomic, strong)FCUnReadMsgView *msgView;
-
+@property (nonatomic, strong)NSTimer *timer;
+ //文本
 @end
 
-@implementation FriendCircleVC {
-    dispatch_source_t _timer;
-}
+@implementation FriendCircleVC
 
 - (instancetype)init
 {
@@ -61,8 +60,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setNavBar];
-    
+
     [self requestDataFirstIn];
     //键盘将要显示
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -76,21 +74,23 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshList) name:@"refreshAllDataWithThis" object:nil];
 }
 
-
+-(NSTimer*)timer{
+    if (!_timer) {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:45  target:self  selector:@selector(getUnReadMsg) userInfo:nil  repeats:YES];
+    }
+    return _timer;
+}
 
 - (void)viewWillAppear: (BOOL)animated {
     [IQKeyboardManager sharedManager].enable = NO;
-    if (_timer) {
-        dispatch_resume(_timer);
-    }
-//    [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = NO;
+    
+    [self.timer setFireDate:[NSDate distantPast]];
 }
 
 - (void)viewWillDisappear: (BOOL)animated {
     [IQKeyboardManager sharedManager].enable = YES;
-    if(_timer){
-        dispatch_suspend(_timer);
-    }
+    [self.timer setFireDate:[NSDate distantFuture]];
+
 }
 
 //改变头像的代理方法
@@ -117,39 +117,10 @@
     return _dataSource;
 }
 
-- (void)setNavBar {
-    self.nav.titleLabel.text = @"印染圈";
-    self.nav.backBtn.hidden = YES;
-    [self.nav.rightBtn setTitle:@"我要发布" forState:UIControlStateNormal];
-    [self.nav.rightBtn setTitleColor:MainColor forState:UIControlStateNormal];
-    [self.nav.rightBtn addTarget:self action:@selector(jumpToPublishVC) forControlEvents:UIControlEventTouchUpInside];
-    self.nav.rightBtn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
-    [self.nav.rightBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(0);
-        make.height.mas_equalTo(44);
-        make.bottom.mas_equalTo(0);
-        make.width.mas_equalTo(90);
-    }];
-    self.nav.backgroundColor = HEXColor(@"#f3f3f3", 1);
-    self.nav.bottomLine.hidden = YES;
-}
-
-- (void)jumpToPublishVC {
-    if (!GET_USER_TOKEN) {
-        [self jumpToLogin];
-    }
-    DDWeakSelf;
-    PublishFriendCircleVC *vc = [[PublishFriendCircleVC alloc] init];
-    vc.refreshFCBlock = ^{
-        weakself.isRefresh = YES;
-        [weakself requestDataFirstIn];
-    };
-    [self presentViewController:vc animated:YES completion:nil];
-}
 
 - (void)setupUI {
     _kbView = [[WXKeyBoardView alloc] init];
-    _kbView.top = SCREEN_HEIGHT;
+    _kbView.top = SCREEN_HEIGHT - NAV_HEIGHT;
     _kbView.tvDelegate = self;
     [self.view addSubview:_kbView];
 }
@@ -157,19 +128,21 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT) style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT) style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.backgroundColor = [UIColor clearColor];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
         _tableView.separatorColor = RGBA(204, 204, 204, 1);
         _tableView.separatorInset = UIEdgeInsetsZero;
         //取消垂直滚动条
         _tableView.showsHorizontalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
-            _tableView.estimatedRowHeight = 0;
+            //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
         
@@ -203,6 +176,14 @@
     return _tableView;
 }
 
+#pragma mark - 代理方法
+//发布朋友圈完成后，代理回调
+- (void)publishCompleted {
+    self.isRefresh = YES;
+    [self requestDataFirstIn];
+}
+
+
 
 - (void)jumpToMyInfo {
     if (!GET_USER_TOKEN) {
@@ -221,9 +202,7 @@
     NSString *tipText = [NSString stringWithFormat:@"更新%@条消息",tips];
     if ([self.view viewWithTag:444]) {
         _msgView.title = tipText;
-//        NSLog(@"---");
     } else {
-//        NSLog(@"===");
         [UIView animateWithDuration:0.3 animations:^{
             weakself.tableView.top = weakself.tableView.top + 30;
             weakself.tableView.height = weakself.tableView.height - 30;
@@ -257,26 +236,6 @@
         weakself.tableView.top = weakself.tableView.top - 30;;
         weakself.tableView.height = weakself.tableView.height + 30;
     }];
-}
-
-#pragma mark 定时器请求消息
-- (void)startTimer {
-    //定义队列
-    dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
-    //创建定时器
-    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-    
-    dispatch_time_t start = DISPATCH_TIME_NOW;        //当前时间
-    dispatch_time_t interval = 45.0 * NSEC_PER_SEC;    //间隔时间
-    //设置定时器
-    dispatch_source_set_timer(_timer, start, interval, 0);
-    //设置回调
-    DDWeakSelf;
-    dispatch_source_set_event_handler(_timer, ^{
-        [weakself getUnReadMsg];
-    });
-    //启动定时器
-    dispatch_resume(_timer);
 }
 
 #pragma mark - 获取朋友圈列表
@@ -333,7 +292,6 @@
     dispatch_group_enter(group);
     dispatch_group_async(group, globalQueue, ^{
         [weakself requestList:group];
-//        dispatch_group_leave(group);
     });
     
     //全部任务完成后，就可以在这吊了
@@ -352,7 +310,7 @@
             } else {
                 [weakself.view addSubview:weakself.tableView];
                 [weakself setupUI];
-                [weakself startTimer];
+                [weakself.timer fire];
             }
             [CddHUD hideHUD:weakself.view];
         });
@@ -364,7 +322,7 @@
     NSString *urlString = [NSString stringWithFormat:URL_Friend_List,User_Token,_page,Page_Count];
     DDWeakSelf;
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-                            NSLog(@"---- %@",json);
+//                            NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.totalNum = [json[@"totalCount"] intValue];
             if (weakself.isRefresh == YES) {
@@ -376,10 +334,8 @@
                 model.likeList = [LikeListModel mj_objectArrayWithKeyValuesArray:model.likeList];
                 model.commentList = [CommentListModel mj_objectArrayWithKeyValuesArray:model.commentList];
             }
-            NSLog(@"kkkkk");
-        } else {
-            NSLog(@"jjjjj");
-        }
+            
+        } 
         dispatch_group_leave(group);
     } Failure:^(NSError *error) {
 //        NSLog(@" Error : %@",error);
@@ -394,6 +350,16 @@
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //                        NSLog(@"---===- %@",json);
         weakself.myInfoDataSource = [FriendCricleInfoModel mj_objectWithKeyValues:json[@"data"]];
+        //代理传值给左上方头像
+        if ([weakself.friendDelegate respondsToSelector:@selector(leftHeaderIconChange:)]) {
+            NSString *headerUrl = [NSString string];
+            if isRightData(weakself.myInfoDataSource.communityPhoto) {
+                headerUrl = weakself.myInfoDataSource.communityPhoto;
+            } else {
+                headerUrl = nil;
+            }
+            [weakself.friendDelegate leftHeaderIconChange:headerUrl];
+        }
         dispatch_group_leave(group);
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
@@ -556,6 +522,7 @@
 
 //查看详情
 - (void)didLookDetail:(NSString *)tieziID {
+    [_kbView.textView resignFirstResponder];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"cellMenu" object:nil];
     FriendCircleDetailVC *vc = [[FriendCircleDetailVC alloc] init];
     vc.tieziID = tieziID;
@@ -601,7 +568,8 @@
     NSDictionary *dict = @{@"token":User_Token,
                            @"dyeId":tieziID,
                            @"content":_kbView.textView.text,
-                           @"parentId":commentID
+                           @"parentId":commentID,
+                           @"from":@"app_ios"
                            };
     [CddHUD show:self.view];
     DDWeakSelf;
@@ -677,13 +645,6 @@
                 }
             }
             [weakself.tableView reloadData];
-//            NSArray *cellArray = [weakself.tableView visibleCells];
-//            NSMutableArray<NSIndexPath *> *ipArray = [NSMutableArray arrayWithCapacity:0];
-//            for (FriendCricleCell *cell in cellArray) {
-//                NSIndexPath *indexPath = [weakself.tableView indexPathForCell:cell];
-//                [ipArray addObject:indexPath];
-//            }
-//            [weakself.tableView reloadRowsAtIndexPaths:ipArray withRowAnimation:UITableViewRowAnimationNone];
             [CddHUD showTextOnlyDelay:@"取消关注成功" view:weakself.view];
         }
     } Failure:^(NSError *error) {
@@ -830,6 +791,12 @@
     for (FriendCricleCell *cell in cellArray) {
         cell.menuView.show = NO;
     }
+    
+    //滚动的时候，代理传值给父控件滚动的高度
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if ([self.friendDelegate respondsToSelector:@selector(tableViewContentOffsetY:)]){
+        [self.friendDelegate tableViewContentOffsetY:offsetY];
+    }
 }
 
 
@@ -843,12 +810,13 @@
     CGFloat keyBoardHeight = keyBoardBounds.size.height;
     // 获取键盘动画时间
     CGFloat animationTime  = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-
+    
     DDWeakSelf;
     [UIView animateWithDuration:animationTime animations:^{
-        weakself.kbView.top = SCREEN_HEIGHT - keyBoardHeight - weakself.kbView.height;
+        weakself.kbView.top = SCREEN_HEIGHT - keyBoardHeight - weakself.kbView.height - NAV_HEIGHT;
     }];
 }
+
 
 - (void)keyBoardWillHide:(NSNotification *)notificaiton
 {
@@ -858,7 +826,7 @@
     CGFloat animationTime = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     DDWeakSelf;
     [UIView animateWithDuration:animationTime animations:^{
-        weakself.kbView.top = SCREEN_HEIGHT;
+        weakself.kbView.top = SCREEN_HEIGHT - NAV_HEIGHT;
     }];
 }
 

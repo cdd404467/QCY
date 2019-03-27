@@ -43,27 +43,6 @@
     botGap.backgroundColor = HEXColor(@"#D3D3D3", 0.6);
     [self addSubview:botGap];
     
-//    //账号类型
-//    UIImageView *typeImage = [[UIImageView alloc] init];
-//    [self addSubview:typeImage];
-//    [typeImage mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(11);
-//        make.height.mas_equalTo(21);
-//        make.width.mas_equalTo(KFit_W(60));
-//        make.top.mas_equalTo(0);
-//    }];
-//    _typeImage = typeImage;
-//    
-//    UILabel *typeLabel = [[UILabel alloc] init];
-//    typeLabel.textColor = [UIColor whiteColor];
-//    typeLabel.textAlignment = NSTextAlignmentCenter;
-//    typeLabel.font = [UIFont systemFontOfSize:12];
-//    [typeImage addSubview:typeLabel];
-//    [typeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.mas_equalTo(typeImage);
-//    }];
-//    _typeLabel = typeLabel;
-    
     // 头像
     UIImageView *headerImage = [[UIImageView alloc] init];
     headerImage.layer.cornerRadius = 25;
@@ -130,14 +109,6 @@
 
 - (void)setModel:(FriendCricleInfoModel *)model {
     _model = model;
-    //企业类型
-    if ([model.isCompanyType isEqualToString:@"1"]) {
-        _typeImage.image = [UIImage imageNamed:@"company_img"];
-        _typeLabel.text = @"企业用户";
-    } else if ([model.isCompanyType isEqualToString:@"0"]) {
-        _typeImage.image = [UIImage imageNamed:@"personal_img"];
-        _typeLabel.text = @"个人用户";
-    }
     
     //朋友圈头像
     if isRightData(model.communityPhoto) {

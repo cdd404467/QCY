@@ -7,7 +7,6 @@
 //
 
 #import "ShopMainPageVC.h"
-#import "CommonNav.h"
 #import "MacroHeader.h"
 #import "ShopMainPageHeaderView.h"
 #import <YNPageViewController.h>
@@ -18,53 +17,45 @@
 #import "CddHUD.h"
 #import "OpenMallModel.h"
 #import <WXApi.h>
+#import "NavControllerSet.h"
 
 @interface ShopMainPageVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
 
-@property (nonatomic, strong)CommonNav *nav;
 @property (nonatomic, assign)int page;
-@property (nonatomic, copy)NSArray *tempArr;
 @property (nonatomic, strong)OpenMallModel *firstDateSource;
 @property (nonatomic, strong)NSMutableArray *secondDataSource;
+@property (nonatomic, assign)int totalNum;
 @end
 
 @implementation ShopMainPageVC
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _page = 1;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-    _page = 1;
-    [self.view addSubview:self.nav];
+    self.title = @"店铺主页";
+    [self setNavBar];
     [self requestData];
    
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-}
-
-- (CommonNav *)nav {
-    if (!_nav) {
-        _nav = [[CommonNav alloc] init];
-        _nav.titleLabel.text = @"店铺主页";
-        _nav.bottomLine.hidden = YES;
-        _nav.backgroundColor = HEXColor(@"ffffff", 0);
-        _nav.titleLabel.textColor = RGBA(0, 0, 0, 0);
-        [_nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-         if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
-              [_nav.rightBtn setTitle:@"分享" forState:UIControlStateNormal];
-              [_nav.rightBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
-         }
+- (void)setNavBar {
+    [self vhl_setNavBarBackgroundAlpha:0.0];
+    [self vhl_setNavBarTitleColor:RGBA(0, 0, 0, 0)];
+    [self vhl_setNavBarShadowImageHidden:YES];
+    
+    if([WXApi isWXAppInstalled]) {//判断用户是否已安装微信App
+        [self addRightBarButtonItemWithTitle:@"分享" action:@selector(share)];
     }
     
-    return _nav;
 }
 
 //初始化数据源
@@ -106,8 +97,9 @@
         NSString *urlString = [NSString stringWithFormat:URL_Shop_Product_List,weakself.page,Page_Count,weakself.storeID];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-                weakself.tempArr  = [ProductInfoModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
-                [weakself.secondDataSource addObjectsFromArray:weakself.tempArr];
+                weakself.totalNum = [json[@"totalCount"] intValue];
+                NSArray *tempArr  = [ProductInfoModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
+                [weakself.secondDataSource addObjectsFromArray:tempArr];
             }
             dispatch_group_leave(group);
         } Failure:^(NSError *error) {
@@ -167,11 +159,11 @@
                                                                                 config:configration];
     vc.dataSource = self;
     vc.delegate = self;
+    
 //
     ShopMainPageHeaderView *header = [[ShopMainPageHeaderView alloc] init];
     [header setupUI:_firstDateSource.creditLevel model:_firstDateSource];
     header.frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(KFit_W(210)) + 50);
-    
     vc.headerView = header;
 //    /// 指定默认选择index 页面
     vc.pageIndex = 0;
@@ -179,12 +171,6 @@
     /// 作为自控制器加入到当前控制器
     [vc addSelfToParentViewController:self];
     
-    [_nav removeFromSuperview];
-    [self.view addSubview:self.nav];
-    
-    /// 如果隐藏了导航条可以 适当改y值
-    //    pageVC.view.yn_y = kYNPAGE_NAVHEIGHT;
-
 }
 
 
@@ -193,8 +179,7 @@
     AllProductsVC *vc_1 = [[AllProductsVC alloc] init];
     vc_1.dataSource = _secondDataSource;
     vc_1.storeID = _storeID;
-    vc_1.tempArr = _tempArr;
-//
+    vc_1.totalNum = _totalNum;
     CompanyInfoVC *vc_2 = [[CompanyInfoVC alloc] init];
     vc_2.companyDesc = _firstDateSource.descriptionStr;
     
@@ -219,8 +204,16 @@
                   progress:(CGFloat)progress {
 //    NSLog(@"--- contentOffset = %f, progress = %f", contentOffset, progress);
     
-    _nav.backgroundColor = HEXColor(@"ffffff", progress);
-    _nav.titleLabel.textColor = RGBA(0, 0, 0, progress);
+    [self vhl_setNavBarBackgroundAlpha:progress];
+    [self vhl_setNavBarTitleColor:RGBA(0, 0, 0, progress)];
+    if (progress == 1.0) {
+        [self vhl_setNavBarShadowImageHidden:NO];
+    } else {
+        [self vhl_setNavBarShadowImageHidden:YES];
+    }
+    
+//    _nav.backgroundColor = HEXColor(@"ffffff", progress);
+//    _nav.titleLabel.textColor = RGBA(0, 0, 0, progress);
 }
 
 

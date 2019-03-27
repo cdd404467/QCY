@@ -7,8 +7,6 @@
 //
 
 #import "GroupBuyingDetailVC.h"
-#import "CommonNav.h"
-#import "MacroHeader.h"
 #import "MacroHeader.h"
 #import <Masonry.h>
 #import "NetWorkingPort.h"
@@ -23,38 +21,21 @@
 #import "GoToGroupBuyVC.h"
 #import "UIView+YNPageExtend.h"
 
+
+
 @interface GroupBuyingDetailVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
 
 @property (nonatomic, strong)GroupBuyingModel *dataSource;
-@property (nonatomic, strong)CommonNav *nav;
 @property (nonatomic, strong)UITableView *tableView;
-@property (nonatomic, assign)CGFloat tbHeight;
 @end
 
 @implementation GroupBuyingDetailVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-  
-    [self requestData];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-}
-
-- (CommonNav *)nav {
-    if (!_nav) {
-        _nav = [[CommonNav alloc] init];
-        _nav.titleLabel.text = @"团购详情";
-//        _nav.bottomLine.hidden = YES;
-//        _nav.titleLabel.textColor = RGBA(0, 0, 0, 0);
-        [_nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    }
+    self.title = @"团购详情";
     
-    return _nav;
+    [self requestData];
 }
 
 
@@ -94,7 +75,6 @@
 }
 
 - (void)setupPageVC {
-    
     YNPageConfigration *configration = [YNPageConfigration defaultConfig];
     configration.pageStyle = YNPageStyleSuspensionTopPause;
     configration.headerViewCouldScale = YES;
@@ -133,12 +113,11 @@
     /// 作为自控制器加入到当前控制器
     [vc addSelfToParentViewController:self];
     
-    [self.view addSubview:self.nav];
-    
     if ([_dataSource.endCode isEqualToString:@"10"] || [_dataSource.endCode isEqualToString:@"11"]) {
         UIButton *btn = [self addBottonBtn];
         [btn setTitle:@"我要团购" forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(jumpToBuy) forControlEvents:UIControlEventTouchUpInside];
+        configration.cutOutHeight = TABBAR_HEIGHT;
     }
     
 }
@@ -151,11 +130,9 @@
     vc_2.cellImage = _dataSource.noteMobilePic;
     GroupBuyRecordVC *vc_3 = [[GroupBuyRecordVC alloc] init];
     vc_3.groupID = _groupID;
+    vc_3.layoutStr = _dataSource.endCode;
     vc_3.titleArray = @[@"序号",@"公司名称",@"联系方式",@"认领量"];
     vc_3.type = @"group";
-//    vc_1.tbHeight = _tbHeight;
-//    vc_2.tbHeight = _tbHeight;
-//    vc_3.tbHeight = _tbHeight;
     
     return @[vc_1, vc_2, vc_3];
 }

@@ -66,6 +66,22 @@
     return nil;
 }
 
+//1.colors 渐变的颜色
+//2.locations 渐变颜色的分割点
+//3.startPoint&endPoint 颜色渐变的方向，范围在(0,0)与(1.0,1.0)之间，如(0,0)(1.0,0)代表水平方向渐变,(0,0)(0,1.0)代表竖直方向渐变
+
++ (void)textGradientview:(UIView *)view bgVIew:(UIView *)bgVIew gradientColors:(NSArray *)colors gradientStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint {
+    
+    CAGradientLayer* gradientLayer1 = [CAGradientLayer layer];
+    gradientLayer1.frame = view.frame;
+    gradientLayer1.colors = colors;
+    gradientLayer1.startPoint =startPoint;
+    gradientLayer1.endPoint = endPoint;
+    [bgVIew.layer addSublayer:gradientLayer1];
+    gradientLayer1.mask = view.layer;
+    view.frame = gradientLayer1.bounds;
+}
+
 // 视频转换为MP4
 + (NSURL *)convertToMp4:(NSURL *)movUrl
 {
@@ -216,6 +232,19 @@
     }
     
     return 0;
+}
+
+//解决小数点精度问题
++ (NSString*)getStringFrom:(double)doubleVal {
+    NSString* stringValue = @"0.00";
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
+    formatter.usesSignificantDigits = true;
+    formatter.maximumSignificantDigits = 100;
+    formatter.groupingSeparator = @"";
+    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+    stringValue = [formatter stringFromNumber:@(doubleVal)];
+    
+    return stringValue;
 }
 
 @end

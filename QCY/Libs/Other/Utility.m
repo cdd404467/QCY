@@ -26,7 +26,7 @@
     long long int secondTime = timeDifference;
     long long int minuteTime = secondTime/60;
     long long int hoursTime = minuteTime/60;
-    long long int dayTime = hoursTime/24;
+//    long long int dayTime = hoursTime/24;
 
 //    long long int monthTime = dayTime/30;
 //    long long int yearTime = monthTime/12;
@@ -65,7 +65,8 @@
     } else if (isYesterday) {
         return [NSString stringWithFormat:@"昨天"];
     } else {
-        return [NSString stringWithFormat:@"%lld天前",dayTime];
+        return string;
+//        return [NSString stringWithFormat:@"%lld天前",dayTime];
     }
 
 //    //今天

@@ -17,12 +17,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.hidden = YES;
-//    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
+    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     CommonNav *nav = [[CommonNav alloc] init];
     [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:nav];
     _nav = nav;
-
 }
 
 

@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^RefreshMyInfoBlock)(void);
-@interface BigVCertVC : BaseViewControllerNav
+@interface BigVCertVC : BaseViewController
 
 @property (nonatomic, copy)RefreshMyInfoBlock refreshMyInfoBlock;
 @end

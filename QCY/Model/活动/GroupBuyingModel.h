@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "PromotionsModel.h"
 #import <MJExtension.h>
 @class PropMap;
@@ -24,7 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *maxNum;                    //最大认购量
 @property (nonatomic, copy)NSString *startTime;                 //开始时间
 @property (nonatomic, copy)NSString *endTime;                   //结束时间
-@property (nonatomic, copy)NSString *oldPrice;                  //原价
+//@property (nonatomic, copy)NSString *oldPrice;                  //原价
+@property (nonatomic, assign)double  oldPrice;                  //原价
+
 @property (nonatomic, copy)NSString *priceNew;                  //团购价
 @property (nonatomic, copy)NSString *priceUnit;                 //价格单位
 @property (nonatomic, copy)NSString *subscribedNum;             //已认购数量

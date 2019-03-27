@@ -18,7 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.nav.titleLabel.text = @"使用说明";
+    self.title = @"使用说明";
     [self setupUI];
 }
 

@@ -7,7 +7,6 @@
 //
 
 #import "DiscountBuyVC.h"
-#import "CommonNav.h"
 #import "MacroHeader.h"
 #import <YYText.h>
 #import <Masonry.h>
@@ -22,7 +21,6 @@
 #import "NetWorkingPort.h"
 
 @interface DiscountBuyVC ()<UITextFieldDelegate>
-@property (nonatomic, strong)CommonNav *nav;
 @property (nonatomic, strong)UIScrollView *scrollView;
 @property (nonatomic, strong)UITextField *buyTF;
 @property (nonatomic, strong)UITextField *contactTF;
@@ -39,17 +37,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-    [self.view addSubview:self.nav];
+    self.title = @"我要购买";
+   
     [self.view addSubview:self.scrollView];
     [self setupUI];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-}
 
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
@@ -65,18 +58,6 @@
     }
     
     return _scrollView;
-}
-
-- (CommonNav *)nav {
-    if (!_nav) {
-        _nav = [[CommonNav alloc] init];
-        _nav.titleLabel.text = @"展销详情";
-        //        _nav.bottomLine.hidden = YES;
-        //        _nav.titleLabel.textColor = RGBA(0, 0, 0, 0);
-        [_nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    return _nav;
 }
 
 - (void)setupUI {
@@ -345,19 +326,19 @@
                            @"city":areaArray[1],
                            @"address":_textView.text,
                            @"isSendSample":[NSString stringWithFormat:@"%ld",(long)currentSelectBtnTag],
-//                           @"from":@"from=app",
+                           @"from":@"app_ios",
                            };
     DDWeakSelf;
     
-    [CddHUD showWithText:@"参与团购中..." view:self.view];
+    [CddHUD showWithText:@"参与中..." view:self.view];
     [ClassTool postRequest:URL_Join_Discount_Buy Params:[dict mutableCopy] Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
 //                        NSLog(@"-----== %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+//            NSString *notiName = @"groupBuySuc";
+//            [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:nil userInfo:nil];
+            [CddHUD showTextOnlyDelay:@"参与成功" view:weakself.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [CddHUD showTextOnlyDelay:@"参与成功" view:weakself.view];
-                NSString *notiName = @"groupBuySuc";
-                [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:nil userInfo:nil];
                 [weakself.navigationController popViewControllerAnimated:YES];
             });
         }
@@ -444,7 +425,4 @@
     return YES;
 }
 
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
-}
 @end

@@ -58,6 +58,10 @@
 + (void)showTextOnlyDelay:(NSString *)text view:(UIView *)view {
     [self show:text icon:nil view:view onlyText:YES delay:DELAY_TIME];
 }
+/*** 只显示文本,延时关闭，自定义时间 ***/
++ (void)showTextOnlyDelay:(NSString *)text view:(UIView *)view delay:(NSTimeInterval)duration {
+    [self show:text icon:nil view:view onlyText:YES delay:duration];
+}
 
 /*** 菊花和文本 ***/
 + (MBProgressHUD *)showWithText:(NSString *)text view:(UIView *)view {

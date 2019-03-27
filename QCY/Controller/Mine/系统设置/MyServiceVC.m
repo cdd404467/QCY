@@ -8,7 +8,6 @@
 
 #import "MyServiceVC.h"
 #import "MacroHeader.h"
-#import "CommonNav.h"
 #import "MyServiceCell.h"
 
 @interface MyServiceVC ()<UITableViewDataSource, UITableViewDelegate>
@@ -20,12 +19,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"我的客服";
-    if (self.navigationController.navigationBar.isHidden == YES) {
-        CommonNav *nav = [[CommonNav alloc] init];
-        [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-        nav.titleLabel.text = @"求购详情";
-        [self.view addSubview:nav];
-    }
     
     [self.view addSubview:self.tableView];
 }
@@ -33,7 +26,7 @@
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.originHeight, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.originHeight, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         if (@available(iOS 11.0, *)) {
@@ -44,13 +37,13 @@
         } else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
         
         UIImageView *headerView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, KFit_W(310))];
         headerView.image = [UIImage imageNamed:@"map"];
         _tableView.tableHeaderView = headerView;
-        
     }
     return _tableView;
 }
@@ -88,13 +81,8 @@
 
 //数据源
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     MyServiceCell *cell = [MyServiceCell cellWithTableView:tableView];
     return cell;
-}
-
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

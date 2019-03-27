@@ -28,13 +28,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *numUnit;                   //数量单位
 @property (nonatomic, copy)NSString *totalNum;                  //总量
 @property (nonatomic, copy)NSArray *listPrice;                  //优惠价数组
+@property (nonatomic, copy)NSArray *listSale;                   //基本参数数组
 @end
 
 
 @interface ListPrice : NSObject
 
 @property (nonatomic, copy)NSString *salesNum;                  //数量
-@property (nonatomic, copy)NSString *salesPrice;                //价格
+@property (nonatomic, assign)double salesPrice;                 //价格
+@end
+
+
+@interface listSaleModel : NSObject
+@property (nonatomic, copy)NSString *shuXing;                   //属性
+@property (nonatomic, copy)NSString *zhi;                       //值
 @end
 
 NS_ASSUME_NONNULL_END

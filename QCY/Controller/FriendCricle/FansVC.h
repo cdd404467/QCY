@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FansVC : BaseViewControllerNav
+@interface FansVC : BaseViewController
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, copy)NSString *userID;
 @property (nonatomic, copy)NSString *ofType;

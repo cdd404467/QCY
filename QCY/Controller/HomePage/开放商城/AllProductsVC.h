@@ -12,11 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AllProductsVC : BaseViewController
 
-@property (nonatomic, copy)NSMutableArray *dataSource;
+@property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, copy)NSString *storeID;
-@property (nonatomic, copy)NSArray *tempArr;
-
+@property (nonatomic, assign)int totalNum;
 @end
 
 NS_ASSUME_NONNULL_END

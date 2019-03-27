@@ -66,7 +66,7 @@
     }];
     _productName = productName;
     
-    if (!GET_USER_TOKEN) {
+//    if (!GET_USER_TOKEN) {
         //背景，用来投影
         UIView *bgView = [[UIView alloc] init];
         bgView.backgroundColor = [UIColor whiteColor];
@@ -137,10 +137,10 @@
         companyName.font = [UIFont systemFontOfSize:13];
         [bgView addSubview:companyName];
         [companyName mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(userType.mas_right).offset(KFit_W(13));
+            make.left.mas_equalTo(userType.mas_right).offset(12);
             make.centerY.mas_equalTo(historyBuy);
             make.height.mas_equalTo(13);
-            make.width.mas_equalTo(KFit_W(130));
+            make.width.mas_equalTo(KFit_W(160));
         }];
         _companyName = companyName;
         
@@ -151,7 +151,7 @@
         cText.textColor = HEXColor(@"#868686", 1);
         [bgView addSubview:cText];
         [cText mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(companyName.mas_right).offset(KFit_W(35));
+            make.left.mas_equalTo(companyName.mas_right).offset(KFit_W(5));
             make.centerY.mas_equalTo(companyName);
         }];
         
@@ -178,16 +178,16 @@
             }
             
         }
-    }
+//    }
 }
 
 - (void)setModel:(AskToBuyDetailModel *)model {
     _model = model;
     [self configData:model];
     
-    if (!GET_USER_TOKEN) {
+//    if (!GET_USER_TOKEN) {
         [self configBottomData:model];
-    }
+//    }
 }
 
 //倒计时和公司名字
@@ -272,6 +272,7 @@
     //是否是我发布
     if ([model.isCharger isEqualToString:@"1"]) {
         _personImageView.hidden = NO;
+        _companyName.text = model.companyName;
         if ([model.publishType isEqualToString:@"企业发布"]) {
             _personImageView.image = [UIImage imageNamed:@"person_red"];
             _personLabel.textColor = HEXColor(@"#F10215", 1);
@@ -282,16 +283,12 @@
         
     } else {
         _personImageView.hidden = YES;
+        _companyName.text = [NSString stringWithFormat:@"*****公司"];
     }
     
     //历史
     _historyBuy.text = [NSString stringWithFormat:@"历史求购 %@",model.enquiryTimes];
     
-    if ([model.publishType isEqualToString:@"企业发布"]) {
-        _companyName.text = model.companyDomain.companyName;
-    } else {
-        _companyName.text = model.companyName2;
-    }
 }
 
 @end

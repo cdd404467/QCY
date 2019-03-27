@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FriendCircleRecordVC : BaseViewControllerNav
+@interface FriendCircleRecordVC : BaseViewController
 @property (nonatomic, copy)NSString *userID;
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, strong)NSMutableArray *dataSource;

@@ -38,7 +38,7 @@
 }
 
 
-/*** 改变image的t颜色 ***/
+/*** 改变image的颜色 ***/
 - (UIImage *) imageWithTintColor:(UIColor *)tintColor
 {
     return [self imageWithTintColor:tintColor blendMode:kCGBlendModeDestinationIn];

@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MyManifestVC : BaseViewController
-
+@property (nonatomic, copy)NSString *phoneNumber;
 @end
 
 NS_ASSUME_NONNULL_END

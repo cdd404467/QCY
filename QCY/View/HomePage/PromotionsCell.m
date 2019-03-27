@@ -12,6 +12,7 @@
 #import <YYWebImage.h>
 #import "HomePageModel.h"
 #import "HelperTool.h"
+#import "UIView+Geometry.h"
 
 @interface PromotionsCell()
 @property (nonatomic, strong)NSMutableArray *typeArray;
@@ -60,6 +61,7 @@
 
 - (void)setDataSource:(NSMutableArray *)dataSource {
     _dataSource = dataSource;
+    [self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     CGFloat width = SCREEN_WIDTH * 0.5;
     CGFloat height = KFit_W(75.0);
     for (NSInteger i = 0; i < dataSource.count; i ++) {
@@ -87,7 +89,7 @@
 
 - (void)linkOfJump:(id)sender {
     //活动的名字数组
-    NSArray<NSString *> * promotionsName = [NSArray arrayWithObjects:@"group_buy",@"sales",@"meeting",@"vote",@"draw", nil];
+    NSArray<NSString *> * promotionsName = [NSArray arrayWithObjects:@"group_buy",@"sales",@"meeting",@"vote",@"auction", nil];
     UITapGestureRecognizer *tap = (UITapGestureRecognizer*)sender;
     UIView *views = (UIView*) tap.view;
     NSUInteger tag = views.tag - 1000;

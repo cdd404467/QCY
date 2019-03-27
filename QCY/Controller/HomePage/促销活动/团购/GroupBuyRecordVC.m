@@ -58,12 +58,22 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         if (@available(iOS 11.0, *)) {
+            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         } else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        
+        if ([_type isEqualToString:@"group"]) {
+            if (![_layoutStr isEqualToString:@"10"] && ![_layoutStr isEqualToString:@"11"]) {
+                _tableView.contentInset = UIEdgeInsetsMake(0, 0, Bottom_Height_Dif, 0);
+                _tableView.scrollIndicatorInsets = _tableView.contentInset;
+            }
+        }
+        
+        
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     return _tableView;

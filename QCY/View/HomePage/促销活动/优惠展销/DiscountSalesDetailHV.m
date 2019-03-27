@@ -13,6 +13,7 @@
 #import <UIImageView+WebCache.h>
 #import "DiscountSalesModel.h"
 #import <YYText.h>
+#import "HelperTool.h"
 
 @implementation DiscountSalesDetailHV {
     UIImageView *_productImageView;
@@ -157,10 +158,10 @@
     NSInteger count = dataSource.listPrice.count;
     if (count == 0)
         return;
-    CGFloat leftGap = 5.f;
-    CGFloat overlap = 25.f;
+    CGFloat leftGap = 2.f;
+    CGFloat overlap = 28.f;
     CGFloat width = (SCREEN_WIDTH - leftGap * 2 + overlap * 2) / 3;
-    CGFloat labelLeft = 27.f;
+    CGFloat labelLeft = 24.f;
     for (NSInteger i = 0; i < count; i ++) {
         ListPrice *model = dataSource.listPrice[i];
         UIImageView *imageView = [[UIImageView alloc] init];
@@ -168,40 +169,23 @@
         imageView.frame = CGRectMake(leftGap + i * (width - overlap), 10, width, 50);
         [_view_two addSubview:imageView];
         
-        YYLabel *countLabel = [[YYLabel alloc] init];
+        UILabel *countLabel = [[UILabel alloc] init];
+//        countLabel.numberOfLines = 2;
         countLabel.textAlignment = NSTextAlignmentCenter;
-        countLabel.text = [NSString stringWithFormat:@"单笔购买%@",model.salesNum];
+        countLabel.text = [NSString stringWithFormat:@"%@",model.salesNum];
         countLabel.frame = CGRectMake(labelLeft, 10, width - labelLeft * 2 + 7, 12);
         countLabel.font = [UIFont systemFontOfSize:9];
         countLabel.textColor = [UIColor blackColor];
         [imageView addSubview:countLabel];
-//        NSLog(@"---==== %@",model.salesPrice);
-//        NSString *text1 = @"单笔购买";
-//        NSString *text2 = [NSString stringWithFormat:@"%@%@%@",text1,model.salesNum,unit];
-//        NSMutableAttributedString *mutableText1 = [[NSMutableAttributedString alloc] initWithString:text2];
-//        mutableText1.yy_color = [UIColor blackColor];
-////        mutableSale.yy_alignment = NSTextAlignmentCenter;
-//        mutableText1.yy_font = [UIFont systemFontOfSize:8];
-//        [mutableText1 yy_setFont:[UIFont boldSystemFontOfSize:14] range:NSMakeRange(text1.length, model.salesNum.length)];
-//        countLabel.attributedText = mutableText1;
-
-
-        YYLabel *priceLabel = [[YYLabel alloc] init];
+        
+        UILabel *priceLabel = [[UILabel alloc] init];
+//        priceLabel.numberOfLines = 2;
         priceLabel.textAlignment = NSTextAlignmentCenter;
-        priceLabel.text = [NSString stringWithFormat:@"优惠价:¥%@元/%@",model.salesPrice,dataSource.priceUnit];
-        priceLabel.frame = CGRectMake(countLabel.left, 50 - 10 - countLabel.height, countLabel.width, 12);
-        priceLabel.font = [UIFont systemFontOfSize:9];
+        priceLabel.text = [NSString stringWithFormat:@"优惠价:¥%@元/%@",[HelperTool getStringFrom:model.salesPrice],dataSource.priceUnit];
+        priceLabel.frame = CGRectMake(countLabel.left, 50 - 10 - countLabel.height, countLabel.width, countLabel.height);
+        priceLabel.font = countLabel.font;
         priceLabel.textColor = HEXColor(@"#F10215", 1);
         [imageView addSubview:priceLabel];
-//
-//        NSString *text11 = @"优惠价:¥";
-//        NSString *text22 = [NSString stringWithFormat:@"%@%@元/%@",text11,model.salesNum,model.salesPrice];
-//        NSMutableAttributedString *mutableText2 = [[NSMutableAttributedString alloc] initWithString:text2];
-//        mutableText2.yy_color = HEXColor(@"#F10215", 1);
-//        //        mutableSale.yy_alignment = NSTextAlignmentCenter;
-//        mutableText2.yy_font = [UIFont systemFontOfSize:8];
-//        [mutableText2 yy_setFont:[UIFont boldSystemFontOfSize:14] range:NSMakeRange(text11.length, model.salesPrice.length)];
-//        priceLabel.attributedText = mutableText2;
     }
     
 }

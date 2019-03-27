@@ -147,7 +147,7 @@
     
     //价格
     if (isRightData(@(model.price).stringValue) && [model.displayPrice isEqualToString:@"1"]){
-        NSString *price = [self getStringFrom:model.price];
+        NSString *price = [HelperTool getStringFrom:model.price];
         
         NSString *text = [NSString stringWithFormat:@"¥ %@/KG",price];
         NSMutableAttributedString *mutableText = [[NSMutableAttributedString alloc] initWithString:text];
@@ -163,18 +163,6 @@
         _priceLabel.attributedText = mutableText;
     }
    
-}
-
--(NSString*)getStringFrom:(double)doubleVal {
-    NSString* stringValue = @"0.00";
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
-    formatter.usesSignificantDigits = true;
-    formatter.maximumSignificantDigits = 100;
-    formatter.groupingSeparator = @"";
-    formatter.numberStyle = NSNumberFormatterDecimalStyle;
-    stringValue = [formatter stringFromNumber:@(doubleVal)];
-    
-    return stringValue;
 }
 
 + (instancetype)cellWithTableView:(UITableView *)tableView {

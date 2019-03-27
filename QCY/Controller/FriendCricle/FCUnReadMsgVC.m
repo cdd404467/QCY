@@ -88,7 +88,7 @@
     NSString *urlString = [NSString stringWithFormat:URL_UnRead_MsgList,User_Token,_page,Page_Count];
     DDWeakSelf;
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-                NSLog(@"---- %@",json);
+//                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             NSArray *tempArr = [CommentListModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
             [weakself.dataSource addObjectsFromArray:tempArr];

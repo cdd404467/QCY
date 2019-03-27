@@ -23,6 +23,8 @@ target 'QCY' do
 	pod 'YBImageBrowser', '~> 2.0.9'
 	pod 'HXPhotoPicker', '~> 2.2.3'
 	pod 'DZNEmptyDataSet', '~> 1.8.1'	
+#极光推送
+	pod 'JPush', '~> 3.1.2'
 #识别网址的Label
 	pod 'MLLabel', '~> 1.10.5'
 #shareSDK

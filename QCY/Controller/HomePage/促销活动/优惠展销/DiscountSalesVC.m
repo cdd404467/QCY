@@ -7,7 +7,6 @@
 //
 
 #import "DiscountSalesVC.h"
-#import "CommonNav.h"
 #import "MacroHeader.h"
 #import "PromotionsHeaderView.h"
 #import "DiscountSalesCell.h"
@@ -42,20 +41,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-    [self setNavBar];
+    self.title = @"优惠展销";
     [self loadData];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-}
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-}
 
 //初始化数据源
 - (NSMutableArray *)dataSource {
@@ -77,7 +67,7 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -87,7 +77,12 @@
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
 
         PromotionsHeaderView *header = [[PromotionsHeaderView alloc] init];
         header.bannerArray = [_bannerDataSource copy];
@@ -107,13 +102,6 @@
     return _tableView;
 }
 
-- (void)setNavBar {
-    CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"优惠展销";
-    [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nav];
-}
-
 #pragma mark -  首次进入请求
 - (void)loadData {
     DDWeakSelf;
@@ -126,7 +114,7 @@
         NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"App_Sales_Info"];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-                                 NSLog(@"---- %@",json);
+//                                 NSLog(@"---- %@",json);
                 NSArray *bannerArr = [PromotionsModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
                 for (PromotionsModel *model in bannerArr) {
                     [weakself.bannerDataSource addObject:ImgUrl(model.ad_image)];
@@ -229,10 +217,6 @@
     cell.model = _dataSource[indexPath.row];
 
     return cell;
-}
-
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

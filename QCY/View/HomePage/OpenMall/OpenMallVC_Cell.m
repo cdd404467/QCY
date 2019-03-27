@@ -45,8 +45,9 @@
 - (void)setupUI {
     UIView *bgView = [[UIView alloc] init];
     bgView.backgroundColor = [UIColor whiteColor];
-    bgView.frame = CGRectMake(KFit_W(9), 6, SCREEN_WIDTH - KFit_W(9) * 2, 120);
-    [HelperTool setRound:bgView corner:UIRectCornerAllCorners radiu:6];
+//    bgView.frame = CGRectMake(KFit_W(9), 6, SCREEN_WIDTH - KFit_W(9) * 2, 120);
+    bgView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 120);
+//    [HelperTool setRound:bgView corner:UIRectCornerAllCorners radiu:6];
     [self.contentView addSubview:bgView];
     
     //图片的灰色背景
@@ -54,7 +55,7 @@
     imageBgView.frame = CGRectMake(0, 0, 120, 120);
     imageBgView.backgroundColor = HEXColor(@"#F5F5F5", 1);
     [bgView addSubview:imageBgView];
-    [HelperTool setRound:imageBgView corner:UIRectCornerTopLeft | UIRectCornerBottomLeft radiu:6];
+//    [HelperTool setRound:imageBgView corner:UIRectCornerTopLeft | UIRectCornerBottomLeft radiu:6];
     _imageBgView = imageBgView;
     
     //图片

@@ -7,7 +7,6 @@
 //
 
 #import "MyManifestVC.h"
-#import "CommonNav.h"
 #import <SGPagingView.h>
 #import "MacroHeader.h"
 #import "ManiFestChildVC.h"
@@ -16,34 +15,19 @@
 @interface MyManifestVC ()<SGPageTitleViewDelegate, SGPageContentScrollViewDelegate>
 @property (nonatomic, strong) SGPageTitleView *pageTitleView;   //标题
 @property (nonatomic, strong) SGPageContentScrollView *pageContentScrollView;   //文本
-@property (nonatomic, strong)CommonNav *nav;
 @end
 
 @implementation MyManifestVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view addSubview:self.nav];
+    self.title = @"我的货单";
     [self setupUI];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-}
-
-- (CommonNav *)nav {
-    if (!_nav) {
-        _nav = [[CommonNav alloc] init];
-        _nav.titleLabel.text = @"我的货单";
-        [_nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    return _nav;
-}
 
 - (void)setupUI {
-    NSArray *titleArr = @[@"我的用货单", @"我的供货单"];
+    NSArray *titleArr = @[@"我的订货单", @"我的供货单"];
     SGPageTitleViewConfigure *configure = [SGPageTitleViewConfigure pageTitleViewConfigure];
     configure.titleFont = [UIFont systemFontOfSize:14];
     configure.titleColor = HEXColor(@"#818181", 1);
@@ -54,6 +38,8 @@
     
     ManiFestChildVC *vc1 = [[ManiFestChildVC alloc] init];
     ManiFestChildVC *vc2 = [[ManiFestChildVC alloc] init];
+    vc1.phoneNumber = _phoneNumber;
+    vc2.phoneNumber = _phoneNumber;
     vc1.listType = @"cg";
     vc2.listType = @"gh";
     
@@ -79,12 +65,6 @@
 
 - (void)pageContentScrollViewDidEndDecelerating {
     _pageTitleView.userInteractionEnabled = YES;
-}
-
-
-
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

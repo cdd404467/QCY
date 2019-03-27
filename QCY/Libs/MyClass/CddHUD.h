@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (MBProgressHUD *)show:(UIView *)view;
 + (void)showTextOnly:(NSString *)text view:(UIView *)view;
 + (void)showTextOnlyDelay:(NSString *)text view:(UIView *)view;
++ (void)showTextOnlyDelay:(NSString *)text view:(UIView *)view delay:(NSTimeInterval)duration;
 + (MBProgressHUD *)showWithText:(NSString *)text view:(UIView *)view;
 + (void)hideHUD:(UIView * _Nullable)view;
 

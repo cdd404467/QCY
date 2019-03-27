@@ -147,11 +147,6 @@
     }];
     _timeLabel = timeLabel;
     
-    
-    
-    
-    
-    
     //没有报价的时候
     UILabel *noneLabel = [[UILabel alloc] init];
     noneLabel.hidden = YES;

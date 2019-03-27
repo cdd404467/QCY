@@ -8,10 +8,9 @@
 
 #import "BaseViewController.h"
 #import "CddHUD.h"
-#import "CommonNav.h"
 #import "LoginVC.h"
-#import "BaseNavigationController.h"
 #import "MacroHeader.h"
+#import "NavControllerSet.h"
 
 @interface BaseViewController ()
 
@@ -27,6 +26,7 @@
     } else {
         _originHeight = 0;
     }
+    [self vhl_setNavigationSwitchStyle:VHLNavigationSwitchStyleTransition];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -34,6 +34,7 @@
 
 
 }
+
 
 - (void)jumpToLogin {
     LoginVC *vc = [[LoginVC alloc] init];

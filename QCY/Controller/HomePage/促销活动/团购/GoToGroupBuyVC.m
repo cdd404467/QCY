@@ -7,7 +7,6 @@
 //
 
 #import "GoToGroupBuyVC.h"
-#import "CommonNav.h"
 #import "MacroHeader.h"
 #import <YYText.h>
 #import <Masonry.h>
@@ -42,8 +41,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
- 
-    [self setNavBar];
+    self.title = @"我要团购";
     [self.view addSubview:self.scrollView];
     [self setupUI];
 }
@@ -52,7 +50,7 @@
     if (!_scrollView) {
         UIScrollView *sv = [[UIScrollView alloc] init];
         sv.backgroundColor = [UIColor whiteColor];
-        sv.frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT);
+        sv.frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT);
         //150 + 680 + 6
         sv.contentSize = CGSizeMake(SCREEN_WIDTH, 600);
         sv.showsVerticalScrollIndicator = YES;
@@ -96,19 +94,18 @@
                            @"address":_textView.text,
                            @"isSendSample":[NSString stringWithFormat:@"%ld",(long)currentSelectBtnTag],
                            @"invitationCode":_heroNumTF.text,
-                           @"from":@"from=app",
+                           @"from":@"app_ios"
                            };
     DDWeakSelf;
-    
-    [CddHUD showWithText:@"参与团购中..." view:self.view];
+    [CddHUD showWithText:@"参与中..." view:self.view];
     [ClassTool postRequest:URL_Join_GroupBuy Params:[dict mutableCopy] Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
 //                NSLog(@"----- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            NSString *notiName = @"groupBuySuc";
+            [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:nil userInfo:nil];
+            [CddHUD showTextOnlyDelay:@"团购成功" view:weakself.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [CddHUD showTextOnlyDelay:@"团购成功" view:weakself.view];
-                NSString *notiName = @"groupBuySuc";
-                [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:nil userInfo:nil];
                 [weakself.navigationController popViewControllerAnimated:YES];
             });
         }
@@ -116,18 +113,10 @@
     } Failure:^(NSError *error) {
         
     }];
-    
 }
 
 
 #pragma mark - set UI
-- (void)setNavBar {
-    CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"我要团购";
-    [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nav];
-    
-}
 
 - (void)checkInfo {
     LookOverHowToUseVC *vc = [[LookOverHowToUseVC alloc] init];
@@ -152,7 +141,7 @@
     tipLabel.layer.cornerRadius = 8.f;
     
     //for循环创建
-    NSArray *titleArr = @[@"我的认领量:",@"英雄码:",@"是否需要样品:",@"联系人:",@"联系人方式:", @"公司名称",@"公司所属区域:",@"公司详细地址:"];
+    NSArray *titleArr = @[@"我的认领量:",@"英雄码:",@"是否需要样品:",@"联系人:",@"联系人方式:", @"公司名称:",@"公司所属区域:",@"公司详细地址:"];
     for (int i = 0; i < 8; i++) {
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.text = titleArr[i];
@@ -457,7 +446,7 @@
         [CddHUD showTextOnlyDelay:@"请输入手机号" view:self.view];
         return NO;
     } else if ([MobilePhone isValidMobile:_phoneTF.text] == NO) {
-        [CddHUD showTextOnlyDelay:@"请输入o有效的手机号" view:self.view];
+        [CddHUD showTextOnlyDelay:@"请输入有效的手机号" view:self.view];
         return NO;
     } else if (_companyTF.text.length == 0) {
         [CddHUD showTextOnlyDelay:@"请输入公司名称" view:self.view];
@@ -580,10 +569,5 @@
     self.selectedBtn = sender;
     
 }
-
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 
 @end

@@ -23,10 +23,10 @@
 #import <MJExtension.h>
 #import "CddHUD.h"
 #import "Alert.h"
-#import "CommonNav.h"
 #import <YYLabel.h>
 #import "UIView+Geometry.h"
 #import <WXApi.h>
+#import "NavControllerSet.h"
 
 
 @interface AskToBuyDetailsVC ()<UITableViewDelegate, UITableViewDataSource>
@@ -35,67 +35,55 @@
 @property (nonatomic, strong)NSMutableArray *secondDateSource;
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, strong)NSMutableArray *infoArr;
-@property (nonatomic, strong)AskToBuyModel *infoDataSource;
 @property (nonatomic, strong)UIButton *btBtn;
 @property (nonatomic, strong)AskToBuyDetailsHeaderView *headerView;
 @end
 
-@implementation AskToBuyDetailsVC {
-    CGFloat _tbHeight;
-}
+@implementation AskToBuyDetailsVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"求购详情";
-    if (self.navigationController.navigationBar.isHidden == YES) {
-        CommonNav *nav = [[CommonNav alloc] init];
-        [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-        nav.titleLabel.text = @"求购详情";
-        if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
-            nav.rightBtn.hidden = NO;
-            [nav.rightBtn setTitle:@"分享" forState:UIControlStateNormal];
-            [nav.rightBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
-        }
-        
-        [self.view addSubview:nav];
-    } else {
-        if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
-            UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-            rightBtn.frame = CGRectMake(0, 0, 50, 44);
-            [rightBtn setTitle:@"分享" forState:UIControlStateNormal];
-            [rightBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [rightBtn sizeToFit];
-            [rightBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
-            UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:rightBtn];
-            self.navigationItem.rightBarButtonItem = rightItem;
-        }
-    }
-    
+    [self setNavBar];
     [self requestMultiData];
+}
+
+- (void)setNavBar {
+    self.title = @"求购详情";
+    if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
+        [self addRightBarButtonItemWithTitle:@"分享" action:@selector(share)];
+    }
 }
 
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, self.originHeight, SCREEN_WIDTH, _tbHeight) style:UITableViewStyleGrouped];
+        _tableView.backgroundColor = UIColor.whiteColor;
+        if ([_firstDateSource.status isEqualToString:@"1"]) {
+            _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT) style:UITableViewStyleGrouped];
+            _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
+            
+        } else {
+            _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
+            _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
+        }
+        
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.bounces = NO;
         //取消垂直滚动条
-        _tableView.showsVerticalScrollIndicator = NO;
+//        _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
-            _tableView.estimatedRowHeight = 0;
+            //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
-        }
-        
-        AskToBuyDetailsHeaderView *headerView = [[AskToBuyDetailsHeaderView alloc] init];
-        if (GET_USER_TOKEN) {
-            headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 60);
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         } else {
-            headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 110);
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+        AskToBuyDetailsHeaderView *headerView = [[AskToBuyDetailsHeaderView alloc] init];
+        headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 110);
         [headerView setupUIWithStarNumber:[_firstDateSource.creditLevel integerValue]];
         headerView.model = _firstDateSource;
         _headerView = headerView;
@@ -103,7 +91,7 @@
         
         UIView *footer = [[UIView alloc] init];
         footer.backgroundColor = RGBA(0, 0, 0, 0.08);
-        footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 10);
+        footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 20);
         _tableView.tableFooterView = footer;
         
     }
@@ -114,7 +102,7 @@
     NSMutableArray *imageArray = [NSMutableArray arrayWithCapacity:0];
     [imageArray addObject:Logo];
     NSString *shareStr = [NSString stringWithFormat:@"http://%@.i7colors.com/groupBuyMobile/openApp/industryChain.html?enquiryId=%@",ShareString,_buyID];
-    NSString *text = [NSString stringWithFormat:@"地区:%@ %@ 求购重量:%@KG",_infoDataSource.locationProvince,_infoDataSource.locationCity,_infoDataSource.num];
+    NSString *text = [NSString stringWithFormat:@"地区:%@ %@ 求购重量:%@KG",_firstDateSource.locationProvince,_firstDateSource.locationCity,_firstDateSource.num];
     
     [ClassTool shareSomething:imageArray urlStr:shareStr title:_firstDateSource.productName text:text];
 }
@@ -145,44 +133,36 @@
 
 
 - (void)setupUI {
+    [self.view addSubview:self.tableView];
     AskToBuyDetailModel *model = _firstDateSource;
     if (GET_USER_TOKEN) {
         //是我自己发布的
         if ([model.isCharger isEqualToString:@"1"]) {
             //并且在进行中，显示关闭求购
             if ([model.status isEqualToString:@"1"]) {
-                _tbHeight = SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT;
                 _btBtn = [self addBottonBtn];
                 [_btBtn setTitle:@"关闭求购" forState:UIControlStateNormal];
                 [_btBtn addTarget:self action:@selector(closeBuy) forControlEvents:UIControlEventTouchUpInside];
-            } else {
-                _tbHeight = SCREEN_HEIGHT - NAV_HEIGHT;
             }
             //不是自己发布，在进行中
         } else {
             //参与报价
             if ([model.status isEqualToString:@"1"]) {
-                _tbHeight = SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT;
                 _btBtn = [self addBottonBtn];
                 [_btBtn setTitle:@"参与报价" forState:UIControlStateNormal];
                 [_btBtn addTarget:self action:@selector(jumpToJoinPrice) forControlEvents:UIControlEventTouchUpInside];
-            } else {
-                _tbHeight = SCREEN_HEIGHT - NAV_HEIGHT;
             }
         }
     }
     //用户未登录,还在进行中的就显示报价按钮
     else {
         if ([model.status isEqualToString:@"1"]) {
-            _tbHeight = SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT;
             UIButton *btn = [self addBottonBtn];
             [btn setTitle:@"参与报价" forState:UIControlStateNormal];
             [btn addTarget:self action:@selector(jumpToJoinPrice) forControlEvents:UIControlEventTouchUpInside];
-        } else {
-            _tbHeight = SCREEN_HEIGHT - NAV_HEIGHT;
-        }
+        } 
     }
-    [self.view addSubview:self.tableView];
+    
 }
 
 - (UIButton *)addBottonBtn {
@@ -221,7 +201,6 @@
         NSString *urlString = [NSString stringWithFormat:URL_ASKTOBUY_DETAIL,token,weakself.buyID];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //            NSLog(@"---- %@",json);
-            weakself.infoDataSource = [AskToBuyModel mj_objectWithKeyValues:json[@"data"]];
             [weakself addInfo:json];
             weakself.firstDateSource = [AskToBuyDetailModel mj_objectWithKeyValues:json[@"data"]];
             dispatch_group_leave(group);
@@ -290,7 +269,7 @@
                 if (isSuc == YES) {
                     [CddHUD showTextOnlyDelay:@"关闭成功" view:weakself.view];
                     [weakself.btBtn removeFromSuperview];
-                    weakself.tableView.frame = CGRectMake(0, weakself.originHeight, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT);
+                    weakself.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
                     [ClassTool addLayer:weakself.headerView.stateLabel frame:weakself.headerView.stateLabel.frame];
                     weakself.headerView.sLabel.hidden = NO;
                 } else if (isSuc == NO){
@@ -321,7 +300,7 @@
                     [weakself getOffrtList];
                     //去掉关闭求购按钮
                     [weakself.btBtn removeFromSuperview];
-                    weakself.tableView.frame = CGRectMake(0, weakself.originHeight, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT);
+                    weakself.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
                     [ClassTool addLayer:weakself.headerView.stateLabel frame:weakself.headerView.stateLabel.frame];
                     weakself.headerView.sLabel.hidden = NO;
                     

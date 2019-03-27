@@ -54,9 +54,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.navigationBar.translucent = NO;
-    
-    self.title = @" ";
     
     [self keyWordSearch];
     [self setupUI];
@@ -64,19 +61,21 @@
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT) style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.emptyDataSetSource = self;
         _tableView.emptyDataSetDelegate = self;
         if (@available(iOS 11.0, *)) {
-            _tableView.estimatedRowHeight = 0;
+            //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         } else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, TABBAR_HEIGHT)];
         _tableView.tableFooterView = footer;
@@ -91,8 +90,17 @@
 
 - (void)setupUI {
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
-    self.navigationItem.rightBarButtonItem.tintColor = RGBA(84, 204, 84, 1);
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 50, 44);
+    [btn setTitle:@"取消" forState:UIControlStateNormal];
+//    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, -5)];
+    btn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [btn setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [btn sizeToFit];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    
+    [btn addTarget:self action:@selector(cancelDidClick) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = rightItem;
     
     // 创建搜索框
     UIView *titleView = [[UIView alloc] init];
@@ -124,7 +132,7 @@
     UITextField * searchTextField = [[[searchBar.subviews firstObject] subviews] lastObject];
     [searchTextField setClearButtonMode:UITextFieldViewModeNever];
     [searchTextField addTarget:self action:@selector(textFieldChange:) forControlEvents:UIControlEventEditingChanged];
-    searchTextField.tintColor = RGBA(84, 204, 84, 1);
+    searchTextField.tintColor = UIColor.blackColor;
     //限制字数
 //    [searchTextField lengthLimit:^{
 //        if (searchTextField.text.length > 10) {

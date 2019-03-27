@@ -82,7 +82,7 @@
     [self addSubview:border];
     [border mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(borderWidth);
     }];
 }
 
@@ -92,7 +92,7 @@
     [self addSubview:border];
     [border mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.bottom.mas_equalTo(0);
-        make.width.mas_equalTo(1);
+        make.width.mas_equalTo(borderWidth);
     }];
 }
 
@@ -102,7 +102,7 @@
     [self addSubview:border];
     [border mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(0);
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(borderWidth);
     }];
 }
 
@@ -112,7 +112,7 @@
     [self addSubview:border];
     [border mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.right.mas_equalTo(0);
-        make.width.mas_equalTo(1);
+        make.width.mas_equalTo(borderWidth);
     }];
 }
 @end

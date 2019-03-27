@@ -20,8 +20,5 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface StandardView : UIView
 
-@property (nonatomic, copy)NSArray<NSString *> *nameArr;
-@end
 NS_ASSUME_NONNULL_END

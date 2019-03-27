@@ -32,29 +32,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     _isFirstLoad = YES;
+    self.title = @"资讯详情";
     [self setupUI];
     [self requestData];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-}
-
 - (void)setupUI {
-    CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"资讯详情";
-    [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nav];
-    
     //创建webView
-    CGRect frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT);
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT);
     WKWebView *webView = [[WKWebView alloc] initWithFrame:frame configuration:[self fitWebView]];
     [self.view addSubview:webView];
     _webView = webView;
-    
 }
 
 - (void)setBottomBtn {
@@ -182,12 +171,6 @@
     }
     
     [self requestData];
-}
-
-
-
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

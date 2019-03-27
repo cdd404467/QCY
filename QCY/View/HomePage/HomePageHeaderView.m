@@ -32,7 +32,7 @@
 //创建轮播图, 8 + 144
 - (void)addBanner {
    
-    CGRect frame = CGRectMake(0, 8, SCREEN_WIDTH, KFit_W(144));
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_W(144));
 //    SDCycleScrollView *bannerView = [SDCycleScrollView cycleScrollViewWithFrame:frame delegate:self placeholderImage:PlaceHolderImgBanner];
     SDCycleScrollView *bannerView = [[SDCycleScrollView alloc] initWithFrame:frame];
     bannerView.placeholderImage = PlaceHolderImgBanner;

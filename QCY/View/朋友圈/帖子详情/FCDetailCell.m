@@ -140,13 +140,13 @@
     [mText yy_setFont:[UIFont boldSystemFontOfSize:kComTextFont] range:NSMakeRange(0, _model.commentUser.length)];
     //评论人点击事件
     [mText yy_setTextHighlightRange:NSMakeRange(0, _model.commentUser.length) color:kHLTextColor backgroundColor:kHLBgColor tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-        NSLog(@"-------1");
+//        NSLog(@"-------1");
     }];
     if (isRightData(_model.byCommentUser)) {
         [mText yy_setFont:[UIFont boldSystemFontOfSize:kComTextFont] range:NSMakeRange(_model.commentUser.length + 4, _model.byCommentUser.length)];
         //被评论人点击事件
         [mText yy_setTextHighlightRange:NSMakeRange(_model.commentUser.length + 4, _model.byCommentUser.length) color:kHLTextColor backgroundColor:kHLBgColor tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-            NSLog(@"-------2");
+//            NSLog(@"-------2");
         }];
     }
     

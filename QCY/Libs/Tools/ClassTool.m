@@ -448,8 +448,8 @@
                                     mimeType:data.fileType];
         }
     } progress:^(NSProgress * _Nonnull uploadProgress) {
-        float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
-        percent(progress);
+//            float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
+//            percent(progress);
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
         if ([code isEqualToString:@"INVALID_SIGN"]) {
@@ -462,8 +462,8 @@
 //            }
             //再次请求
             [manager POST:urlString parameters:params progress:^(NSProgress * _Nonnull uploadProgress) {
-                float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
-                percent(progress);
+//                float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
+//                percent(progress);
             } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 if (success) {
                     success(responseObject);
@@ -554,7 +554,7 @@
                 break;
             }
             case SSDKResponseStateCancel:{
-                [CddHUD showTextOnlyDelay:@"分享已取消" view:[HelperTool getCurrentVC].view];
+//                [CddHUD showTextOnlyDelay:@"分享已取消" view:[HelperTool getCurrentVC].view];
                 break;
             }
                 
@@ -562,6 +562,16 @@
                 break;
         }
     }];
+}
+
+//字典转json字符串
++ (NSString *)arrayToJSONString:(NSArray *)array {
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:array options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSString *jsonTemp = [jsonString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    NSString *jsonResult = [jsonTemp stringByReplacingOccurrencesOfString:@" " withString:@""];
+    return jsonResult;
 }
 
 @end

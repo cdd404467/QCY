@@ -15,7 +15,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.frame = CGRectMake(0, 0, SCREEN_WIDTH, 80);
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = HEXColor(@"f1f1f1", 1);
         [self setupUI];
     }
     return self;
@@ -57,6 +57,7 @@
         make.height.mas_equalTo(1);
         make.left.mas_equalTo(width * 2);
     }];
+    
 }
 
 

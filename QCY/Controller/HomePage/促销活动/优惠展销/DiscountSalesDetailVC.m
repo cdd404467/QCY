@@ -7,21 +7,19 @@
 //
 
 #import "DiscountSalesDetailVC.h"
-#import "CommonNav.h"
 #import "MacroHeader.h"
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
 #import "ClassTool.h"
 #import "DiscountSalesModel.h"
 #import <YNPageViewController.h>
-#import "BaseParameterVC.h"
 #import "DiscountSalesDetailHV.h"
 #import "GroupBuyRecordVC.h"
 #import <Masonry.h>
 #import "DiscountBuyVC.h"
+#import "BaseParameterTextVC.h"
 
 @interface DiscountSalesDetailVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
-@property (nonatomic, strong)CommonNav *nav;
 @property (nonatomic, strong)DiscountSalesModel *dataSource;
 @end
 
@@ -29,29 +27,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-    
-    [self.view addSubview:self.nav];
+    self.title = @"展销详情";
     
     [self requestData];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-}
 
-- (CommonNav *)nav {
-    if (!_nav) {
-        _nav = [[CommonNav alloc] init];
-        _nav.titleLabel.text = @"展销详情";
-        //        _nav.bottomLine.hidden = YES;
-        //        _nav.titleLabel.textColor = RGBA(0, 0, 0, 0);
-        [_nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    return _nav;
-}
 
 - (void)requestData {
     NSString *urlString = [NSString stringWithFormat:URL_DisCount_Sales_Detail,_productID];
@@ -63,6 +44,7 @@
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [DiscountSalesModel mj_objectWithKeyValues:json[@"data"]];
             weakself.dataSource.listPrice = [ListPrice mj_objectArrayWithKeyValuesArray:weakself.dataSource.listPrice];
+            weakself.dataSource.listSale = [listSaleModel mj_objectArrayWithKeyValuesArray:weakself.dataSource.listSale];
             [weakself setupPageVC];
         }
         
@@ -110,8 +92,6 @@
     /// 作为自控制器加入到当前控制器
     [vc addSelfToParentViewController:self];
     
-    [self.view addSubview:self.nav];
-    
     //底部按钮
     UIButton *buyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [buyBtn setTitle:@"我要购买" forState:UIControlStateNormal];
@@ -128,8 +108,8 @@
 
 //控制器数组
 - (NSArray *)getArrayVCs {
-    BaseParameterVC *vc_1 = [[BaseParameterVC alloc] init];
-    vc_1.cellImage = _dataSource.detailMobilePic;
+    BaseParameterTextVC *vc_1 = [[BaseParameterTextVC alloc] init];
+    vc_1.dataSource = _dataSource.listSale;
     GroupBuyRecordVC *vc_2 = [[GroupBuyRecordVC alloc] init];
     vc_2.groupID = _productID;
     vc_2.titleArray = @[@"序号",@"公司名称",@"联系方式",@"购买量"];
@@ -143,8 +123,8 @@
 
 - (UIScrollView *)pageViewController:(YNPageViewController *)pageViewController pageForIndex:(NSInteger)index {
     UIViewController *vc = pageViewController.controllersM[index];
-    if ([vc isKindOfClass:[BaseParameterVC class]]) {
-        return [(BaseParameterVC *)vc tableView];
+    if ([vc isKindOfClass:[BaseParameterTextVC class]]) {
+        return [(BaseParameterTextVC *)vc tableView];
     } else {
         return [(GroupBuyRecordVC *)vc tableView];
     }
@@ -157,7 +137,4 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
-}
 @end

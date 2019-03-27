@@ -15,7 +15,6 @@
 #import "HelperTool.h"
 #import "FriendCricleModel.h"
 #import <UIImageView+WebCache.h>
-#import "CommonNav.h"
 #import "ClassTool.h"
 #import "MacroHeader.h"
 #import "CddHUD.h"
@@ -28,11 +27,11 @@
 #import "WXKeyBoardView.h"
 #import <WXApi.h>
 #import <UIScrollView+EmptyDataSet.h>
+#import "NavControllerSet.h"
 
 
 @interface FriendCircleDetailVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate,TVDelegate>
 @property (nonatomic, strong)YNPageViewController *ynVC;
-@property (nonatomic, strong)CommonNav *nav;
 @property (nonatomic, strong)FriendCricleModel *headerDataSource;
 @property (nonatomic, strong)WXKeyBoardView *kbView;
 @property (nonatomic, assign)BOOL isCommentUser;    //是否是回复别人的评论
@@ -44,8 +43,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view addSubview:self.nav];
     
+    [self setNavBar];
     [self requestData];
     //键盘将要显示
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -55,20 +54,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDown) name:UIKeyboardDidHideNotification object:nil];
 }
 
-- (CommonNav *)nav {
-    if (!_nav) {
-        _nav = [[CommonNav alloc] init];
-        _nav.backgroundColor = [UIColor whiteColor];
-        _nav.titleLabel.text = @"详情";
-        [_nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-        if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
-            [_nav.rightBtn setTitle:@"分享" forState:UIControlStateNormal];
-            [_nav.rightBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [_nav.rightBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
-        }
+- (void)setNavBar {
+    self.title = @"详情";
+    if([WXApi isWXAppInstalled]) {//判断用户是否已安装微信App
+        [self addRightBarButtonItemWithTitle:@"分享" action:@selector(share)];
     }
-    
-    return _nav;
 }
 
 - (void)setupBottomView {
@@ -247,10 +237,8 @@
     configration.selectedItemFont = [UIFont boldSystemFontOfSize:15];
     configration.showBottomLine = YES;
     configration.bottomLineHeight = 0.6;
-
-    //    configration.headerViewCouldScale = YES;
-    //    configration.headerViewScaleMode = YNPageHeaderViewScaleModeTop;
     configration.bottomLineBgColor = HEXColor(@"#D3D3D3", 0.6);
+    configration.cutOutHeight = TABBAR_HEIGHT;
     /// 设置悬浮停顿偏移量
     configration.suspenOffsetY = NAV_HEIGHT;
     YNPageViewController *vc = [YNPageViewController pageViewControllerWithControllers:self.getArrayVCs
@@ -261,18 +249,13 @@
     //header
     FCDetailHeaderView *header = [[FCDetailHeaderView alloc] init];
     header.headerModel = _headerDataSource;
-    header.frame = CGRectMake(0, 0, SCREEN_WIDTH, header.bottom);
+    header.frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(header.bottom));
     
     vc.headerView = header;
     /// 作为自控制器加入到当前控制器
     [vc addSelfToParentViewController:self];
     
-    [_nav removeFromSuperview];
-    [self.view addSubview:self.nav];
     [self setupBottomView];
-    /// 如果隐藏了导航条可以 适当改y值
-    //    pageVC.view.yn_y = kYNPAGE_NAVHEIGHT;
-//    vc.view.height = NAV_HEIGHT;
 }
 
 

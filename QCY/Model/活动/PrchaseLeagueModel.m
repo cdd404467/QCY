@@ -17,7 +17,11 @@
     return _isOpen;
 }
 
-
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"goodsID" : @"id"//前边的是你想用的key，后边的是返回的key
+             };
+}
 
 @end
 
@@ -31,9 +35,66 @@
     return _cellHeight;
 }
 
+- (BOOL)isSelect {
+    if (!_isSelect) {
+        _isSelect = NO;
+    }
+    return _isSelect;
+}
+
+- (BOOL)isCustom {
+    if (!_isCustom) {
+        _isCustom = NO;
+    }
+    return _isCustom;
+}
+
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"shopID" : @"id"//前边的是你想用的key，后边的是返回的key
+             };
+}
+
 @end
 
 @implementation MeetingTypeListModel
+- (BOOL)isSelectStand {
+    if (!_isSelectStand) {
+        _isSelectStand = NO;
+    }
+    return _isSelectStand;
+}
 
+- (instancetype)copyWithZone:(NSZone *)zone {
+    MeetingTypeListModel *model = [[MeetingTypeListModel allocWithZone:zone] init];
+    model.referenceType = self.referenceType;
+    model.isSelectStand = self.isSelectStand;
+    
+    return model;
+}
+
+- (instancetype)mutableCopyWithZone:(NSZone *)zone {
+    MeetingTypeListModel *model = [[MeetingTypeListModel allocWithZone:zone] init];
+    model.referenceType = self.referenceType;
+    model.isSelectStand = self.isSelectStand;
+    
+    return model;
+}
+
+@end
+
+@implementation MeetingList
+
+
+@end
+
+@implementation OrderOrSupplyModel
+
+- (NSString *)detailArea_data {
+    if (!_detailArea_data) {
+        _detailArea_data = @"";
+    }
+    return _detailArea_data;
+}
 
 @end

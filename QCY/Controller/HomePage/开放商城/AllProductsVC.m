@@ -19,6 +19,7 @@
 @interface AllProductsVC ()<UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, assign)BOOL isFirstLoad;
 @property (nonatomic, assign)int page;
+
 @end
 
 @implementation AllProductsVC
@@ -26,7 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _isFirstLoad = YES;
-     _page = 2;
+     _page = 1;
     [self.view addSubview:self.tableView];
 }
 
@@ -43,15 +44,17 @@
         } else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, Bottom_Height_Dif, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+        
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         DDWeakSelf;
         _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            weakself.page++;
-            if ( weakself.tempArr.count < Page_Count) {
-                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-                
-            } else {
+            if (weakself.totalNum - Page_Count * weakself.page > 0) {
+                weakself.page++;
                 [weakself requestData];
+            } else {
+                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }];
     }
@@ -70,9 +73,13 @@
     NSString *urlString = [NSString stringWithFormat:URL_Shop_Product_List,_page,Page_Count,_storeID];
     DDWeakSelf;
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+//        NSLog(@"--- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-            weakself.tempArr  = [ProductInfoModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
-            [weakself.dataSource addObjectsFromArray:weakself.tempArr];
+            weakself.totalNum = [json[@"totalCount"] intValue];
+            NSArray *tempArr  = [ProductInfoModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
+            [weakself.dataSource addObjectsFromArray:tempArr];
+            [weakself.tableView.mj_footer endRefreshing];
+            [weakself.tableView reloadData];
         }
         
     } Failure:^(NSError *error) {

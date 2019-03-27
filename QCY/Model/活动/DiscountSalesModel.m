@@ -20,3 +20,8 @@
 @implementation ListPrice
 
 @end
+
+@implementation listSaleModel
+
+
+@end

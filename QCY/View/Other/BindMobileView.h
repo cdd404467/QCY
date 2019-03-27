@@ -11,6 +11,7 @@
 @interface BindMobileView : UIView
 
 @property (nonatomic, strong)UITextField *phoneTF;
+@property (nonatomic, strong)UITextField *inviteTF;
 @property (nonatomic, strong)UITextField *passwdTF;
 @property (nonatomic, strong)UIButton *codeBtn;
 @property (nonatomic, strong)UIButton *cancelBtn;

@@ -35,8 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 // 查看全文/收起
-//- (void)didSelectFullText:(NSIndexPath *)indexPath;
-// 查看全文/收起
 - (void)didSelectFullText:(NSString *)tieziID;
 // 点赞
 - (void)didZan:(NSString *)tieziID;

@@ -8,6 +8,7 @@
 
 #import "HomePageVC.h"
 #import "MacroHeader.h"
+#import "UIView+Geometry.h"
 #import "HomePageHeaderView.h"
 #import "HomePageSectionHeader.h"
 #import "PromotionsCell.h"
@@ -40,8 +41,12 @@
 #import "GroupBuyingVC.h"
 #import "DiscountSalesVC.h"
 #import "PrchaseLeagueVC.h"
+#import "VoteVC.h"
+#import "AuctionVC.h"
+#import "NavControllerSet.h"
+#import "BaseNavigationController.h"
 
-#define sectionHeaderHeight 40
+
 @interface HomePageVC ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong)HomePageModel *dataSource;
@@ -66,19 +71,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    [self registerNotifi];
-    self.navigationController.navigationBar.translucent = NO;
-
-    [self setRightItem];
+    [self setNavBar];
     [self requestMultiData];
 
 }
-
-//- (void)registerNotifi {
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(urlAwake:) name:@"urlJump" object:nil];
-//}
-
-
 
 - (WithoutNetView *)withoutView {
     if (!_withoutView) {
@@ -90,20 +86,8 @@
     return _withoutView;
 }
 
-- (void)setRightItem {
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 50, 44);
-    btn.imageEdgeInsets = UIEdgeInsetsMake(0, 14, 0, -14);
-    [btn setImage:[UIImage imageNamed:@"search"] forState:UIControlStateNormal];
-    
-//    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-    
-    UIBarButtonItem *rewardItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
-    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    spaceItem.width = -15;
-    [btn addTarget:self action:@selector(jumpToSearch) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItems = @[spaceItem,rewardItem];
-    
+- (void)setNavBar {
+    [self addRightBarButtonWithFirstImage:[UIImage imageNamed:@"search"] action:@selector(jumpToSearch)];
 }
 
 - (void)jumpToSearch {
@@ -115,24 +99,31 @@
     }];
     //历史搜索风格
     searchViewController.searchHistoryStyle = PYSearchHistoryStyleNormalTag;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:searchViewController];
     [self presentViewController:nav  animated:NO completion:nil];
 }
+
+
 
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:SCREEN_BOUNDS style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         //取消垂直滚动条
-        _tableView.showsVerticalScrollIndicator = NO;
+//        _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
 //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, TABBAR_HEIGHT, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         DDWeakSelf;
         _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
             [weakself.bannerArray removeAllObjects];
@@ -165,7 +156,7 @@
 
 //创建自定义的tableView headerView
 - (HomePageHeaderView *)addHeaderView {
-    CGFloat headerHeight = 8 + KFit_W(144) + 65 + 6;
+    CGFloat headerHeight = KFit_W(144) + 65 + 6;
     HomePageHeaderView *headerView = [[HomePageHeaderView alloc] init];
     headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, headerHeight);
     DDWeakSelf;
@@ -319,20 +310,6 @@
     
 }
 
-
-//header不悬停
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if(scrollView == self.tableView) {
-        if (scrollView.contentOffset.y <= sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
-            scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        } else if (scrollView.contentOffset.y > sectionHeaderHeight) {
-            scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
-        }else if (scrollView.contentOffset.y <= sectionHeaderHeight){
-            scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        }
-    }
-}
-
 #pragma mark - tableView代理方法
 //分区数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -362,7 +339,7 @@
 
 //section header的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return sectionHeaderHeight;
+    return 40;
 }
 
 //section footer的高度
@@ -389,7 +366,7 @@
     } else {
         header.moreLabel.hidden = NO;
         header.clickMoreBlock = ^{
-            DiscountSalesVC *vc = [[DiscountSalesVC alloc] init];
+            OpenMallVC *vc = [[OpenMallVC alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
         };
         return header;
@@ -436,6 +413,7 @@
     }
 }
 
+
 - (void)jumpToPromotions:(NSInteger)type {
     switch (type) {
         case 0:
@@ -454,6 +432,18 @@
         case 2:
         {
             PrchaseLeagueVC *vc = [[PrchaseLeagueVC alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 3:
+        {
+            VoteVC *vc = [[VoteVC alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 4:
+        {
+            AuctionVC *vc = [[AuctionVC alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;

@@ -108,7 +108,7 @@
     UITextField *specificationTF = [[UITextField alloc] init];
     specificationTF.backgroundColor = [UIColor whiteColor];
     specificationTF.keyboardType = UIKeyboardTypeNumberPad;
-    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, KFit_W(20), 32)];
+    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 10, 32)];
     leftView.contentMode = UIViewContentModeCenter;
     specificationTF.leftView = leftView;
     specificationTF.leftViewMode = UITextFieldViewModeAlways;

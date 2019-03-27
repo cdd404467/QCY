@@ -15,12 +15,13 @@
 
 //#define Photo_URL @"http://192.168.0.76"
 //线上测试-图片
-#define Photo_URL @"http://static1.i7colors.com"
+//#define Photo_URL @"http://static1.i7colors.com"
 //正式
-//#define Photo_URL @"http://static.i7colors.com"
+#define Photo_URL @"http://static.i7colors.com"
 
-//分享地址
+//h5测试分享地址
 //#define ShareString @"manage"
+//h5正式分享地址
 #define ShareString @"mobile"
 
 //公司电话
@@ -42,13 +43,16 @@
 #define View_Color [UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1];     //全局view背景色
 #define Main_BgColor RGBA(0, 0, 0, 0.08)
 #define Cell_BGColor  HEXColor(@"#D3D3D3", 1)
+#define Like_Color HEXColor(@"#ededed", 1)
 
 //RGBA
 #define RGBA(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+#define RGBA_F(r, g, b, a) [UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)]
+
 //Hex
 #define HEXColor(string,alpha) [UIColor colorWithHexString:(string) andAlpha:(alpha)]
 
-/*** 手机d尺寸 ***/
+/*** 手机尺寸 ***/
 //屏幕大小
 #define SCREEN_BOUNDS [UIScreen mainScreen].bounds
 //屏幕的宽
@@ -86,7 +90,7 @@
 #define UserDefault [NSUserDefaults standardUserDefaults]
 //weakself 和 strongself
 #define DDWeakSelf __weak typeof(self) weakself = self;
-#define DDStrongSelf __weak typeof(weakself) strongself = weakself;
+#define DDStrongSelf __weak typeof(self) strongself = self;
 
 //判断后台返回数据是合法的
 #define isRightData(jsonData) (jsonData && ![jsonData isEqualToString:@""] && ![jsonData isEqualToString:@"null"] && ![jsonData isEqualToString:@"<null>"] && jsonData != NULL && ![jsonData isKindOfClass:[NSNull class]])

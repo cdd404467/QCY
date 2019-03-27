@@ -7,7 +7,6 @@
 //
 
 #import "MyFriendCircleInfoVC.h"
-#import "CommonNav.h"
 #import <YNPageViewController.h>
 #import "MacroHeader.h"
 #import "FansVC.h"
@@ -25,10 +24,10 @@
 #import "ChangeHeaderVC.h"
 #import "HelperTool.h"
 #import "ChangeNickNameVC.h"
-
+#import "NavControllerSet.h"
 
 @interface MyFriendCircleInfoVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
-@property (nonatomic, strong)CommonNav *nav;
+//@property (nonatomic, strong)CommonNav *nav;
 @property (nonatomic, assign)int page;
 @property (nonatomic, strong)YNPageViewController *ynVC;
 @property (nonatomic, strong)FriendCricleInfoModel *headerDataSource;
@@ -51,8 +50,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.navigationBar.hidden = YES;
-    [self.view addSubview:self.nav];
+    [self setNavBar];
     [self requestData];
     //修改头像监听
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeInfo:) name:@"changeFCInfo" object:nil];
@@ -73,20 +71,14 @@
     _vcHeader.model = _headerDataSource;
 }
 
-- (CommonNav *)nav {
-    if (!_nav) {
-        CommonNav *nav = [[CommonNav alloc] init];
-        nav.titleLabel.textColor = [UIColor whiteColor];
-        nav.backgroundColor = HEXColor(@"#ffffff", 0);
-        nav.bottomLine.hidden = YES;
-        nav.leftBtnTintColor = [UIColor whiteColor];
-        nav.titleLabel.text = @"印染圈个人信息";
-        [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-        _nav = nav;
-    }
-    
-    return _nav;
+- (void)setNavBar {
+    self.title = @"印染圈个人信息";
+    [self vhl_setNavBarTitleColor:UIColor.whiteColor];
+    [self vhl_setNavBarBackgroundAlpha:0.0];
+    self.mainNavController.backBtnTintColor = UIColor.whiteColor;
+    [self vhl_setNavBarShadowImageHidden:YES];
 }
+
 
 //初始化数据源
 - (NSMutableArray *)dataSource {
@@ -256,12 +248,10 @@
     configration.selectedItemFont = [UIFont boldSystemFontOfSize:15];
     configration.showBottomLine = YES;
     configration.bottomLineHeight = 0.6;
-//    configration.headerViewCouldScale = YES;
-//    configration.headerViewScaleMode = YNPageHeaderViewScaleModeTop;
     configration.bottomLineBgColor = HEXColor(@"#D3D3D3", 0.6);
     //    /// 设置悬浮停顿偏移量
     configration.suspenOffsetY = NAV_HEIGHT;
-    //
+    
     YNPageViewController *vc = [YNPageViewController pageViewControllerWithControllers:self.getArrayVCs
                                                                                 titles:[self getArrayTitles]
                                                                                 config:configration];
@@ -272,7 +262,7 @@
     header.ofType = _ofType;
     [header.focusBtn addTarget:self action:@selector(focusOrCancel) forControlEvents:UIControlEventTouchUpInside];
     [header.changeBtn addTarget:self action:@selector(gotoChangeNickName) forControlEvents:UIControlEventTouchUpInside];
-    header.frame = CGRectMake(0, 0, SCREEN_WIDTH, 146 + NAV_HEIGHT);
+    header.frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(146 + NAV_HEIGHT));
     if ([_ofType isEqualToString:@"mine"]) {
         [HelperTool addTapGesture:header.headerImage withTarget:self andSEL:@selector(jumpToChangeHeader)];
     } else {
@@ -293,20 +283,21 @@
     };
     vc.headerView = header;
     _vcHeader = header;
-    //    /// 指定默认选择index 页面
+    // 指定默认选择index 页面
     vc.pageIndex = 0;
     
     /// 作为自控制器加入到当前控制器
     [vc addSelfToParentViewController:self];
     _ynVC = vc;
     
-    [_nav removeFromSuperview];
-    [self.view addSubview:self.nav];
-    
     /// 如果隐藏了导航条可以 适当改y值
     //    pageVC.view.yn_y = kYNPAGE_NAVHEIGHT;
     
 }
+
+
+
+
 
 - (NSArray *)getArrayVCs {
     
@@ -346,7 +337,7 @@
 
 //修改statesBar 颜色
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if (pgOne < 0.5) {
+    if (pgOne < 0.2) {
         return UIStatusBarStyleLightContent;  //白色，默认的值是黑色的
     } else {
         return UIStatusBarStyleDefault;
@@ -359,15 +350,23 @@
                   progress:(CGFloat)progress {
     //    NSLog(@"--- contentOffset = %f, progress = %f", contentOffset, progress);
     pgOne = progress;
-    _nav.backgroundColor = HEXColor(@"#ffffff", progress);
+    [self vhl_setNavBarBackgroundAlpha:progress];
+    
     [self setNeedsStatusBarAppearanceUpdate];
-    if (progress < 0.5) {
-        _nav.titleLabel.textColor = RGBA(255, 255, 255,1 - progress);
-        _nav.leftBtnTintColor = RGBA(255, 255, 255,1 - progress);;
+    if (progress < 0.2) {
+        self.mainNavController.backBtnTintColor = UIColor.whiteColor;
+        [self vhl_setNavBarTitleColor:UIColor.whiteColor];
     } else {
-        _nav.titleLabel.textColor = RGBA(0, 0, 0,progress);
-        _nav.leftBtnTintColor = RGBA(0, 0, 0,progress);
+        self.mainNavController.backBtnTintColor = UIColor.blackColor;
+        [self vhl_setNavBarTitleColor:UIColor.blackColor];
     }
+    
+    if (progress == 1.0) {
+        [self vhl_setNavBarShadowImageHidden:NO];
+    } else {
+        [self vhl_setNavBarShadowImageHidden:YES];
+    }
+    
     
 }
 
@@ -628,7 +627,20 @@
                 _isCert.attributedText = mtitle;
             //是自己，认证失败
             } else if ([model.isDyeV isEqualToString:@"0"]) {
-                _isCert.text = @"认证失败";
+                NSString *certText = @"认证失败,去重新认证";
+                NSMutableAttributedString *mtitle = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",certText]];
+                UIFont *font = [UIFont systemFontOfSize:13];
+                mtitle.yy_font = font;
+                mtitle.yy_color = HEXColor(@"#686D74", 1);
+                //点击事件
+                [mtitle yy_setTextHighlightRange:NSMakeRange(6, 5) color:HEXColor(@"#1E90FF", 1) backgroundColor:HEXColor(@"#000000", 0.3) tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+                    if (self.certClickBlock) {
+                        self.certClickBlock();
+                    }
+                }];
+                _isCert.attributedText = mtitle;
+                
+//                _isCert.text = @"认证失败";
             }
             
         } else {

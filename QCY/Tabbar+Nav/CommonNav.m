@@ -26,18 +26,6 @@
 }
 
 - (void)setupUI {
-    //标题
-    UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.textColor = [UIColor blackColor];
-    titleLabel.font = [UIFont boldSystemFontOfSize:17];
-    [self addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.mas_centerX);
-        make.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(44);
-    }];
-    _titleLabel = titleLabel;
-    
     //左边返回按钮
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     backBtn.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -66,6 +54,20 @@
         make.width.mas_equalTo(50);
     }];
     _rightBtn = rightBtn;
+    
+    //标题
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:titleLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.mas_centerX);
+        make.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(44);
+        make.width.mas_equalTo(SCREEN_WIDTH - 100);
+    }];
+    _titleLabel = titleLabel;
     
     UIView *bottomLine = [[UIView alloc] init];
     bottomLine.backgroundColor = RGBA(0, 0, 0, 0.3);

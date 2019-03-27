@@ -60,7 +60,7 @@
     if (!_scrollView) {
         UIScrollView *sv = [[UIScrollView alloc] init];
         sv.backgroundColor = [UIColor whiteColor];
-        sv.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT);
+        sv.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT);
         //150 + 680 + 6
         sv.contentSize = CGSizeMake(SCREEN_WIDTH, 600);
         sv.showsVerticalScrollIndicator = YES;
@@ -86,7 +86,8 @@
                            @"isIncludeTrans":tagStr,            //是否包含运费
                            @"phone":_contactTF.text,            //手机号
                            @"validTime":_timeEffective.text,    //有效期至
-                           @"description":_expTextView.text     //报价描述
+                           @"description":_expTextView.text,     //报价描述
+                           @"from":@"app_ios"
                            };
     NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:dict];
     //公司名称（个人报价时必填），企业用户不需要

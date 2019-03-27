@@ -37,7 +37,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.navigationBar.hidden = YES;
     [self.view addSubview:self.tableView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addComment:) name:@"commentChange" object:nil];
     [self requestData];
@@ -89,7 +88,7 @@
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[YNPageTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[YNPageTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.emptyDataSetSource = self;
@@ -97,6 +96,14 @@
         _tableView.tableFooterView = [[UIView alloc] init];
         [_tableView setSeparatorInset:UIEdgeInsetsMake(0,14, 0, 0)];
         _tableView.separatorColor = RGBA(225, 225, 225, 1);
+        if (@available(iOS 11.0, *)) {
+            _tableView.estimatedSectionHeaderHeight = 0;
+            _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
+        
         //        DDWeakSelf;
         //        _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         //            weakself.page++;

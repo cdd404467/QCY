@@ -6,16 +6,21 @@
 //  Copyright © 2018 Shanghai i7colors Ecommerce Co., Ltd. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "BasePresentViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^RefreshFCBlock)(void);
-@interface PublishFriendCircleVC : BaseViewController
+typedef void(^PublishComoletedBlock)(void);
+@interface PublishFriendCircleVC : BasePresentViewController
 
 @property (nonatomic, strong)UIButton *cancelBtn;
 @property (nonatomic, strong)UIButton *publishBtn;
-@property (nonatomic, copy)RefreshFCBlock refreshFCBlock;
+@property (nonatomic, copy)PublishComoletedBlock publishComoletedBlock;
 @end
+
+@interface PublishHeaderView : UIView
+
+@end
+
 
 NS_ASSUME_NONNULL_END

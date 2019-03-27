@@ -15,16 +15,19 @@
 #import "FriendCircleDetailVC.h"
 #import "FriendCricleModel.h"
 #import <UIScrollView+EmptyDataSet.h>
+#import <MJRefresh.h>
 
 
-@interface FriendCircleRecordVC ()<UITableViewDataSource, UITableViewDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
-
+@interface FriendCircleRecordVC ()<UITableViewDataSource, UITableViewDelegate ,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@property (nonatomic, assign)NSInteger page;
+@property (nonatomic, assign)int totalNum;
 @end
 
 @implementation FriendCircleRecordVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _page = 1;
     [self.view addSubview:self.tableView];
 }
 
@@ -36,22 +39,22 @@
         _tableView.emptyDataSetSource = self;
         _tableView.emptyDataSetDelegate = self;
         if (@available(iOS 11.0, *)) {
-            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         } else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, Bottom_Height_Dif, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 //        DDWeakSelf;
 //        _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-//            weakself.page++;
-//            if ( weakself.tempArr.count < Page_Count) {
-//                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-//
-//            } else {
+//            if (weakself.totalNum - Page_Count * weakself.page > 0) {
+//                weakself.page++;
 //                [weakself requestData];
+//            } else {
+//                [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
 //            }
 //        }];
     }
@@ -113,7 +116,6 @@
     
     return cell;
 }
-
 
 
 @end

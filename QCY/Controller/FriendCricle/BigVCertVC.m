@@ -17,6 +17,7 @@
 #import "HelperTool.h"
 #import <YYText.h>
 #import "CddHUD.h"
+#import "NavControllerSet.h"
 
 
 @interface BigVCertVC ()<HXPhotoViewDelegate>
@@ -33,14 +34,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"大V认证";
+    [self vhl_setNavBarShadowImageHidden:YES];
+    [self vhl_setNavBarBackgroundColor:Like_Color];
     _isSelPhoto = NO;
-    self.nav.titleLabel.text = @"大V认证";
     [self setupUI];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [UINavigationBar appearance].translucent = NO;
 }
 
 - (UIScrollView *)scrollView {
@@ -88,7 +86,8 @@
     NSDictionary *dict = @{@"token":User_Token,
                            @"name":_nameTF.text,
                            @"companyName":_companyNameTF.text,
-                           @"job":_jobNameTF.text
+                           @"job":_jobNameTF.text,
+                           @"from":@"app_ios"
                            };
     
     [CddHUD show:self.view];
@@ -260,6 +259,7 @@
         return NO;
     } else if (_isSelPhoto == NO) {
         [CddHUD showTextOnlyDelay:@"请上传凭证" view:self.view];
+        return NO;
     }
     
     return YES;

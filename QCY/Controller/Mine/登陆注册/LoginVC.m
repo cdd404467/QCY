@@ -101,10 +101,19 @@
 //登录
 - (void)requestLogin {
     [self.view endEditing:YES];
+    
+    if (_userNameTF.text.length == 0) {
+        [CddHUD showTextOnlyDelay:@"请输入账号" view:self.view];
+        return;
+    } else if (_passwdTF.text.length == 0) {
+        [CddHUD showTextOnlyDelay:@"请输入密码" view:self.view];
+        return;
+    }
+    
     DDWeakSelf;
     NSDictionary *dict = @{@"username":_userNameTF.text,
                            @"aesPass":[AES128 AES128Encrypt:_passwdTF.text],
-                           @"captcha":_checkCodeTF.text,
+//                           @"captcha":_checkCodeTF.text,
                            @"deviceNo":[UIDevice getDeviceID]
                            };
     [CddHUD showWithText:@"登录中..." view:self.view];
@@ -130,7 +139,7 @@
 //微信登录
 - (void)loginWithWeiChat:(NSNotification *)notification {
     [self.view endEditing:YES];
-//    DDWeakSelf;
+    
     NSDictionary *dict = @{@"code":notification.userInfo[@"weixinCode"]
                            };
     DDWeakSelf;
@@ -164,6 +173,8 @@
     NSDictionary *dict = @{@"phone":_bindView.phoneTF.text,
                            @"token":_bindView.bToken,
                            @"smsCode":_bindView.passwdTF.text,
+                           @"inviteCode":_bindView.inviteTF.text,
+                           @"from":@"app_ios"
                             };
     
     DDWeakSelf;
@@ -240,12 +251,10 @@
 
 - (void)setupUI {
     //app图标
-//    CGFloat headerWidth =
     UIImageView *appHeader = [[UIImageView alloc] init];
     appHeader.layer.cornerRadius = KFit_W(87) / 2;
     appHeader.clipsToBounds = YES;
     appHeader.image = [UIImage imageNamed:@"login_header"];
-//    appHeader.frame = CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)
     [self.view addSubview:appHeader];
     [appHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view.mas_centerX);
@@ -261,7 +270,7 @@
     [self.view addSubview:tfView];
     [tfView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(appHeader.mas_bottom).offset(37);
-        make.height.mas_equalTo(150);
+        make.height.mas_equalTo(100);
         make.left.mas_equalTo(@(38 * Scale_W));
         make.right.mas_equalTo(@(-38 * Scale_W));
     }];
@@ -297,66 +306,66 @@
     _passwdTF = passwdTF;
     [self setTextField:passwdTF];
     
-    //密码TF黑线
-    UIView *line_2 = [[UIView alloc] init];
-    line_2.backgroundColor = HEXColor(@"#D6D6D6", 0.5);
-    [passwdTF addSubview:line_2];
-    [line_2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(@0);
-        make.height.mas_equalTo(@1);
-    }];
+//    //密码TF黑线
+//    UIView *line_2 = [[UIView alloc] init];
+//    line_2.backgroundColor = HEXColor(@"#D6D6D6", 0.5);
+//    [passwdTF addSubview:line_2];
+//    [line_2 mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.bottom.mas_equalTo(@0);
+//        make.height.mas_equalTo(@1);
+//    }];
     
-    //验证码TF
-    UITextField *checkCodeTF = [[UITextField alloc] init];
-    [tfView addSubview:checkCodeTF];
-    [checkCodeTF mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(@0);
-        make.width.mas_equalTo(@(158 * Scale_W));
-        make.top.mas_equalTo(passwdTF.mas_bottom);
-        make.height.mas_equalTo(50);
-    }];
-    [checkCodeTF lengthLimit:^{
-        if (checkCodeTF.text.length > 4) {
-            checkCodeTF.text = [checkCodeTF.text substringToIndex:4];
-        }
-    }];
-    _checkCodeTF = checkCodeTF;
-    [self setTextField:checkCodeTF];
+//    //验证码TF
+//    UITextField *checkCodeTF = [[UITextField alloc] init];
+//    [tfView addSubview:checkCodeTF];
+//    [checkCodeTF mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(@0);
+//        make.width.mas_equalTo(@(158 * Scale_W));
+//        make.top.mas_equalTo(passwdTF.mas_bottom);
+//        make.height.mas_equalTo(50);
+//    }];
+//    [checkCodeTF lengthLimit:^{
+//        if (checkCodeTF.text.length > 4) {
+//            checkCodeTF.text = [checkCodeTF.text substringToIndex:4];
+//        }
+//    }];
+//    _checkCodeTF = checkCodeTF;
+//    [self setTextField:checkCodeTF];
+//
+//    //分割线
+//    UIView *sLine = [[UIView alloc] init];
+//    sLine.backgroundColor = HEXColor(@"#D7D7D7", 1);
+//    [tfView addSubview:sLine];
+//    [sLine mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(checkCodeTF.mas_right);
+//        make.height.mas_equalTo(30);
+//        make.width.mas_equalTo(1);
+//        make.centerY.mas_equalTo(checkCodeTF.mas_centerY);
+//    }];
     
-    //分割线
-    UIView *sLine = [[UIView alloc] init];
-    sLine.backgroundColor = HEXColor(@"#D7D7D7", 1);
-    [tfView addSubview:sLine];
-    [sLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(checkCodeTF.mas_right);
-        make.height.mas_equalTo(30);
-        make.width.mas_equalTo(1);
-        make.centerY.mas_equalTo(checkCodeTF.mas_centerY);
-    }];
-    
-    //图片验证码
-    UIImageView *checkImage = [[UIImageView alloc] init];
-    checkImage.backgroundColor = [UIColor grayColor];
-    [tfView addSubview:checkImage];
-    [checkImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(sLine.mas_right).offset(13 * Scale_W);
-        make.height.mas_equalTo(30);
-        make.width.mas_equalTo(@(65 * Scale_W));
-        make.centerY.mas_equalTo(sLine.mas_centerY);
-    }];
-    _checkImage = checkImage;
-    
-    //换一张按钮
-    UIButton *changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [changeBtn setImage:[UIImage imageNamed:@"change_next"] forState:UIControlStateNormal];
-    [changeBtn addTarget:self action:@selector(requestImageCode) forControlEvents:UIControlEventTouchUpInside];
-    [tfView addSubview:changeBtn];
-    [changeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(checkImage.mas_right);
-        make.right.mas_equalTo(@0);
-        make.height.mas_equalTo(30);
-        make.centerY.mas_equalTo(sLine.mas_centerY);
-    }];
+//    //图片验证码
+//    UIImageView *checkImage = [[UIImageView alloc] init];
+//    checkImage.backgroundColor = [UIColor grayColor];
+//    [tfView addSubview:checkImage];
+//    [checkImage mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(sLine.mas_right).offset(13 * Scale_W);
+//        make.height.mas_equalTo(30);
+//        make.width.mas_equalTo(@(65 * Scale_W));
+//        make.centerY.mas_equalTo(sLine.mas_centerY);
+//    }];
+//    _checkImage = checkImage;
+//
+//    //换一张按钮
+//    UIButton *changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [changeBtn setImage:[UIImage imageNamed:@"change_next"] forState:UIControlStateNormal];
+//    [changeBtn addTarget:self action:@selector(requestImageCode) forControlEvents:UIControlEventTouchUpInside];
+//    [tfView addSubview:changeBtn];
+//    [changeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(checkImage.mas_right);
+//        make.right.mas_equalTo(@0);
+//        make.height.mas_equalTo(30);
+//        make.centerY.mas_equalTo(sLine.mas_centerY);
+//    }];
     
     //登录按钮
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];

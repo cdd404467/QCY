@@ -88,10 +88,11 @@ CGFloat maxLimitHeight = 110;
     // 头像视图
     _headImageView = [[UIImageView alloc] initWithFrame:CGRectMake(KFit_W(12), kBlank , kFaceWidth, kFaceWidth)];
     _headImageView.contentMode = UIViewContentModeScaleAspectFill;
-    _headImageView.userInteractionEnabled = YES;
-    _headImageView.layer.masksToBounds = YES;
     [HelperTool addTapGesture:_headImageView withTarget:self andSEL:@selector(userHeaderClick)];
     [self.contentView addSubview:_headImageView];
+    [HelperTool setRound:_headImageView corner:UIRectCornerAllCorners radiu:5];
+    
+
     //大V认证图标
     _bigVImageView = [[UIImageView alloc] init];
     _bigVImageView.frame = CGRectMake(kFaceWidth - 14, kFaceWidth - 14, 14, 14);

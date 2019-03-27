@@ -12,6 +12,7 @@
 #import <YYWebImage.h>
 #import "GroupBuyingModel.h"
 #import <YYText.h>
+#import "HelperTool.h"
 
 @interface GroupBuyingCell()
 
@@ -298,7 +299,8 @@
         _priceImageView.image = [UIImage imageWithColor:HEXColor(@"#BCBCBC", 1)];
     }
     //原价
-    NSString *oPrice = model.oldPrice;
+    
+    NSString *oPrice = [HelperTool getStringFrom:model.oldPrice];
     NSString *oText = [NSString stringWithFormat:@"原价: ¥%@元/%@",oPrice,model.priceUnit];
     NSMutableAttributedString *mutableOriginal = [[NSMutableAttributedString alloc] initWithString:oText];
     mutableOriginal.yy_color = [UIColor blackColor];
@@ -352,13 +354,7 @@
         _emojoImage.hidden = YES;
         _stateLabelRight.hidden = YES;
         _stateLabelLeft.text = @"团购进行中...";
-        _stateLabelLeft.textColor = MainColor;
-//        [_emojoImage mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.centerY.mas_equalTo(self.stateView);
-//            make.width.height.mas_equalTo(36);
-//            make.left.mas_equalTo(self.stateView.mas_centerX).offset(5);
-//        }];
-        
+        _stateLabelLeft.textColor = MainColor;        
         [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.center.mas_equalTo(self.stateView);
         }];
@@ -409,8 +405,6 @@
         _progressView.progress = percent;
         _progressLabel.text = [NSString stringWithFormat:@"达成%@",model.numPercent];
     }
-    
-    
     
 }
 

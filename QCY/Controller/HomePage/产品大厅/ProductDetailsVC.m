@@ -34,15 +34,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"产品详情";
-    
-//    [self setupBottomBar];
-    
     [self requestData];
 }
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT) style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc]initWithFrame:SCREEN_BOUNDS style:UITableViewStyleGrouped];
         _tableView.backgroundColor = HEXColor(@"#d9d9d9", 1);
         _tableView.delegate = self;
         _tableView.dataSource = self;
@@ -51,13 +48,15 @@
         //取消垂直滚动条
         _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
-//            _tableView.estimatedRowHeight = 0;
+            //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         } else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         _tableView.rowHeight = UITableViewAutomaticDimension;
         ProductDetailHeaderView *header = [[ProductDetailHeaderView alloc] initWithDataSource:_dataSource];
         header.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40 + KFit_W(210) + 60);
@@ -345,15 +344,6 @@
     .rightEqualToView(contactService)
     .heightIs(12);
     
-    //发起询价
-//    UIButton *askPrice= [UIButton buttonWithType:UIButtonTypeCustom];
-//    askPrice.frame = CGRectMake(goInToShop.frame.size.width * 2, 0, (SCREEN_WIDTH - goInToShop.frame.size.width * 2) / 2, 49);
-//    [askPrice setTitle:@"发起询价" forState:UIControlStateNormal];
-//    askPrice.titleLabel.font = [UIFont systemFontOfSize:15];
-//    [askPrice setTitleColor:MainColor forState:UIControlStateNormal];
-//    [askPrice addBorderLayer:MainColor width:3.f direction:BorderDirectionAll];
-//    [bottomView addSubview:askPrice];
-    
     //一键呼叫
     UIButton *callBtn= [UIButton buttonWithType:UIButtonTypeCustom];
     callBtn.frame = CGRectMake(goInToShop.frame.size.width * 2, 0, SCREEN_WIDTH - goInToShop.frame.size.width * 2, 49);
@@ -373,18 +363,6 @@
     
     callBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 5);
     callBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
-    
-//    callBtn.imageView.sd_layout
-//    .leftSpaceToView(callBtn, KFit_W(12))
-//    .centerYEqualToView(callBtn)
-//    .widthIs(19)
-//    .heightIs(20);
-//
-//    callBtn.titleLabel.sd_layout
-//    .centerYEqualToView(callBtn)
-//    .rightSpaceToView(callBtn, KFit_W(12))
-//    .widthIs(90)
-//    .heightIs(20);
 }
 
 

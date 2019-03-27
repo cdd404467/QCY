@@ -79,11 +79,14 @@
     if (!_scrollView) {
         UIScrollView *sv = [[UIScrollView alloc] init];
         sv.backgroundColor = [UIColor whiteColor];
-        sv.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT);
+        sv.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT);
         //150 + 680 + 6
         sv.contentSize = CGSizeMake(SCREEN_WIDTH, 680 + 50);
         sv.showsVerticalScrollIndicator = YES;
         sv.bounces = NO;
+        
+//        sv.contentInset = UIEdgeInsetsMake(0, 0, 49, 0);
+//        sv.scrollIndicatorInsets = sv.contentInset;
         _scrollView = sv;
     }
     
@@ -203,16 +206,6 @@
 }
 
 - (void)showPickView_5 {
-//    [self.view endEditing:YES];
-//    DDWeakSelf;
-//    //开始日期
-//    NSDate *minDate = [NSDate date];
-//    //最大日期
-//    NSDate *maxDate = [NSDate br_setYear:2020 month:1 day:1];
-//    //    NSDate *maxDate = [NSDate br_setYear:2030 month:1 day:1];
-//    [BRDatePickerView showDatePickerWithTitle:@"选择结帐期" dateType:BRDatePickerModeYMD defaultSelValue:nil minDate:minDate maxDate:maxDate isAutoSelect:NO themeColor:MainColor resultBlock:^(NSString *selectValue) {
-//        weakself.bView.billDate.textLabel.text = selectValue;
-//    }];
     [self.view endEditing:YES];
     NSArray *arr = @[@"款到发货",@"货到付款",@"货到30天付款",@"货到45天付款",@"货到60天付款"];
     DDWeakSelf;
@@ -292,6 +285,7 @@
                            @"deliveryDate":_bView.deliveryDate.textLabel.text,
                            @"paymentType":_bView.payType.textLabel.text,
                            @"description":_bView.textView.text,
+                           @"from":@"app_ios"
                            };
     
     DDWeakSelf;

@@ -9,7 +9,8 @@
 #import "TabbarVC.h"
 #import "MacroHeader.h"
 #import "HomePageVC.h"
-#import "FriendCircleVC.h"
+//#import "FriendCircleVC.h"
+#import "CircleClassifyVC.h"
 #import "MessageVC.h"
 #import "MineVC.h"
 #import "BaseNavigationController.h"
@@ -17,7 +18,7 @@
 
 
 @interface TabbarVC ()<UITabBarDelegate, UITabBarControllerDelegate>
-
+@property (nonatomic,assign) NSInteger  indexFlag;
 @end
 
 @implementation TabbarVC
@@ -41,7 +42,7 @@
     HomePageVC *vc_1 = [[HomePageVC alloc] init];
     [self addChildViewController:vc_1 tabTitle:@"首页" normalImage:@"tabbar_1" selectedImage:@"tabbar_1_selected"];
     
-    FriendCircleVC *vc_2 = [[FriendCircleVC alloc] init];
+    CircleClassifyVC *vc_2 = [[CircleClassifyVC alloc] init];
     [self addChildViewController:vc_2 tabTitle:@"印染圈" normalImage:@"tabbar_2" selectedImage:@"tabbar_2_selected"];
 
     MessageVC *vc_3 = [[MessageVC alloc] init];
@@ -61,9 +62,9 @@
     nav.tabBarItem.title = tabTitle;
     vc.navigationItem.title = tabTitle;
     //调整每个bar title的位置
-    [nav.tabBarItem setTitlePositionAdjustment:UIOffsetMake(0, -1)];
+    [nav.tabBarItem setTitlePositionAdjustment:UIOffsetMake(0, -2)];
     //调整bar icon的位置
-    nav.tabBarItem.imageInsets = UIEdgeInsetsMake(-1, 0, 1, 0);
+    nav.tabBarItem.imageInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     NSDictionary *titleColor = [NSDictionary dictionaryWithObject:RGBA(0, 0, 0, 0.7) forKey:NSForegroundColorAttributeName];
     NSDictionary *selectedTitleColor = [NSDictionary dictionaryWithObject:MainColor forKey:NSForegroundColorAttributeName];
     [nav.tabBarItem setTitleTextAttributes:titleColor forState:UIControlStateNormal];
@@ -112,10 +113,39 @@
     }
 }
 
+//j已经选中tabbar的 item
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+    NSInteger index = [self.tabBar.items indexOfObject:item];
+    if (index != self.indexFlag) {
+        //执行动画
+        NSMutableArray *array = [NSMutableArray array];
+        for (UIView *btn in self.tabBar.subviews) {
+            if ([btn isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
+                UIImageView *btnImageView = [btn valueForKey:@"info"];
+                [array addObject:btnImageView];
+            }
+        }
+        
+        [self tabAnimation:array index:index];
+        self.indexFlag = index;
+    }
+}
+
+//tabbar动画
+- (void)tabAnimation:(NSMutableArray *)array index:(NSInteger)index {
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    //速度控制函数，控制动画运行的节奏
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    animation.duration = 0.2;       //执行时间
+    animation.repeatCount = 1;      //执行次数
+    animation.autoreverses = YES;    //完成动画后会回到执行动画之前的状态
+    animation.fromValue = [NSNumber numberWithFloat:1.0];   //初始伸缩倍数
+    animation.toValue = [NSNumber numberWithFloat:1.2];     //结束伸缩倍数
+    [[array[index] layer] addAnimation:animation forKey:nil];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     
 }
-
 @end

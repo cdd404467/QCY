@@ -7,7 +7,6 @@
 //
 
 #import "PrchaseLeagueVC.h"
-#import "CommonNav.h"
 #import "MacroHeader.h"
 #import "PromotionsHeaderView.h"
 #import "CddHUD.h"
@@ -18,6 +17,11 @@
 #import "PrchaseLeagueModel.h"
 #import <Masonry.h>
 #import "MyManifestVC.h"
+#import "PromotionsModel.h"
+#import "OrderGoodsVC.h"
+#import "SupplyGoodsVC.h"
+#import "CGLMMobileView.h"
+
 
 @interface PrchaseLeagueVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
@@ -25,6 +29,8 @@
 @property (nonatomic, assign)BOOL isFirstLoad;
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, assign)int totalNum;
+@property (nonatomic, strong)NSMutableArray *bannerDataSource;
+@property (nonatomic, strong)CGLMMobileView *bindView;
 @end
 
 @implementation PrchaseLeagueVC
@@ -41,34 +47,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-    [self setNavBar];
+    self.title = @"采购联盟";
     [self loadData];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-}
-
-- (void)setNavBar {
-    CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"采购联盟";
-    [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nav];
-    
 }
 
 - (void)setupUI {
     UIButton *lookOverBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [lookOverBtn setTitle:@"查看我的货单" forState:UIControlStateNormal];
     [lookOverBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [lookOverBtn addTarget:self action:@selector(lookOverMyIndent) forControlEvents:UIControlEventTouchUpInside];
+    [lookOverBtn addTarget:self action:@selector(alertBindMobile) forControlEvents:UIControlEventTouchUpInside];
     [ClassTool addLayer:lookOverBtn];
     [self.view addSubview:lookOverBtn];
     [lookOverBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -78,9 +65,33 @@
     }];
 }
 
-- (void)lookOverMyIndent {
-    MyManifestVC *vc = [[MyManifestVC alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+- (void)checkSMSAndJump {
+    [self.bindView endEditing:YES];
+    NSDictionary *dict = @{@"phone":_bindView.phoneTF.text,
+                           @"code":_bindView.passwdTF.text,
+                           };
+    DDWeakSelf;
+    [CddHUD show:_bindView];
+    [ClassTool postRequest:URL_Cglm_Check_SMS Params:[dict mutableCopy] Success:^(id json) {
+        [CddHUD hideHUD:weakself.bindView];
+        //        NSLog(@"-----=== %@",json);
+        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            [CddHUD showTextOnlyDelay:@"验证成功" view:weakself.bindView];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakself.bindView removeSignView];
+                    MyManifestVC *vc = [[MyManifestVC alloc] init];
+                    vc.phoneNumber = weakself.bindView.phoneTF.text;
+                    [weakself.navigationController pushViewController:vc animated:YES];
+                });
+            });
+
+        } else {
+            [CddHUD showTextOnlyDelay:@"验证码错误" view:weakself.bindView];
+        }
+    } Failure:^(NSError *error) {
+        
+    }];
 }
 
 //初始化数据源
@@ -95,20 +106,25 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         //取消垂直滚动条
         //        _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
-            _tableView.estimatedRowHeight = 0;
+            //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         
         PromotionsHeaderView *header = [[PromotionsHeaderView alloc] init];
-        //        [header addBanner:[_bannerDataSource copy]];
+        header.bannerArray = [_bannerDataSource copy];
         header.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_W(144));
         _tableView.tableHeaderView = header;
         
@@ -125,6 +141,31 @@
     return _tableView;
 }
 
+- (NSMutableArray *)bannerDataSource {
+    if (!_bannerDataSource) {
+        NSMutableArray *mArr = [NSMutableArray arrayWithCapacity:0];
+        _bannerDataSource = mArr;
+    }
+    return _bannerDataSource;
+}
+
+- (void)alertBindMobile {
+//    MyManifestVC *vc = [[MyManifestVC alloc] init];
+//    vc.phoneNumber = @"18252889110";
+//    [self.navigationController pushViewController:vc animated:YES];
+    CGLMMobileView *bindView = [[CGLMMobileView alloc]init];
+    [bindView.loginBtn addTarget:self action:@selector(checkSMSAndJump) forControlEvents:UIControlEventTouchUpInside];
+    [bindView.cancelBtn addTarget:self action:@selector(cancelJunp) forControlEvents:UIControlEventTouchUpInside];
+    [UIApplication.sharedApplication.keyWindow addSubview:bindView];
+    _bindView = bindView;
+}
+
+//取消
+- (void)cancelJunp {
+    [CddHUD hideHUD:_bindView];
+    [_bindView removeSignView];
+}
+
 #pragma mark -  首次进入请求
 - (void)loadData {
     DDWeakSelf;
@@ -134,14 +175,13 @@
     //第一个线程获取banner
     dispatch_group_enter(group);
     dispatch_group_async(group, globalQueue, ^{
-        NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"XCX_Group_Buy"];
+        NSString *urlString = [NSString stringWithFormat:URL_Get_Banner,@"App_Meeting_Info"];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-                //                 NSLog(@"---- %@",json);
-                //                weakself.bannerArr = [GroupBuyingModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
-                //                for (GroupBuyingModel *model in weakself.bannerArr) {
-                //                    [weakself.bannerDataSource addObject:ImgUrl(model.ad_image)];
-                //                }
+                NSArray *bannerArr = [PromotionsModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
+                for (PromotionsModel *model in bannerArr) {
+                    [weakself.bannerDataSource addObject:ImgUrl(model.ad_image)];
+                }
             }
             dispatch_group_leave(group);
         } Failure:^(NSError *error) {
@@ -187,7 +227,7 @@
     NSString *urlString = [NSString stringWithFormat:URL_Purchase_League_List,_page,Page_Count];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
         
-        //                NSLog(@"---- %@",json);
+//                        NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.totalNum = [json[@"totalCount"] intValue];
             NSArray *tempArr = [PrchaseLeagueModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
@@ -230,11 +270,22 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     PrchaseLeagueCell *cell = [PrchaseLeagueCell cellWithTableView:tableView];
     cell.model = _dataSource[indexPath.row];
-    
+    DDWeakSelf;
+    cell.btnClickBlock = ^(NSInteger tag, NSString * _Nonnull goodsID, NSString * _Nonnull state) {
+        //订货
+        if (tag == 1000) {
+            OrderGoodsVC *vc = [[OrderGoodsVC alloc] init];
+            vc.goodsID = goodsID;
+            vc.state = state;
+            [weakself.navigationController pushViewController:vc animated:YES];
+        } else {
+            SupplyGoodsVC *vc = [[SupplyGoodsVC alloc] init];
+            vc.goodsID = goodsID;
+            vc.state = state;
+            [weakself.navigationController pushViewController:vc animated:YES];
+        }
+    };
     return cell;
 }
 
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
-}
 @end

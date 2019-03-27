@@ -8,7 +8,6 @@
 
 #import "IndustryInformationVC.h"
 #import "MacroHeader.h"
-#import "CommonNav.h"
 #import <SGPagingView.h>
 #import "InformationChildVC.h"
 
@@ -23,30 +22,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-    [self setNavBar];
+    self.title = @"产业资讯";
     [self setupUI];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-}
-
-- (void)setNavBar {
-    CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"产业资讯";
-    [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nav];
-}
-
 - (void)setupUI {
-    CGFloat titleHeight = 35;
+    CGFloat titleHeight = 40;
     NSArray *titleArr = @[@"全部", @"行业资讯", @"人物访谈", @"政策法规", @"展会/会议", @"人才招聘"];
     NSArray *typeArr = @[@"0", @"66", @"89", @"90", @"91", @"11"];
     SGPageTitleViewConfigure *configure = [SGPageTitleViewConfigure pageTitleViewConfigure];
@@ -70,13 +51,12 @@
         [childArr addObject:vc];
     }
     
-    CGRect contentRect = CGRectMake(0, titleHeight + NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - titleHeight);
+    CGRect contentRect = CGRectMake(0, titleHeight + NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - titleHeight);
     self.pageContentScrollView = [[SGPageContentScrollView alloc] initWithFrame:contentRect parentVC:self childVCs:childArr];
     _pageContentScrollView.delegatePageContentScrollView = self;
     [self.view addSubview:_pageContentScrollView];
     _pageContentScrollView.isAnimated = YES;
 }
-
 
 
 - (void)pageTitleView:(SGPageTitleView *)pageTitleView selectedIndex:(NSInteger)selectedIndex {
@@ -93,11 +73,6 @@
 
 - (void)pageContentScrollViewDidEndDecelerating {
     _pageTitleView.userInteractionEnabled = YES;
-}
-
-
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

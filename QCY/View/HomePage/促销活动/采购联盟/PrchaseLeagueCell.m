@@ -55,28 +55,26 @@
     UIView *handleView = [[UIView alloc] init];
     handleView.frame = CGRectMake(0, leagueName.bottom, SCREEN_WIDTH, 35);
     [self.contentView addSubview:handleView];
-    [handleView addBorderView:LineColor width:0.5f direction:BorderDirectionTop | BorderDirectionBottom];
+    [handleView addBorderView:RGBA(190, 190, 190, 1) width:0.5f direction:BorderDirectionTop | BorderDirectionBottom];
     
     for (NSInteger i = 0; i < 2; i ++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.layer.cornerRadius = 12.5;
         btn.layer.borderWidth = 1.f;
         btn.titleLabel.font = [UIFont systemFontOfSize:14];
+        btn.tag = 1000 + i;
+        [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
         [handleView addSubview:btn];
         if (i == 0) {
             //我要采购按钮
-//            btn.layer.borderColor = HEXColor(@"#FF7E00", 1).CGColor;
             btn.frame = CGRectMake(0, 5, 130, 25);
             [btn setTitle:@"我要采购" forState:UIControlStateNormal];
-//            [btn setTitleColor:HEXColor(@"#FF7E00", 1) forState:UIControlStateNormal];
             btn.centerX = SCREEN_WIDTH / 4;
             _caigouBtn = btn;
         } else {
             //我要供货按钮
-//            btn.layer.borderColor = HEXColor(@"#4A81FF", 1).CGColor;
             btn.frame = CGRectMake(0, 5, 130, 25);
             [btn setTitle:@"我要供货" forState:UIControlStateNormal];
-//            [btn setTitleColor:HEXColor(@"#4A81FF", 1) forState:UIControlStateNormal];
             btn.centerX = SCREEN_WIDTH / 4 * 3;
             [handleView addSubview:btn];
             _gonghuoBtn = btn;
@@ -95,9 +93,9 @@
         label.numberOfLines = 2;
         label.frame = CGRectMake(2, 2, width - 4, 46);
         [view addSubview:label];
-        [view addBorderView:LineColor width:0.5f direction:BorderDirectionBottom];
-        if (i != 3) {
-            [view addBorderView:LineColor width:0.5f direction:BorderDirectionRight];
+        [view addBorderView:RGBA(190, 190, 190, 1) width:0.5f direction:BorderDirectionBottom];
+        if (i != 0) {
+            [view addBorderView:RGBA(190, 190, 190, 1) width:0.5f direction:BorderDirectionLeft];
         }
         
         if (i == 0) {
@@ -129,6 +127,13 @@
     bottomGap.frame = CGRectMake(0, 175, SCREEN_WIDTH, 12);
     [self.contentView addSubview:bottomGap];
 }
+
+- (void)btnClick:(UIButton *)sender {
+    if (self.btnClickBlock) {
+        self.btnClickBlock(sender.tag, _model.goodsID, _model.isType);
+    }
+}
+
 
 - (void)setModel:(PrchaseLeagueModel *)model {
     _model = model;
@@ -168,9 +173,7 @@
             UIImage *img = [ClassTool getGradedImage:_stateLabel colors:@[HEXColor(@"#FF7E00", 1),HEXColor(@"#F10215", 1)] gradientType:1];
             _bgImgView.image = img;
         }
-        
     }
-    
     
     for (NSInteger i = 0; i < 4; i ++) {
         NSString *text = [NSString string];
@@ -198,17 +201,21 @@
         mutableText.yy_color = HEXColor(@"#333333", 1);
         mutableText.yy_alignment = NSTextAlignmentCenter;
         mutableText.yy_font = [UIFont systemFontOfSize:8];
-        [mutableText yy_setFont:[UIFont systemFontOfSize:15] range:NSMakeRange(0, text.length)];
+        [mutableText yy_setFont:[UIFont systemFontOfSize:13] range:NSMakeRange(0, text.length)];
         [mutableText yy_setColor:HEXColor(@"#F10215", 1) range:NSMakeRange(0, text.length)];
         [mutableText yy_setColor:HEXColor(@"#B7B7B7", 1) range:NSMakeRange(text.length + 1, 1)];
-        if (i == 0) {
-            _allDH.attributedText = mutableText;
-        } else if (i == 1) {
-            _allDHCompany.attributedText = mutableText;
-        } else if (i == 2) {
-            _allGH.attributedText = mutableText;
-        } else {
-            _allGHsup.attributedText = mutableText;
+        switch (i) {
+            case 0:
+                _allDH.attributedText = mutableText;
+                break;
+            case 1:
+                _allDHCompany.attributedText = mutableText;
+            case 2:
+                _allGH.attributedText = mutableText;
+            case 3:
+                _allGHsup.attributedText = mutableText;
+            default:
+                break;
         }
     }
 }

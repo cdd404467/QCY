@@ -38,7 +38,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupNav];
-    [self requestImageCode];
+//    [self requestImageCode];
     [self setupUI];
 }
 
@@ -89,19 +89,22 @@
     if ([_phoneTF.text isEqualToString:@""]) {
         [CddHUD showTextOnlyDelay:@"请输入手机号" view:self.view];
         return ;
-    } else if ([_imageCodeTF.text isEqualToString:@""]) {
-        [CddHUD showTextOnlyDelay:@"请输入图形验证码" view:self.view];
-        return ;
-    } else if ([MobilePhone isValidMobile:_phoneTF.text] == NO) {
+    }
+//    else if ([_imageCodeTF.text isEqualToString:@""]) {
+//        [CddHUD showTextOnlyDelay:@"请输入图形验证码" view:self.view];
+//        return ;
+//    }
+    else if ([MobilePhone isValidMobile:_phoneTF.text] == NO) {
         [CddHUD showTextOnlyDelay:@"请输入有效的手机号" view:self.view];
         return ;
-    } else if (_imageCodeTF.text.length != 4) {
-        [CddHUD showTextOnlyDelay:@"请输入正确的图形验证码" view:self.view];
-        return ;
     }
+//    else if (_imageCodeTF.text.length != 4) {
+//        [CddHUD showTextOnlyDelay:@"请输入正确的图形验证码" view:self.view];
+//        return ;
+//    }
     
     NSDictionary *dict = @{@"mobile":_phoneTF.text,
-                           @"captcha":_imageCodeTF.text,
+//                           @"captcha":_imageCodeTF.text,
                            @"deviceNo":[UIDevice getDeviceID]
                            };
     DDWeakSelf;
@@ -130,7 +133,8 @@
     NSDictionary *dict = @{@"phone":_phoneTF.text,
                            @"password":[AES128 AES128Encrypt:_setPassTF.text],
                            @"smsCode":_msgCodeTF.text,
-                           @"inviteCode":_registerNumTF.text
+                           @"inviteCode":_registerNumTF.text,
+                           @"from":@"app_ios"
                            };
     DDWeakSelf;
     [CddHUD show:self.view];
@@ -187,10 +191,12 @@
     if ([_phoneTF.text isEqualToString:@""]) {
         [CddHUD showTextOnlyDelay:@"请输入手机号" view:self.view];
         return NO;
-    } else if ([_imageCodeTF.text isEqualToString:@""]) {
-        [CddHUD showTextOnlyDelay:@"请输入图形验证码" view:self.view];
-        return NO;
-    } else if ([_msgCodeTF.text isEqualToString:@""]) {
+    }
+//    else if ([_imageCodeTF.text isEqualToString:@""]) {
+//        [CddHUD showTextOnlyDelay:@"请输入图形验证码" view:self.view];
+//        return NO;
+//    }
+    else if ([_msgCodeTF.text isEqualToString:@""]) {
         [CddHUD showTextOnlyDelay:@"请输入短信验证码" view:self.view];
         return NO;
     } else if ([_setPassTF.text isEqualToString:@""]) {
@@ -202,10 +208,12 @@
     } else if ([MobilePhone isValidMobile:_phoneTF.text] == NO) {
         [CddHUD showTextOnlyDelay:@"请输入有效的手机号" view:self.view];
         return NO;
-    } else if (_imageCodeTF.text.length != 4) {
-        [CddHUD showTextOnlyDelay:@"请输入正确的图形验证码" view:self.view];
-        return NO;
-    } else if (_msgCodeTF.text.length != 6) {
+    }
+//    else if (_imageCodeTF.text.length != 4) {
+//        [CddHUD showTextOnlyDelay:@"请输入正确的图形验证码" view:self.view];
+//        return NO;
+//    }
+    else if (_msgCodeTF.text.length != 6) {
         [CddHUD showTextOnlyDelay:@"请输入6位短信验证码" view:self.view];
         return NO;
     } else if([self isEmpty:_setPassTF.text] == YES) {
@@ -257,19 +265,32 @@
     _phoneTF = phoneTF;
     [self setTextField:phoneTF];
     
+    //加个星星
+    for (int i = 0; i < 5; i++) {
+        if (i != 2) {
+            UIImageView *tabIcon = [[UIImageView alloc] init];
+            tabIcon.image = [UIImage imageNamed:@"tab_icon"];
+            [_scrollView addSubview:tabIcon];
+            [tabIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.mas_equalTo(phoneTF.mas_centerY).offset(i * 65);
+                make.left.mas_equalTo(20);
+                make.width.height.mas_equalTo(4);
+            }];
+        }
+    }
     
-    //图片验证码底框
-    UIView *bgView1 = [[UIView alloc] init];
-    bgView1.layer.borderWidth = 1;
-    bgView1.layer.borderColor = HEXColor(@"#D7D7D7", 1).CGColor;
-    bgView1.layer.cornerRadius = 3;
-    [_scrollView addSubview:bgView1];
-    [bgView1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(phoneTF.mas_bottom).offset(15);
-        make.height.mas_equalTo(phoneTF.mas_height);
-        make.left.mas_equalTo(phoneTF.mas_left);
-        make.right.mas_equalTo(phoneTF.mas_right);
-    }];
+//    //图片验证码底框
+//    UIView *bgView1 = [[UIView alloc] init];
+//    bgView1.layer.borderWidth = 1;
+//    bgView1.layer.borderColor = HEXColor(@"#D7D7D7", 1).CGColor;
+//    bgView1.layer.cornerRadius = 3;
+//    [_scrollView addSubview:bgView1];
+//    [bgView1 mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(phoneTF.mas_bottom).offset(15);
+//        make.height.mas_equalTo(phoneTF.mas_height);
+//        make.left.mas_equalTo(phoneTF.mas_left);
+//        make.right.mas_equalTo(phoneTF.mas_right);
+//    }];
     
     //短信验证码底框
     UIView *bgView2 = [[UIView alloc] init];
@@ -279,62 +300,62 @@
     bgView2.layer.cornerRadius = 3;
     [_scrollView addSubview:bgView2];
     [bgView2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(bgView1.mas_bottom).offset(15);
+        make.top.mas_equalTo(phoneTF.mas_bottom).offset(15);
         make.height.mas_equalTo(phoneTF.mas_height);
         make.left.mas_equalTo(phoneTF.mas_left);
         make.right.mas_equalTo(phoneTF.mas_right);
     }];
     
-    //图片验证码
-    UITextField *imageCodeTF = [[UITextField alloc] init];
-    imageCodeTF.keyboardType = UIKeyboardTypeNumberPad;
-    [bgView1 addSubview:imageCodeTF];
-    [imageCodeTF mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.bottom.mas_equalTo(@0);
-        make.width.mas_equalTo(@(KFit_W(170)));
-    }];
-    [imageCodeTF lengthLimit:^{
-        if (imageCodeTF.text.length > 4) {
-            imageCodeTF.text = [imageCodeTF.text substringToIndex:4];
-        }
-    }];
-    _imageCodeTF = imageCodeTF;
-    [self setTextField:imageCodeTF];
+//    //图片验证码
+//    UITextField *imageCodeTF = [[UITextField alloc] init];
+//    imageCodeTF.keyboardType = UIKeyboardTypeNumberPad;
+//    [bgView1 addSubview:imageCodeTF];
+//    [imageCodeTF mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.left.bottom.mas_equalTo(@0);
+//        make.width.mas_equalTo(@(KFit_W(170)));
+//    }];
+//    [imageCodeTF lengthLimit:^{
+//        if (imageCodeTF.text.length > 4) {
+//            imageCodeTF.text = [imageCodeTF.text substringToIndex:4];
+//        }
+//    }];
+//    _imageCodeTF = imageCodeTF;
+//    [self setTextField:imageCodeTF];
     
-    //分割线 - 1
-    UIView *sLine_1 = [[UIView alloc] init];
-    sLine_1.backgroundColor = HEXColor(@"#D7D7D7", 1);
-    [bgView1 addSubview:sLine_1];
-    [sLine_1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(imageCodeTF.mas_right);
-        make.height.mas_equalTo(30);
-        make.width.mas_equalTo(1);
-        make.centerY.mas_equalTo(imageCodeTF.mas_centerY);
-    }];
+//    //分割线 - 1
+//    UIView *sLine_1 = [[UIView alloc] init];
+//    sLine_1.backgroundColor = HEXColor(@"#D7D7D7", 1);
+//    [bgView1 addSubview:sLine_1];
+//    [sLine_1 mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(imageCodeTF.mas_right);
+//        make.height.mas_equalTo(30);
+//        make.width.mas_equalTo(1);
+//        make.centerY.mas_equalTo(imageCodeTF.mas_centerY);
+//    }];
+//
+//    //图片验证码
+//    UIImageView *checkImage = [[UIImageView alloc] init];
+//    checkImage.backgroundColor = [UIColor grayColor];
+//    [bgView1 addSubview:checkImage];
+//    [checkImage mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(sLine_1.mas_right).offset(13 * Scale_W);
+//        make.height.mas_equalTo(30);
+//        make.width.mas_equalTo(@(65 * Scale_W));
+//        make.centerY.mas_equalTo(sLine_1.mas_centerY);
+//    }];
+//    _checkImage = checkImage;
     
-    //图片验证码
-    UIImageView *checkImage = [[UIImageView alloc] init];
-    checkImage.backgroundColor = [UIColor grayColor];
-    [bgView1 addSubview:checkImage];
-    [checkImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(sLine_1.mas_right).offset(13 * Scale_W);
-        make.height.mas_equalTo(30);
-        make.width.mas_equalTo(@(65 * Scale_W));
-        make.centerY.mas_equalTo(sLine_1.mas_centerY);
-    }];
-    _checkImage = checkImage;
-    
-    //换一张按钮
-    UIButton *changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [changeBtn setImage:[UIImage imageNamed:@"change_next"] forState:UIControlStateNormal];
-    [changeBtn addTarget:self action:@selector(requestImageCode) forControlEvents:UIControlEventTouchUpInside];
-    [bgView1 addSubview:changeBtn];
-    [changeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(checkImage.mas_right);
-        make.right.mas_equalTo(@0);
-        make.height.mas_equalTo(30);
-        make.centerY.mas_equalTo(sLine_1.mas_centerY);
-    }];
+//    //换一张按钮
+//    UIButton *changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [changeBtn setImage:[UIImage imageNamed:@"change_next"] forState:UIControlStateNormal];
+//    [changeBtn addTarget:self action:@selector(requestImageCode) forControlEvents:UIControlEventTouchUpInside];
+//    [bgView1 addSubview:changeBtn];
+//    [changeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(checkImage.mas_right);
+//        make.right.mas_equalTo(@0);
+//        make.height.mas_equalTo(30);
+//        make.centerY.mas_equalTo(sLine_1.mas_centerY);
+//    }];
     
     //手机验证码
     UITextField *msgCodeTF = [[UITextField alloc] init];
@@ -474,9 +495,11 @@
 - (void)setTextField:(UITextField *)tf {
     if ([tf isEqual:_phoneTF]) {
         tf.placeholder = @"请输入手机号(用于登录/找回密码)";
-    } else if ([tf isEqual:_imageCodeTF]) {
-        tf.placeholder = @"请输入图形验证码";
-    } else if ([tf isEqual:_msgCodeTF]) {
+    }
+//    else if ([tf isEqual:_imageCodeTF]) {
+//        tf.placeholder = @"请输入图形验证码";
+//    }
+    else if ([tf isEqual:_msgCodeTF]) {
         tf.placeholder = @"请输入手机验证码";
     } else if ([tf isEqual:_registerNumTF]) {
         tf.placeholder = @"请输入邀请码(非必填)";

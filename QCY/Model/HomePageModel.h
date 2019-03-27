@@ -50,10 +50,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *enquiryTimes;              //历史求购次数
 @property (nonatomic, copy)NSString *isCharger;                 //是否是自己查看 1 - 是
 @property (nonatomic, copy)NSString *creditLevel;               //信用等级
-@property (nonatomic, copy)NSString *companyName2;              //个人
+@property (nonatomic, copy)NSString *companyName2;              //
+@property (nonatomic, copy)NSString *companyName;               //名字
+@property (nonatomic, copy)NSString *locationProvince;          //省
+@property (nonatomic, copy)NSString *locationCity;              //市区
 @property (nonatomic, copy)NSString *descriptionStr;            //采购说明
 @property (nonatomic, copy)NSString *status;                    //询盘状态:status= 1，求购中；status=2，已关闭；status=3,已接受报价
-@property (nonatomic, strong)CompanyDomain *companyDomain;      //嵌套CompanyDomain模型
+@property (nonatomic, copy)NSString *num;                       //求购数量
+
 @end
 
 /*** 报价供应商列表 ***/

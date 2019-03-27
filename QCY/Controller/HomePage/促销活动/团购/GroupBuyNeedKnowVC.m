@@ -32,9 +32,6 @@
         if (@available(iOS 11.0, *)) {
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
-            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }

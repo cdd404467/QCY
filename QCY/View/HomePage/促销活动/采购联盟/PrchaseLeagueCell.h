@@ -10,9 +10,10 @@
 @class PrchaseLeagueModel;
 
 NS_ASSUME_NONNULL_BEGIN
-
+typedef void(^BtnClickBlock)(NSInteger tag, NSString *goodsID, NSString *state);
 @interface PrchaseLeagueCell : UITableViewCell
 @property (nonatomic, strong)PrchaseLeagueModel *model;
+@property (nonatomic, copy)BtnClickBlock btnClickBlock;
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 @end
 

@@ -49,7 +49,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.navigationBar.translucent = NO;
     self.title = @" ";
     [self setupUI];
     [self requestData];
@@ -58,7 +57,7 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.emptyDataSetSource = self;
@@ -67,10 +66,15 @@
         //取消垂直滚动条
         _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
-            _tableView.estimatedRowHeight = 0;
+            //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         DDWeakSelf;
         _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
             if (weakself.totalNum - Page_Count * weakself.page > 0) {
@@ -96,8 +100,16 @@
 
 - (void)setupUI {
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
-    self.navigationItem.rightBarButtonItem.tintColor = RGBA(84, 204, 84, 1);
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 50, 44);
+    [btn setTitle:@"取消" forState:UIControlStateNormal];
+    btn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [btn setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [btn sizeToFit];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    
+    [btn addTarget:self action:@selector(cancelDidClick) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = rightItem;
     
     // 创建搜索框
     UIView *titleView = [[UIView alloc] init];
@@ -128,7 +140,7 @@
     //    }
     UITextField * searchTextField = [[[searchBar.subviews firstObject] subviews] lastObject];
     [searchTextField setClearButtonMode:UITextFieldViewModeNever];
-    [searchTextField addTarget:self action:@selector(textFieldChange:) forControlEvents:UIControlEventEditingChanged];
+//    [searchTextField addTarget:self action:@selector(textFieldChange:) forControlEvents:UIControlEventEditingChanged];
     searchTextField.tintColor = [UIColor blackColor];
     //限制字数
     //    [searchTextField lengthLimit:^{
@@ -141,15 +153,6 @@
     [titleView addSubview:searchBar];
     self.searchBar = searchBar;
     self.navigationItem.titleView = titleView;
-}
-
-//监听键盘输入
--(void)textFieldChange:(UITextField *)textField{
-    if (textField.markedTextRange == nil) {
-        if (textField.text.length == 0) {
-            //            [self.navigationController popViewControllerAnimated:NO];
-        }
-    }
 }
 
 //searchBar 键盘搜索按钮的点击事件

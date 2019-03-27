@@ -58,6 +58,17 @@
 
         _tableView.emptyDataSetSource = self;
         _tableView.emptyDataSetDelegate = self;
+        if (@available(iOS 11.0, *)) {
+            _tableView.estimatedSectionHeaderHeight = 0;
+            _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, Bottom_Height_Dif, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+        
+        
         //        DDWeakSelf;
         //        _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         //            weakself.page++;

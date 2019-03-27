@@ -21,6 +21,8 @@
 #import "CddHUD.h"
 #import "PYSearch.h"
 #import "SearchResultPageVC.h"
+#import "BaseNavigationController.h"
+#import "NavControllerSet.h"
 
 @interface AskToBuyVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
@@ -47,29 +49,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"求购大厅";
     self.view.backgroundColor = View_Color;
-    [self setRightItem];
+    [self setNavBar];
     [self requestData];
 }
 
-- (void)setRightItem {
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 50, 44);
-    btn.imageEdgeInsets = UIEdgeInsetsMake(0, 14, 0, -14);
-    [btn setImage:[UIImage imageNamed:@"search"] forState:UIControlStateNormal];
-    
-    //    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-    
-    UIBarButtonItem *rewardItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
-    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    spaceItem.width = -15;
-    [btn addTarget:self action:@selector(jumpToSearch) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItems = @[spaceItem,rewardItem];
+
+- (void)setNavBar {
+    self.title = @"求购大厅";
+    [self addRightBarButtonWithFirstImage:[UIImage imageNamed:@"search"] action:@selector(jumpToSearch)];
 }
 
 - (void)jumpToSearch {
-    //    NSArray *arr = @[@"阿伦",@"封金能"];
     PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"输入关键词搜索" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         SearchResultPageVC *vc = [[SearchResultPageVC alloc]init];
         vc.keyWord = searchText;
@@ -78,19 +69,19 @@
     }];
     //历史搜索风格
     searchViewController.searchHistoryStyle = PYSearchHistoryStyleNormalTag;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:searchViewController];
     [self presentViewController:nav  animated:NO completion:nil];
 }
 
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         //取消垂直滚动条
-        _tableView.showsVerticalScrollIndicator = NO;
+//        _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
@@ -99,7 +90,8 @@
         } else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
-        self.edgesForExtendedLayout = UIRectEdgeNone;
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
+        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         DDWeakSelf;
 //        _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
 //            weakself.page = 1;

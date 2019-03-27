@@ -265,8 +265,20 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.baseSearchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
-    self.navigationItem.rightBarButtonItem.tintColor = [UIColor colorWithRed:84/255.0 green:204/255.0 blue:84/255.0 alpha:1];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
+//    self.navigationItem.rightBarButtonItem.tintColor = [UIColor colorWithRed:84/255.0 green:204/255.0 blue:84/255.0 alpha:1];
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 50, 44);
+    [btn setTitle:@"取消" forState:UIControlStateNormal];
+    btn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [btn setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [btn sizeToFit];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    
+    [btn addTarget:self action:@selector(cancelDidClick) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = rightItem;
+    
     /**
      * 设置一些默认设置
      */
@@ -308,7 +320,7 @@
 //    }
     UITextField * searchTextField = [[[searchBar.subviews firstObject] subviews] lastObject];
     [searchTextField setClearButtonMode:UITextFieldViewModeNever];
-    searchTextField.tintColor = [UIColor colorWithRed:84/255.0 green:204/255.0 blue:84/255.0 alpha:1];
+    searchTextField.tintColor = UIColor.blackColor;
     [searchTextField setBackgroundColor:[UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1]];
     //限制字数
     [searchTextField lengthLimit:^{

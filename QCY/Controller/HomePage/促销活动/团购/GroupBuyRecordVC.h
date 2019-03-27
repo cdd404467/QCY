@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, copy)NSArray *titleArray;
 @property (nonatomic, copy)NSString *type;
+@property (nonatomic, strong)NSString *layoutStr;
 
 @end
 

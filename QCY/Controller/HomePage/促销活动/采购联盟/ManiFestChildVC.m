@@ -16,6 +16,7 @@
 #import "ManifestScetionHeader.h"
 #import "ManifestScetionFooter.h"
 #import "ManifestCell.h"
+#import "ManifestSupplyCell.h"
 
 @interface ManiFestChildVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
@@ -56,16 +57,19 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - 40) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - 40 - Bottom_Height_Dif) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         //取消垂直滚动条
         //        _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
-//            _tableView.estimatedRowHeight = 0;
+            //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         
 //        DDWeakSelf;
@@ -83,7 +87,12 @@
 
 - (void)requestData {
     DDWeakSelf;
-    NSString *urlString = [NSString stringWithFormat:URL_My_Ordergoods_list,@"17329431696",_page,Page_Count];
+    NSString *urlString = [NSString string];
+    if ([_listType isEqualToString:@"cg"]) {
+        urlString = [NSString stringWithFormat:URL_My_Ordergoods_list,@"0",_phoneNumber,_page,Page_Count];
+    } else {
+        urlString = [NSString stringWithFormat:URL_My_Ordergoods_list,@"1",_phoneNumber,_page,Page_Count];
+    }
     if (_isFirstLoad == YES) {
         [CddHUD show:self.view];
     }
@@ -97,15 +106,6 @@
                 model.meetingShopList = [MeetingShopListModel mj_objectArrayWithKeyValuesArray:model.meetingShopList];
                 for (MeetingShopListModel *sModel in model.meetingShopList) {
                     sModel.meetingTypeList = [MeetingTypeListModel mj_objectArrayWithKeyValuesArray:sModel.meetingTypeList];
-                    
-                    NSMutableArray *ma = [sModel.meetingTypeList mutableCopy];
-                    if (sModel.meetingTypeList.count > 0) {
-                        for (NSInteger i = 0; i < 14; i ++) {
-                            [ma addObject:sModel.meetingTypeList[0]];
-                        }
-
-                    }
-                    sModel.meetingTypeList = [ma copy];
                 }
             }
             
@@ -182,12 +182,18 @@
 
 //数据源
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //    DDWeakSelf;
-    ManifestCell *cell = [ManifestCell cellWithTableView:tableView];
     PrchaseLeagueModel *model = _dataSource[indexPath.section];
-    cell.model = model.meetingShopList[indexPath.row];
-    
-    return cell;
+    if ([_listType isEqualToString:@"cg"]) {
+        ManifestCell *cell = [ManifestCell cellWithTableView:tableView];
+        cell.model = model.meetingShopList[indexPath.row];
+        
+        return cell;
+    } else {
+        ManifestSupplyCell *cell = [ManifestSupplyCell cellWithTableView:tableView];
+        cell.model = model.meetingShopList[indexPath.row];
+        
+        return cell;
+    }
 }
 
 @end

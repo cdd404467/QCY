@@ -11,6 +11,7 @@
 #import "PrchaseLeagueModel.h"
 #import "ClassTool.h"
 #import "UIView+Geometry.h"
+#import "UIView+Border.h"
 
 @implementation ManifestScetionFooter {
     UILabel *_stateLabel;
@@ -38,6 +39,8 @@
     [bgImgView addSubview:stateLabel];
     _stateLabel = stateLabel;
     _bgImgView = bgImgView;
+    
+    [bgImgView addBorderView:LineColor width:0.5 direction:BorderDirectionTop];
 }
 
 - (void)setModel:(PrchaseLeagueModel *)model {

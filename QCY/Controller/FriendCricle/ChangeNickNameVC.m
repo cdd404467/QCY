@@ -21,6 +21,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = View_Color;
+    self.navBar.navTitle = @"设置名字";
+    self.navBar.rightBtn.enabled = NO;
     [self setupUI];
 }
 
@@ -57,8 +59,8 @@
      } Progress:nil];
 }
 
+
 - (void)setupUI {
-    self.nav.titleLabel.text = @"设置名字";
     
     _nameTF = [[UITextField alloc]init];
     [_nameTF becomeFirstResponder];
@@ -81,24 +83,17 @@
     bottomLine.backgroundColor = RGBA(235, 235, 235, 1);
     bottomLine.frame = CGRectMake(0, _nameTF.frame.origin.y + 40, SCREEN_WIDTH, 1);
     [self.view addSubview:bottomLine];
-    
-    self.nav.rightBtn.enabled = NO;
-    [self.nav.rightBtn setTitle:@"完成" forState:UIControlStateNormal];
-    self.nav.rightBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [self.nav.rightBtn setTitleColor:RGBA(84, 204, 84, 1) forState:UIControlStateNormal];
-    [self.nav.rightBtn setTitleColor:RGBA(84, 204, 84, 0.3) forState:UIControlStateDisabled];
-    [self.nav.rightBtn addTarget:self action:@selector(fcChangeNickName) forControlEvents:UIControlEventTouchUpInside];
-    self.nav.rightBtn.enabled = NO;
 
+     [self.navBar.rightBtn addTarget:self action:@selector(fcChangeNickName) forControlEvents:UIControlEventTouchUpInside];
 }
 
 
 //监听passTF
 - (void)changeTextField:(UITextField *)textField{
     if (![textField.text isEqualToString:self.currentName]) {
-        self.nav.rightBtn.enabled = YES;
+        self.navBar.rightBtn.enabled = YES;
     } else {
-        self.nav.rightBtn.enabled = NO;
+        self.navBar.rightBtn.enabled = NO;
     }
 }
 

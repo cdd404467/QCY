@@ -39,7 +39,7 @@
     textLabel.textColor = HEXColor(@"#868686", 1);
     [self addSubview:textLabel];
     [textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(Scale_W * 20);
+        make.left.mas_equalTo(10);
         make.height.mas_equalTo(self.mas_height);
         make.right.mas_equalTo(rightImg.mas_left).offset(-5);
         make.centerY.mas_equalTo(self.mas_centerY);
