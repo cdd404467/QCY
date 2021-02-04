@@ -7,9 +7,7 @@
 //
 
 #import "UpdateAppView.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
-#import "UIView+Geometry.h"
+#import <YYText.h>
 
 @interface UpdateAppView()
 @property (nonatomic, strong)UIScrollView *scrollView;
@@ -46,7 +44,6 @@
     
     if ([updateType isEqualToString:@"0"]) {
         UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        closeBtn.backgroundColor = [UIColor redColor];
         [closeBtn setImage:[UIImage imageNamed:@"close_update"] forState:UIControlStateNormal];
         [closeBtn addTarget:self action:@selector(removeSignView) forControlEvents:UIControlEventTouchUpInside];
         [imageView addSubview:closeBtn];
@@ -80,30 +77,21 @@
     versionLabel.frame = CGRectMake(0, 0, _scrollView.width, 35);
     [self.scrollView addSubview:versionLabel];
     
-    
-    UILabel *updateText = [[UILabel alloc]init];
-    NSMutableAttributedString *attText = [[NSMutableAttributedString alloc] initWithString:text];
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setLineSpacing:5];
-    [attText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [attText length])];
-    updateText.attributedText = attText;
-    updateText.lineBreakMode = NSLineBreakByWordWrapping;
+    YYLabel *updateText = [[YYLabel alloc]init];
     updateText.numberOfLines = 0;
-    updateText.textColor = RGBA(51, 51, 51, 1);
-    updateText.font = [UIFont systemFontOfSize:12];
-    
+    NSMutableAttributedString *attText = [[NSMutableAttributedString alloc] initWithString:text];
+    attText.yy_font = [UIFont systemFontOfSize:12];
+    attText.yy_lineSpacing = 5;
+    attText.yy_color = RGBA(51, 51, 51, 1);
+    updateText.attributedText = attText;
     [self.scrollView addSubview:updateText];
-   
-    CGSize size = [updateText sizeThatFits:CGSizeMake(_scrollView.width, MAXFLOAT)];
     
-    [updateText mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(weakself.scrollView.width - KFit_W(16));
-        make.left.mas_equalTo(10);
-        make.top.mas_equalTo(35);
-        make.height.mas_equalTo(@(size.height));
-    }];
-    self.scrollView.contentSize = CGSizeMake(_scrollView.width, size.height + 35 + 10);
-    
+    CGSize introSize = CGSizeMake(weakself.scrollView.width - KFit_W(16), CGFLOAT_MAX);
+    YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:introSize text:attText];
+    updateText.textLayout = layout;
+    CGFloat introHeight = layout.textBoundingSize.height;
+    updateText.frame = CGRectMake(10, 35, weakself.scrollView.width - KFit_W(16), introHeight);
+    self.scrollView.contentSize = CGSizeMake(_scrollView.width, introHeight + 35 + 10);
     
     UIButton *updateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [updateBtn setTitle:@"立即升级" forState:UIControlStateNormal];
@@ -119,10 +107,6 @@
         make.bottom.mas_equalTo(-20);
     }];
     [updateBtn addTarget:self action:@selector(checkVersionUpdata) forControlEvents:UIControlEventTouchUpInside];
-//    updateBtn.layer.shadowColor = RGBA(170, 172, 174, 1).CGColor;
-//    updateBtn.layer.shadowOffset = CGSizeMake(4,-5);
-//    updateBtn.layer.shadowOpacity = 1.0f;
-//    updateBtn.layer.shadowRadius = 4.f;
 }
 
 - (UIScrollView *)scrollView {
@@ -149,6 +133,9 @@
 - (void)removeSignView {
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self removeFromSuperview];
+    if (self.closeClickBlock) {
+        self.closeClickBlock();
+    }
 }
 
 @end

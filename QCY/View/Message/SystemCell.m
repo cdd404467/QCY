@@ -7,24 +7,19 @@
 //
 
 #import "SystemCell.h"
-#import "MacroHeader.h"
 #import "MessageModel.h"
-#import <Masonry.h>
-#import "UIView+Geometry.h"
 #import <UIImageView+WebCache.h>
-#import "UIView+Geometry.h"
+#import "UIView+Border.h"
+#import "HelperTool.h"
+#import <YYText.h>
 
 
-#define Margin 12
 @implementation SystemCell {
-    UILabel *_msgState;
     UILabel *_msgTitle;
     UILabel *_timeLabel;
-    UILabel *_msgContent;
+    YYLabel *_msgContent;
     UIImageView *_contentImage;
-    UILabel *_onlyText;
-    UILabel *_desLabel;
-    UIView *_gap;
+    YYLabel *_desLabel;
 }
 
 - (void)awakeFromNib {
@@ -38,7 +33,7 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.contentView.backgroundColor = [UIColor whiteColor];
+        self.contentView.backgroundColor = View_Color;
         [self setupUI];
     }
     
@@ -46,101 +41,122 @@
 }
 
 - (void)setupUI {
-    //已读未读状态
-    _msgState = [[UILabel alloc] init];
-    _msgState.font = [UIFont boldSystemFontOfSize:15];
-    _msgState.frame = CGRectMake(0, 15, 46, 16);
-    _msgState.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:_msgState];
+    //时间
+    _timeLabel = [[UILabel alloc] init];
+    _timeLabel.textColor = UIColor.blackColor;
+    _timeLabel.frame = CGRectMake(8, 5, SCREEN_WIDTH - 8 * 2 , 25);
+    _timeLabel.font = [UIFont systemFontOfSize:16];
+    _timeLabel.textAlignment = NSTextAlignmentCenter;
+    [self.contentView addSubview:_timeLabel];
     
     //标题
     _msgTitle = [[UILabel alloc] init];
-    _msgTitle.frame = CGRectMake(_msgState.right, _msgState.top, SCREEN_WIDTH - _msgState.right, _msgState.height);
+    _msgTitle.frame = CGRectMake(_timeLabel.left, _timeLabel.bottom + 5, _timeLabel.width , 44);
     _msgTitle.textColor = HEXColor(@"#000000", 1);
-    _msgTitle.font = [UIFont boldSystemFontOfSize:14];
+    _msgTitle.font = [UIFont boldSystemFontOfSize:16];
+     _msgTitle.backgroundColor = UIColor.whiteColor;
     [self.contentView addSubview:_msgTitle];
-    //时间
-    _timeLabel = [[UILabel alloc] init];
-    _timeLabel.textColor = HEXColor(@"#868686", 1);
-    _timeLabel.frame = CGRectMake(SCREEN_WIDTH - KFit_W(135), _msgState.top, KFit_W(125), 14);
-    _timeLabel.font = [UIFont systemFontOfSize:12];
-    _timeLabel.textAlignment = NSTextAlignmentRight;
-    [self.contentView addSubview:_timeLabel];
+    [HelperTool setRound:_msgTitle corner:UIRectCornerTopLeft | UIRectCornerTopRight radiu:6.f];
+    
     //图片
     _contentImage = [[UIImageView alloc] init];
-    _contentImage.frame = CGRectMake(10, _msgState.bottom + 14, SCREEN_WIDTH - 20, KFit_W(156));
+    _contentImage.frame = CGRectMake(_timeLabel.left, _msgTitle.bottom, _msgTitle.width, KFit_W(150));
     [self.contentView addSubview:_contentImage];
     
-    //描述
-    _desLabel = [[UILabel alloc] init];
-    _desLabel.font = [UIFont boldSystemFontOfSize:14];
-    [self.contentView addSubview:_desLabel];
-    
     //文本
-    _msgContent = [[UILabel alloc] init];
-    _msgContent.textColor = HEXColor(@"#868686", 1);
-    _msgContent.frame = CGRectMake(_msgTitle.left, _msgState.bottom + 14, SCREEN_WIDTH - _msgTitle.left - 10, 0);
-    _msgContent.font = [UIFont systemFontOfSize:12];
-    _msgContent.textColor = HEXColor(@"#868686", 1);
+    _msgContent = [[YYLabel alloc] init];
+    _msgContent.textColor = HEXColor(@"#333333", 1);
+    _msgContent.frame = CGRectMake(_msgTitle.left, _msgTitle.bottom, _msgTitle.width, 10);
+    _msgContent.font = [UIFont systemFontOfSize:15];
+    _msgContent.numberOfLines = 0;
+    _msgContent.backgroundColor = UIColor.whiteColor;
     [self.contentView addSubview:_msgContent];
     
-    //间隔
-    _gap = [[UIView alloc] init];
-    _gap.frame = CGRectMake(0, 0, SCREEN_WIDTH, 6);
-    _gap.backgroundColor = Cell_BGColor;
-    [self.contentView addSubview:_gap];
+    CALayer *line = [[CALayer alloc] init];
+    line.frame = CGRectMake(_msgTitle.left, _msgTitle.bottom - .5, _msgContent.width, .5);
+    line.backgroundColor = Like_Color.CGColor;
+    [self.contentView.layer addSublayer:line];
+    
+    //描述
+    _desLabel = [[YYLabel alloc] initWithFrame:CGRectMake(_contentImage.left, 0, _contentImage.width, 0)];
+    _desLabel.numberOfLines = 0;
+    _desLabel.backgroundColor = UIColor.whiteColor;
+    _desLabel.font = [UIFont boldSystemFontOfSize:14];
+    _desLabel.textColor = HEXColor(@"#868686", 1);
+    [self.contentView addSubview:_desLabel];
+}
+
+//YYLbael计算高度
+- (CGFloat)getMessageHeight:(NSString *)mess andLabel:(YYLabel *)label {
+    NSMutableAttributedString *introText = [[NSMutableAttributedString alloc] initWithString:mess];
+    introText.yy_lineSpacing = 4;
+    introText.yy_lineBreakMode = NSLineBreakByCharWrapping;
+    introText.yy_font = label.font;
+    introText.yy_color = label.textColor;
+    introText.yy_firstLineHeadIndent = 24.f;
+    introText.yy_headIndent = 5.f;
+    CGSize introSize = CGSizeMake(label.width, CGFLOAT_MAX);
+    label.attributedText = introText;
+    YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:introSize text:introText];
+    label.textLayout = layout;
+    CGFloat introHeight = layout.textBoundingSize.height;
+    return introHeight;
 }
 
 - (void)setModel:(MessageModel *)model {
     _model = model;
-    //已读还是未读
-    if (isRightData(model.isRead)) {
-        //已读
-        if ([model.isRead isEqualToString:@"1"]) {
-            _msgState.text = @"已读";
-            _msgState.textColor = HEXColor(@"#868686", 1);
-        } else {
-            _msgState.text = @"未读";
-            _msgState.textColor = HEXColor(@"#F10215", 1);
-        }
-        
-    }
-    //标题
-    if isRightData(model.title)
-        _msgTitle.text = model.title;
     //创建时间
     if isRightData(model.createdAt)
-        _timeLabel.text = model.createdAt;
+        _timeLabel.text = [model.createdAt substringToIndex:10];
     
+    //标题
+    if isRightData(model.title)
+        _msgTitle.text = [NSString stringWithFormat:@"    %@",model.title];
     CGFloat bottom = _msgTitle.bottom;
-    
+
     //不是纯文本就加载图片
     if(![model.type isEqualToString:@"txt"]) {
-        _contentImage.hidden = NO;
-        _msgContent.hidden = YES;
-        [_contentImage sd_setImageWithURL:ImgUrl(model.pic) placeholderImage:PlaceHolderImg];
-        bottom = _contentImage.bottom;
+        if isRightData(model.pic) {
+            _contentImage.hidden = NO;
+            _msgContent.hidden = YES;
+            _desLabel.hidden = NO;
+            [_contentImage sd_setImageWithURL:ImgUrl(model.pic) placeholderImage:PlaceHolderImg];
+            bottom = _contentImage.bottom;
+            if isRightData(model.content) {
+                _desLabel.text = model.content;
+                CGFloat mHeight = [self getMessageHeight:_desLabel.text andLabel:_desLabel];
+                _desLabel.height = mHeight + 30;
+                _desLabel.top = _contentImage.bottom;
+                bottom = _desLabel.bottom;
+                [HelperTool setRound:_desLabel corner:UIRectCornerBottomLeft | UIRectCornerBottomRight radiu:6.f];
+            }
+        } else {
+            _msgContent.hidden = NO;
+            _contentImage.hidden = YES;
+            _desLabel.hidden = NO;
+            if isRightData(model.content) {
+                _desLabel.text = model.content;
+                CGFloat mHeight = [self getMessageHeight:_desLabel.text andLabel:_desLabel];
+                _desLabel.height = mHeight + 30;
+                _desLabel.top = _msgTitle.bottom;
+                bottom = _desLabel.bottom;
+                [HelperTool setRound:_desLabel corner:UIRectCornerBottomLeft | UIRectCornerBottomRight radiu:6.f];
+            }
+        }
+        
     } else {
         _msgContent.hidden = NO;
         _contentImage.hidden = YES;
+        _desLabel.hidden = YES;
         if isRightData(model.content) {
             _msgContent.text = model.content;
-            CGFloat mHeight = [model.content boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - _msgTitle.left - 10, CGFLOAT_MAX)
-                                                          options:NSStringDrawingUsesLineFragmentOrigin
-                                                       attributes:@{NSFontAttributeName : _msgContent.font}
-                                                          context:nil].size.height;
-            _msgContent.height = mHeight;
+            CGFloat mHeight = [self getMessageHeight:_msgContent.text andLabel:_msgContent];
+            _msgContent.height = mHeight + 35;
             bottom = _msgContent.bottom;
         }
     }
-    
-    _gap.top = bottom + 20;
-    
-    model.cellHeight = _gap.bottom + 5;
-
+    model.cellHeight = bottom + 15;
 }
-
-
 
 
 + (instancetype)cellWithTableView:(UITableView *)tableView {

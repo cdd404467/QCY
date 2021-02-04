@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSString (Class)
 
 - (UIViewController *)stringToClass:(NSString *)str;
+
 @end
 
 NS_ASSUME_NONNULL_END

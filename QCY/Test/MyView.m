@@ -7,7 +7,6 @@
 //
 
 #import "MyView.h"
-#import "MacroHeader.h"
 
 @implementation MyView
 

@@ -7,8 +7,6 @@
 //
 
 #import "DiscountSalesDetailHV.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
 #import "UIView+Border.h"
 #import <UIImageView+WebCache.h>
 #import "DiscountSalesModel.h"
@@ -112,7 +110,7 @@
     _dataSource = dataSource;
     [_productImageView sd_setImageWithURL:ImgUrl(dataSource.productPic) placeholderImage:PlaceHolderImg];
     //已销售总量
-    NSString *cPrice = dataSource.totalNum;
+    NSString *cPrice = dataSource.subscribedNum;
     NSString *unit = dataSource.numUnit;
     NSString *cText = [NSString stringWithFormat:@"%@%@\n已销售总量",cPrice,unit];
     NSMutableAttributedString *mutableText = [[NSMutableAttributedString alloc] initWithString:cText];
@@ -152,7 +150,7 @@
     
     //产品名字和销售量
     _productName.text = dataSource.productName;
-    _saleAlready.text = [NSString stringWithFormat:@"已销售总量: %@%@",dataSource.totalNum,dataSource.numUnit];
+    _saleAlready.text = [NSString stringWithFormat:@"已销售总量: %@%@",dataSource.subscribedNum,dataSource.numUnit];
     
     //优惠箭头
     NSInteger count = dataSource.listPrice.count;

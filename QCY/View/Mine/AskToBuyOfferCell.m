@@ -7,8 +7,6 @@
 //
 
 #import "AskToBuyOfferCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import <YYText.h>
 #import "ClassTool.h"
 #import "MinePageModel.h"

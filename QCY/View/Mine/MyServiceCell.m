@@ -7,8 +7,7 @@
 //
 
 #import "MyServiceCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
+
 
 @implementation MyServiceCell
 

@@ -7,7 +7,6 @@
 //
 
 #import "VoteDetailVC.h"
-#import "MacroHeader.h"
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
 #import "ClassTool.h"
@@ -40,7 +39,9 @@
 }
 
 - (void)setNavBar {
-    self.title = [NSString stringWithFormat:@"%@%@",_pageTitle,_pageTitle];
+    if (_pageTitle) {
+        self.title = [NSString stringWithFormat:@"%@",_pageTitle];
+    }
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 50, 44);
     if([WXApi isWXAppInstalled]) {//判断用户是否已安装微信App
@@ -72,6 +73,9 @@
 //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [VoteModel mj_objectWithKeyValues:json[@"data"]];
+            if (weakself.pageTitle == nil) {
+                weakself.title = weakself.dataSource.name;
+            }
             weakself.dataSource.ruleList = [RuleListModel mj_objectArrayWithKeyValuesArray:weakself.dataSource.ruleList];
             if (isFirst == YES) {
                 [weakself setupPageVC];

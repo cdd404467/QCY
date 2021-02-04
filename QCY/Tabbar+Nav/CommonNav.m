@@ -7,8 +7,6 @@
 //
 
 #import "CommonNav.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 
 @implementation CommonNav
 
@@ -82,7 +80,7 @@
 - (void)setLeftBtnTintColor:(UIColor *)leftBtnTintColor {
     _leftBtnTintColor = leftBtnTintColor;
     UIImage *image = [UIImage imageNamed:@"back_black"];
-    [_backBtn setImage:[image imageWithTintColor:leftBtnTintColor] forState:UIControlStateNormal];
+    [_backBtn setImage:[image imageWithTintColor_My:leftBtnTintColor] forState:UIControlStateNormal];
     _backBtn.tintColor = leftBtnTintColor;
 }
 

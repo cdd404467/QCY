@@ -9,5 +9,5 @@
 #import "BaseViewController.h"
 
 @interface OpenMallVC : BaseViewController
-
+@property (nonatomic, copy)NSString *classifyValue;
 @end

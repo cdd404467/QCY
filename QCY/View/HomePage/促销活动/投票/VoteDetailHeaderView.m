@@ -7,12 +7,9 @@
 //
 
 #import "VoteDetailHeaderView.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
 #import "HelperTool.h"
 #import "VoteModel.h"
 #import <UIImageView+WebCache.h>
-#import <Masonry.h>
 #import "CountDown.h"
 
 @implementation VoteDetailHeaderView {

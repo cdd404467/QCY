@@ -17,4 +17,9 @@ typedef void(^LimitBlock)(void);
 
 - (void)lengthLimit:(void (^)(void))limit;
 
+
+/****第二种方式***/
+@property (assign,nonatomic) NSUInteger maxLength;
+
+@property (copy,nonatomic) void(^valueChangedBlock)(NSString *content);
 @end

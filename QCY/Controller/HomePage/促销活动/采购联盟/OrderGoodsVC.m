@@ -7,22 +7,20 @@
 //
 
 #import "OrderGoodsVC.h"
-#import "MacroHeader.h"
 #import "NetWorkingPort.h"
 #import "ClassTool.h"
 #import "PrchaseLeagueModel.h"
 #import "HomePageSectionHeader.h"
 #import "OrderGoodsTBCell.h"
 #import "ClassTool.h"
-#import "UIView+Geometry.h"
 #import "AddCustomGoodsVC.h"
 #import <UIImageView+WebCache.h>
 #import "ContactsInfoCell.h"
 #import <XHWebImageAutoSize.h>
-#import <Masonry.h>
 #import "CddHUD.h"
 #import "MobilePhone.h"
 #import "AutoImageCell.h"
+#import <UMAnalytics/MobClick.h>
 
 @interface OrderGoodsVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
@@ -37,7 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"我要订货";
+    self.title = @"我要采购";
     [self.view addSubview:self.tableView];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView cellForRowAtIndexPath:indexPath];
@@ -46,6 +44,17 @@
     [self requestData];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:[NSString stringWithFormat:@"采购联盟-采购-%@",_pName]];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:[NSString stringWithFormat:@"采购联盟-采购-%@",_pName]];
+}
 
 //懒加载tableView
 - (UITableView *)tableView {
@@ -63,8 +72,6 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;
@@ -301,7 +308,7 @@
 //section footer的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if (section == 0) {
-        return 50;
+        return 5;
     } else {
         return 0.01;
     }
@@ -319,15 +326,15 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if (section == 0) {
         UIView *secFooter = [[UIView alloc] init];
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.layer.cornerRadius = 5.f;
-        btn.layer.masksToBounds = YES;
-        [btn setTitle:@"添加自定义商品" forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        btn.frame = CGRectMake(47, 0, SCREEN_WIDTH - 47 * 2, 44);
-        [btn addTarget:self action:@selector(addCustomGoods) forControlEvents:UIControlEventTouchUpInside];
-        [secFooter addSubview:btn];
-        [ClassTool addLayer:btn frame:CGRectMake(0, 0, btn.width, btn.height)];
+//        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+//        btn.layer.cornerRadius = 5.f;
+//        btn.layer.masksToBounds = YES;
+//        [btn setTitle:@"添加自定义商品" forState:UIControlStateNormal];
+//        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        btn.frame = CGRectMake(47, 0, SCREEN_WIDTH - 47 * 2, 44);
+//        [btn addTarget:self action:@selector(addCustomGoods) forControlEvents:UIControlEventTouchUpInside];
+//        [secFooter addSubview:btn];
+//        [ClassTool addLayer:btn frame:CGRectMake(0, 0, btn.width, btn.height)];
         
         return secFooter;
     } else {

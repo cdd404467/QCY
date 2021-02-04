@@ -7,18 +7,34 @@
 //
 
 #import "UIViewController+Extension.h"
-//#import "BaseNavigationController.h"
 
 @implementation UIViewController (Extension)
 
 - (BaseNavigationController *)mainNavController {
-    
-    BaseNavigationController *nav = (BaseNavigationController *)self.navigationController;
-    if (nav) {
-        return nav;
+    BaseNavigationController *nav = nil;
+    if ([self isKindOfClass:[UINavigationController class]]) {
+        nav = (id)self;
+    } else {
+        if ([self isKindOfClass:[UITabBarController class]]) {
+            nav = ((UITabBarController*)self).selectedViewController.mainNavController;
+        }
+        else {
+            nav = (BaseNavigationController *)self.navigationController;
+        }
     }
-
-    return nil;
+    return nav;
 }
+
+//旋转
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    //设置只允许视频播放界面可以旋转，其他只能竖屏
+    if ([self isKindOfClass:NSClassFromString(@"PlayVideoVC")]) {
+        return UIInterfaceOrientationMaskAll;
+    }else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
+}
+
 
 @end

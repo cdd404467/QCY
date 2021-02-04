@@ -72,8 +72,10 @@
     }
 }
 -(NSDate *)dateWithLongLong:(long long)longlongValue{
-    long long value = longlongValue/1000;
-    NSNumber *time = [NSNumber numberWithLongLong:value];
+    if (@(longlongValue).stringValue.length > 10) {
+        longlongValue = longlongValue/1000;
+    }
+    NSNumber *time = [NSNumber numberWithLongLong:longlongValue];
     //转换成NSTimeInterval,用longLongValue，防止溢出
     NSTimeInterval nsTimeInterval = [time longLongValue];
     NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:nsTimeInterval];

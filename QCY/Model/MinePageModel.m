@@ -44,3 +44,16 @@
 
 
 @end
+
+
+@implementation MineCellModel
+
+- (NSString *)iconNum {
+    if (!_iconNum) {
+        _iconNum = @"0";
+    }
+    
+    return _iconNum;
+}
+
+@end

@@ -7,16 +7,15 @@
 //
 
 #import "MessageCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "MessageModel.h"
-
+#import "HelperTool.h"
 
 @interface MessageCell()
 @end
 
 
 @implementation MessageCell {
+    UILabel *_messageType;
     UILabel *_msgState;
     UILabel *_productName;
     UILabel *_timeLabel;
@@ -41,14 +40,36 @@
 }
 
 - (void)setupUI {
+    UILabel *messageType = [[UILabel alloc] initWithFrame:CGRectMake(KFit_W(50), 0, 64, 17)];
+    messageType.backgroundColor = HEXColor(@"#FAA02D", 1);
+    messageType.textColor = UIColor.whiteColor;
+    messageType.font = [UIFont systemFontOfSize:12];
+    messageType.textAlignment = NSTextAlignmentCenter;
+    [self.contentView addSubview:messageType];
+    [HelperTool setRound:messageType corner:UIRectCornerBottomLeft | UIRectCornerBottomRight radiu:5];
+    _messageType = messageType;
+    
+    //时间
+    UILabel *timeLabel = [[UILabel alloc] init];
+    timeLabel.textColor = HEXColor(@"#868686", 1);
+    timeLabel.font = [UIFont systemFontOfSize:12];
+    [self.contentView addSubview:timeLabel];
+    [timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(messageType.mas_right).offset(15);
+        make.centerY.mas_equalTo(messageType);
+        make.right.mas_equalTo(-15);
+    }];
+    _timeLabel = timeLabel;
+    
     //已读未读状态
     UILabel *msgState = [[UILabel alloc] init];
+    msgState.textAlignment = NSTextAlignmentCenter;
     msgState.font = [UIFont boldSystemFontOfSize:15];
     [self.contentView addSubview:msgState];
     [msgState mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(15);
-        make.left.mas_equalTo(12);
-        make.width.mas_equalTo(KFit_W(32));
+        make.top.mas_equalTo(messageType.mas_bottom).with.offset(10);
+        make.left.mas_equalTo(0);
+        make.width.mas_equalTo(KFit_W(50));
         
     }];
     _msgState = msgState;
@@ -60,23 +81,10 @@
     [self.contentView addSubview:productName];
     [productName mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(msgState);
-        make.left.mas_equalTo(msgState.mas_right).offset(7);
-        make.right.mas_equalTo(KFit_W(-145));
+        make.left.mas_equalTo(msgState.mas_right);
+        make.right.mas_equalTo(-15);
     }];
     _productName = productName;
-    
-    //时间
-    UILabel *timeLabel = [[UILabel alloc] init];
-    timeLabel.textColor = HEXColor(@"#868686", 1);
-    timeLabel.textAlignment = NSTextAlignmentRight;
-    timeLabel.font = [UIFont systemFontOfSize:12];
-    [self.contentView addSubview:timeLabel];
-    [timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-15);
-        make.bottom.mas_equalTo(productName);
-        make.width.mas_equalTo(KFit_W(125));
-    }];
-    _timeLabel = timeLabel;
     
     //消息文本
     UILabel *msgContent = [[UILabel alloc] init];
@@ -86,7 +94,7 @@
     [self.contentView addSubview:msgContent];
     [msgContent mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(productName);
-        make.right.mas_equalTo(timeLabel);
+        make.right.mas_equalTo(productName);
         make.top.mas_equalTo(productName.mas_bottom).offset(5);
         make.height.mas_equalTo(35);
     }];
@@ -100,7 +108,6 @@
         make.height.mas_equalTo(6);
         make.left.right.bottom.mas_equalTo(0);
     }];
-    
 }
 
 - (void)setModel:(MessageModel *)model {
@@ -115,16 +122,28 @@
             _msgState.text = @"未读";
             _msgState.textColor = HEXColor(@"#F10215", 1);
         }
-        
     }
     
     if isRightData(model.createdAt)
         _timeLabel.text = model.createdAt;
+
+    //求购消息
+    NSString *name = [NSString string];
+    NSString *typeName = [NSString string];
+    if ([model.workType isEqualToString:@"enquiry"]) {
+        name = model.productName;
+        typeName = @"求购报价";
+    }
+    //助剂定制消息
+    else if ([model.workType isEqualToString:@"zhujiDiy"]) {
+        name = model.zhujiName;
+        typeName = @"助剂定制";
+    }
     
     //产品名字
-    if isRightData(model.productName)
-        _productName.text = model.productName;
-        
+    _productName.text = name;
+    _messageType.text = typeName;
+    
     //消息文本
     if isRightData(model.content)
         _msgContent.text = model.content;

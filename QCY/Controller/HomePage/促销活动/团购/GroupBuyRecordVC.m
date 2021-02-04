@@ -7,7 +7,6 @@
 //
 
 #import "GroupBuyRecordVC.h"
-#import "MacroHeader.h"
 #import "ClassTool.h"
 #import <YNPageTableView.h>
 #import "UIView+Border.h"
@@ -62,8 +61,6 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         
         if ([_type isEqualToString:@"group"]) {

@@ -8,12 +8,9 @@
 
 #import "OrderGoodsTBCell.h"
 #import "BEMCheckBox.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
-#import <Masonry.h>
 #import "PrchaseLeagueModel.h"
 #import "SelectedView.h"
-#import <BRPickerView.h>
+#import "BRPickerView.h"
 #import "HelperTool.h"
 #import "SelectStandardView.h"
 
@@ -116,6 +113,7 @@
     
     //预定量TF
     UITextField *reserveTF = [[UITextField alloc] init];
+    reserveTF.frame = CGRectMake(reserveTxt.right + 40, 0, 100, 24);
     reserveTF.delegate = self;
     reserveTF.backgroundColor = HEXColor(@"#F7F7F7", 1);
     reserveTF.layer.borderColor = HEXColor(@"#E5E5E5", 1).CGColor;
@@ -126,7 +124,6 @@
     [reserveTF addTarget:self action:@selector(textFieldTextDidChange:) forControlEvents:UIControlEventEditingChanged];
     reserveTF.textColor = HEXColor(@"#F10215", 1);
     reserveTF.font = [UIFont systemFontOfSize:16];
-    reserveTF.frame = CGRectMake(reserveTxt.right + 20, 0, 100, 24);
     reserveTF.centerY = reserveTxt.centerY;
     reserveTF.keyboardType = UIKeyboardTypeDecimalPad;
     [self.contentView addSubview:reserveTF];
@@ -144,7 +141,7 @@
     //参考标准文字
     UILabel *standardTxt = [[UILabel alloc] init];
     standardTxt.centerY = reserveTxt.centerY;
-    standardTxt.text = @"参考标准:";
+    standardTxt.text = @"接受供应商:";
     standardTxt.font = [UIFont systemFontOfSize:12];
     standardTxt.textColor = HEXColor(@"#868686", 1);
     [self.contentView addSubview:standardTxt];
@@ -165,7 +162,7 @@
         make.left.mas_equalTo(reserveTF);
         make.height.mas_equalTo(24);
         make.centerY.mas_equalTo(standardTxt);
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(-15);
     }];
     _standardSelect = standardSelect;
     

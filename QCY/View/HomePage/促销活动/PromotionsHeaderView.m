@@ -7,7 +7,6 @@
 //
 
 #import "PromotionsHeaderView.h"
-#import "MacroHeader.h"
 #import <UIImageView+WebCache.h>
 
 

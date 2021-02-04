@@ -7,7 +7,6 @@
 //
 
 #import "BaseParameterVC.h"
-#import "MacroHeader.h"
 #import <YNPageTableView.h>
 #import <XHWebImageAutoSize.h>
 #import "ImageCell.h"
@@ -37,9 +36,7 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
+        } 
         
         
     }

@@ -12,6 +12,9 @@
 + (UIImage * _Nonnull)imageWithColor:(UIColor * _Nonnull)color size:(CGSize)size;
 + (UIImage * _Nonnull)imageWithColor:(UIColor * _Nonnull)color;
 
-- (UIImage *) imageWithTintColor:(UIColor *)tintColor;
+/***  iOS13苹果自带这个方法，我也是醉了  ***/
+//- (UIImage *_Nullable) imageWithTintColor:(UIColor *_Nullable)tintColor;
 
+
+- (UIImage *_Nullable) imageWithTintColor_My:(UIColor *_Nullable)tintColor;
 @end

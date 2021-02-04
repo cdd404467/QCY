@@ -7,12 +7,13 @@
 //
 
 #import "FCRecordCell.h"
-#import "UIView+Geometry.h"
-#import "MacroHeader.h"
 #import <YYText.h>
 #import "FriendCricleModel.h"
 #import "TimeAbout.h"
 #import <UIImageView+WebCache.h>
+#import "FCZiXunView.h"
+#import "Friend.h"
+#import "HelperTool.h"
 
 // 最大高度限制
 CGFloat maxHeight = 60;
@@ -22,6 +23,8 @@ CGFloat maxHeight = 60;
 @property (nonatomic, strong)UIImageView *recordImage;
 @property (nonatomic, strong)UILabel *mainLabel;
 @property (nonatomic, strong)UIImageView *play;
+//分享咨询view
+@property (nonatomic, strong) FCZiXunView *ziXunView;
 @end
 
 @implementation FCRecordCell
@@ -76,6 +79,11 @@ CGFloat maxHeight = 60;
     [self.contentView addSubview:mainLabel];
     _mainLabel = mainLabel;
     
+    //咨询view
+    _ziXunView = [[FCZiXunView alloc] initWithFrame:CGRectMake(_recordImage.left, 0, kTextWidth - 50, 50)];
+    _ziXunView.userInteractionEnabled = NO;
+    _ziXunView.backgroundColor = HEXColor(@"#e5e5e5", 1);
+    [self.contentView addSubview:_ziXunView];
 }
 
 - (void)setModel:(FriendCricleModel *)model {
@@ -107,6 +115,7 @@ CGFloat maxHeight = 60;
                                                     context:nil].size.height;
     }
     
+    CGFloat bottom = 15;
     _timeLabel.height = labelHeight;
     cx = _timeLabel.width;
     //图片
@@ -116,17 +125,20 @@ CGFloat maxHeight = 60;
             _play.hidden = YES;
             [_recordImage sd_setImageWithURL:ImgUrl(model.pic1) placeholderImage:PlaceHolderImg];
             cx = cx + _recordImage.width + 8;
+            bottom = _recordImage.bottom + 10;
         } else {
             _recordImage.hidden = YES;
             _play.hidden = YES;
         }
+        
+        //视频
     } else {
         _recordImage.hidden = NO;
         _play.hidden = NO;
         [_recordImage sd_setImageWithURL:ImgUrl(model.videoPicUrl) placeholderImage:PlaceHolderImg];
         cx = cx + _recordImage.width + 8;
+        bottom = _recordImage.bottom + 10;
     }
-    
     
     //文本
     if isRightData(model.content) {
@@ -145,12 +157,30 @@ CGFloat maxHeight = 60;
             mainHeight = mHeight;
         }
         _mainLabel.height = mainHeight;
+        
+        if (_recordImage.hidden == YES)
+            bottom = _mainLabel.bottom + 10;
+        
+        
     } else {
         _mainLabel.hidden = YES;
         _mainLabel.height = 0;
         _mainLabel.left = 0;
         _mainLabel.width = 0;
     }
+    
+    //咨询View
+    if (isRightData(model.shareBean.title)) {
+        _ziXunView.model = model.shareBean;
+        _ziXunView.top = bottom;
+        _ziXunView.hidden = NO;
+        bottom = _ziXunView.bottom + 22;
+    } else {
+        _ziXunView.hidden = YES;
+        bottom = bottom + 12;
+    }
+    
+    _model.cellHeight = bottom;
 }
 
 + (instancetype)cellWithTableView:(UITableView *)tableView {

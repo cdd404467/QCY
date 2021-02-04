@@ -7,14 +7,11 @@
 //
 
 #import "ContactsInfoCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
-#import <BRPickerView.h>
+#import "BRPickerView.h"
 #import "HelperTool.h"
 #import "UITextView+Placeholder.h"
 #import "UITextField+Limit.h"
 #import <UIImageView+WebCache.h>
-#import "UIView+Geometry.h"
 #import "PrchaseLeagueModel.h"
 
 @interface ContactsInfoCell()<UITextFieldDelegate, UITextViewDelegate>

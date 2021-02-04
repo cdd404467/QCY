@@ -7,8 +7,6 @@
 //
 
 #import "GroupBuyingCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import <YYWebImage.h>
 #import "GroupBuyingModel.h"
 #import <YYText.h>
@@ -16,8 +14,8 @@
 
 @interface GroupBuyingCell()
 
-@property (nonatomic, strong)UIView *stateView;
-@property (nonatomic, strong) UIImageView *emojoImage;;
+@property (nonatomic, strong) UIView *stateView;
+//@property (nonatomic, strong) UIImageView *emojoImage;
 @end
 
 @implementation GroupBuyingCell {
@@ -28,7 +26,6 @@
     UILabel *_minBuy;
     UILabel *_maxBuy;
     UILabel *_stateLabelLeft;
-    UILabel *_stateLabelRight;
     UIImageView *_priceImageView;
     YYLabel *_originalPrice;
     YYLabel *_currentPrice;
@@ -146,38 +143,15 @@
     }];
     _stateView = stateView;
     
-    //图片
-    UIImageView *emojoImage = [[UIImageView alloc] init];
-    [stateView addSubview:emojoImage];
-    [emojoImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(stateView);
-        make.width.height.mas_equalTo(36);
-        make.left.mas_equalTo(stateView.mas_centerX).offset(5);
-    }];
-    _emojoImage = emojoImage;
-    
     //左边文字label
     UILabel *stateLabelLeft = [[UILabel alloc] init];
-    stateLabelLeft.textAlignment = NSTextAlignmentRight;
+    stateLabelLeft.textAlignment = NSTextAlignmentCenter;
     stateLabelLeft.font = [UIFont boldSystemFontOfSize:15];
     [stateView addSubview:stateLabelLeft];
     [stateLabelLeft mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(stateView);
-        make.right.mas_equalTo(emojoImage.mas_left).offset(-10);
+        make.center.mas_equalTo(self.stateView);
     }];
     _stateLabelLeft = stateLabelLeft;
-    
-    //右边文字label
-    UILabel *stateLabelRight = [[UILabel alloc] init];
-    stateLabelRight.textColor = MainColor;
-    stateLabelRight.textAlignment = NSTextAlignmentLeft;
-    stateLabelRight.font = [UIFont boldSystemFontOfSize:15];
-    [stateView addSubview:stateLabelRight];
-    [stateLabelRight mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(stateView);
-        make.left.mas_equalTo(emojoImage.mas_right).offset(10);
-    }];
-    _stateLabelRight = stateLabelRight;
     
     //显示价格的
     UIImageView *priceImageView = [[UIImageView alloc] init];
@@ -299,7 +273,6 @@
         _priceImageView.image = [UIImage imageWithColor:HEXColor(@"#BCBCBC", 1)];
     }
     //原价
-    
     NSString *oPrice = [HelperTool getStringFrom:model.oldPrice];
     NSString *oText = [NSString stringWithFormat:@"原价: ¥%@元/%@",oPrice,model.priceUnit];
     NSMutableAttributedString *mutableOriginal = [[NSMutableAttributedString alloc] initWithString:oText];
@@ -326,72 +299,12 @@
     _currentPrice.attributedText = mutablecurrent;
     
     //右边文字状态
-    //未开始
-    if ([model.endCode isEqualToString:@"00"]) {
-        _emojoImage.hidden = NO;
-        _stateLabelRight.hidden = NO;
-        _stateLabelLeft.textColor = MainColor;
-        NSString *start = [model.startTime substringToIndex:10];
-        NSString *end = [model.endTime substringToIndex:10];
-        _stateLabelLeft.text = start;
-        _stateLabelRight.text = end;
-        _emojoImage.image = [UIImage imageNamed:@"groupBuy_time"];
-        [_emojoImage mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_equalTo(20);
-            make.center.mas_equalTo(self.stateView);
-        }];
-        [_stateLabelRight mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.stateView);
-            make.left.mas_equalTo(self.emojoImage.mas_right).offset(10);
-        }];
-        [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.stateView);
-            make.right.mas_equalTo(self.emojoImage.mas_left).offset(-10);
-        }];
-        
-    //进行中
-    } else if ([model.endCode isEqualToString:@"10"]) {
-        _emojoImage.hidden = YES;
-        _stateLabelRight.hidden = YES;
+    if ([model.endCode isEqualToString:@"10"]) {
         _stateLabelLeft.text = @"团购进行中...";
-        _stateLabelLeft.textColor = MainColor;        
-        [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.center.mas_equalTo(self.stateView);
-        }];
-        
-    //失败
-    } else if ([model.endCode isEqualToString:@"20"]) {
-        _emojoImage.hidden = NO;
-        _stateLabelRight.hidden = YES;
-        _stateLabelLeft.textColor = HEXColor(@"#868686", 1);;
-        _stateLabelLeft.text = @"团购失败!";
-        _emojoImage.image = [UIImage imageNamed:@"groupBuy_fail"];
-        [_emojoImage mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.stateView);
-            make.width.height.mas_equalTo(36);
-            make.left.mas_equalTo(self.stateView.mas_centerX).offset(5);
-        }];
-        [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.stateView);
-            make.right.mas_equalTo(self.stateView.mas_centerX).offset(-5);
-        }];
-    //成功
-    } else {
-        _emojoImage.hidden = NO;
-        _stateLabelRight.hidden = YES;
         _stateLabelLeft.textColor = MainColor;
-        _stateLabelLeft.text = @"团购成功!";
-        _emojoImage.image = [UIImage imageNamed:@"groupBuy_success"];
-        [_emojoImage mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.stateView);
-            make.width.height.mas_equalTo(36);
-            make.left.mas_equalTo(self.stateView.mas_centerX).offset(5);
-        }];
-        [_stateLabelLeft mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.stateView);
-            make.right.mas_equalTo(self.stateView.mas_centerX).offset(-5);
-        }];
-        
+    } else {
+        _stateLabelLeft.text = @"团购已结束!";
+        _stateLabelLeft.textColor = HEXColor(@"#868686", 1);
     }
     
     //已经认领

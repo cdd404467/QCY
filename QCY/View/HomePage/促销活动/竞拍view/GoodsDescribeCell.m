@@ -7,9 +7,6 @@
 //
 
 #import "GoodsDescribeCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
-#import "UIView+Geometry.h"
 #import "AuctionModel.h"
 
 @implementation GoodsDescribeCell {

@@ -7,8 +7,6 @@
 //
 
 #import "FCDetailZanCell.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
 #import "HelperTool.h"
 #import "Friend.h"
 #import <UIImageView+WebCache.h>

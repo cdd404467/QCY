@@ -8,8 +8,6 @@
 
 #import "ManifestSupplyCell.h"
 #import "PrchaseLeagueModel.h"
-#import "UIView+Geometry.h"
-#import "MacroHeader.h"
 #import <YYText.h>
 #import "UIView+Border.h"
 #import "StandardView.h"

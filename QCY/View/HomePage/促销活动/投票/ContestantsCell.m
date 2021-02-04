@@ -7,12 +7,9 @@
 //
 
 #import "ContestantsCell.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
 #import "HelperTool.h"
 #import "VoteModel.h"
 #import <UIImageView+WebCache.h>
-#import <Masonry.h>
 #import <YYText.h>
 #import "ClassTool.h"
 #import "HelperTool.h"

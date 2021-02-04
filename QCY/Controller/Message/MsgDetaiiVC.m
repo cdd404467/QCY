@@ -7,12 +7,11 @@
 //
 
 #import "MsgDetaiiVC.h"
-#import "MacroHeader.h"
 #import "ClassTool.h"
 #import "NetWorkingPort.h"
 #import "MessageModel.h"
-#import <Masonry.h>
 #import "AskToBuyDetailsVC.h"
+#import "ZhuJiDiyDetailVC.h"
 
 @interface MsgDetaiiVC ()
 @property (nonatomic, strong)UIScrollView *scrollView;
@@ -45,28 +44,29 @@
 }
 
 - (void)setupNav {
-    self.nav.titleLabel.text = @"消息详情";
-    [ClassTool addLayer:self.nav frame:self.nav.frame];
-    self.nav.titleLabel.textColor = [UIColor whiteColor];
-    self.nav.bottomLine.hidden = YES;
-    [self.nav.backBtn setImage:[UIImage imageNamed:@"back_white"] forState:UIControlStateNormal];
+    self.title = @"消息详情";
+    UIView *nav = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT)];
+    [ClassTool addLayer:nav frame:CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT) startPoint:CGPointMake(0, 0) endPoint:CGPointMake(1.0, 0)];
+    [self vhl_setNavBarBackgroundView:nav];
+    self.backBtnTintColor = UIColor.whiteColor;
+    [self vhl_setNavBarTitleColor:UIColor.whiteColor];
+    [self vhl_setNavBarShadowImageHidden:YES];
+    [self vhl_setNavigationSwitchStyle:VHLNavigationSwitchStyleFakeNavBar];
 }
 
 #pragma mark - 请求详情
 - (void)requestData {
     DDWeakSelf;
-    //    [CddHUD show];
-    NSString *urlString = [NSString stringWithFormat:URL_AskBuy_Msg_Detail,User_Token,_msgID];
+    NSString *urlString = [NSString stringWithFormat:URLGet_AskBuy_Msg_Detail,User_Token,_model.workType,_model.detailID];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [MessageModel mj_objectWithKeyValues:json[@"data"]];
             if (weakself.alreadyReadBlock) {
-                weakself.alreadyReadBlock(weakself.msgID);
+                weakself.alreadyReadBlock(weakself.model.detailID);
             }
             [weakself setupUI];
         }
-        
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
     }];
@@ -80,7 +80,11 @@
     productName.font = [UIFont boldSystemFontOfSize:14];
     productName.textColor = [UIColor blackColor];
     productName.numberOfLines = 0;
-    productName.text = _dataSource.productName;
+    if ([_model.workType isEqualToString:@"enquiry"]) {
+        productName.text = _dataSource.productName;
+    } else if ([_model.workType isEqualToString:@"zhujiDiy"]) {
+        productName.text = _dataSource.zhujiName;
+    }
     [self.scrollView addSubview:productName];
     CGSize size1 = [productName sizeThatFits:CGSizeMake(SCREEN_WIDTH - 24, MAXFLOAT)];
     productName.frame = CGRectMake(12, 24, SCREEN_WIDTH - 24, size1.height);
@@ -126,9 +130,27 @@
 }
 
 - (void)jumpToDetail {
-    AskToBuyDetailsVC *vc = [[AskToBuyDetailsVC alloc] init];
-    vc.buyID = _dataSource.enquiryId;
-    [self.navigationController pushViewController:vc animated:YES];
+    //求购相关消息
+    if ([_model.workType isEqualToString:@"enquiry"]) {
+        AskToBuyDetailsVC *vc = [[AskToBuyDetailsVC alloc] init];
+        vc.buyID = _model.enquiryId;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    //助剂相关消息
+    else if ([_model.workType isEqualToString:@"zhujiDiy"]) {
+        ZhuJiDiyDetailVC *vc = [[ZhuJiDiyDetailVC alloc] init];
+        //买家
+        if ([_model.type isEqualToString:@"buyer"]) {
+            vc.jumpFrom = @"myZhuJiDiy";
+            vc.zhuJiDiyID = _model.zhujiDiyId;
+        }
+        //卖家
+        else if ([_model.type isEqualToString:@"seller"]) {
+            vc.jumpFrom = @"myZhuJiSolution";
+            vc.zhuJiDiyID = _model.zhujiDiySolutionId;
+        }
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 //修改statesBar 颜色

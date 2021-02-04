@@ -6,11 +6,11 @@
 //  Copyright © 2018 Shanghai i7colors Ecommerce Co., Ltd. All rights reserved.
 //
 
-#import "BaseViewControllerNav.h"
+#import "BaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AboutQCY : BaseViewControllerNav
+@interface AboutQCY : BaseViewController
 
 @end
 

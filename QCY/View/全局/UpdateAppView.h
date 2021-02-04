@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+
+typedef void(^CloseClickBlock)(void);
 @interface UpdateAppView : UIView
 @property (nonatomic, copy)NSString *version;
 @property (nonatomic, copy)NSString *updateUrl;
 - (void)setupUIWithText:(NSString *)text isMustUpdate:(NSString *)updateType;
+@property (nonatomic, copy) CloseClickBlock closeClickBlock;
+- (void)removeSignView;
 @end

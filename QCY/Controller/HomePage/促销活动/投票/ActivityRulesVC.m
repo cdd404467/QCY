@@ -8,10 +8,8 @@
 
 #import "ActivityRulesVC.h"
 #import <YNPageTableView.h>
-#import "MacroHeader.h"
 #import <YYText.h>
 #import "VoteModel.h"
-#import "UIView+Geometry.h"
 
 
 @interface ActivityRulesVC ()<UITableViewDataSource, UITableViewDelegate>
@@ -38,8 +36,6 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, Bottom_Height_Dif, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;

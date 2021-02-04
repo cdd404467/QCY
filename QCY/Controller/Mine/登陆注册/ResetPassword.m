@@ -9,13 +9,12 @@
 #import "ResetPassword.h"
 #import "CommonNav.h"
 #import "ClassTool.h"
-#import <Masonry.h>
-#import "MacroHeader.h"
 #import "UITextField+Limit.h"
 #import "NetWorkingPort.h"
 #import "AES128.h"
 #import "CddHUD.h"
 #import "MobilePhone.h"
+#import "NavControllerSet.h"
 
 
 @interface ResetPassword ()<UITextFieldDelegate>
@@ -28,21 +27,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self setupNav];
     [self setupUI];
-    
 }
 
 - (void)setupNav {
-    CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"重置密码";
-    [ClassTool addLayer:nav frame:nav.frame];
-    nav.titleLabel.textColor = [UIColor whiteColor];
-    nav.bottomLine.hidden = YES;
-    [nav.backBtn setImage:[UIImage imageNamed:@"back_white"] forState:UIControlStateNormal];
-    [nav.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nav];
+    if ([_passType isEqualToString:@"changePW"]) {
+        self.title = @"修改密码";
+    } else {
+        self.title = @"重置密码";
+    }
+    UIView *nav = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT)];
+    [ClassTool addLayer:nav frame:CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT) startPoint:CGPointMake(0, 0) endPoint:CGPointMake(1.0, 0)];
+    [self vhl_setNavBarShadowImageHidden:YES];
+    [self vhl_setNavBarBackgroundView:nav];
+    [self vhl_setNavBarTitleColor:UIColor.whiteColor];
+    self.backBtnTintColor = UIColor.whiteColor;
+    [self vhl_setNavigationSwitchStyle:VHLNavigationSwitchStyleFakeNavBar];
 }
 
 #pragma mark - 提交新密码
@@ -186,14 +187,18 @@
     setPassTF.keyboardType = UIKeyboardTypeASCIICapable;
     [self.view addSubview:setPassTF];
     [setPassTF mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(oriPassTF.mas_bottom).offset(15);
+        if (self.oriPassTF.hidden == YES) {
+            make.top.mas_equalTo(150 + NAV_HEIGHT);
+        } else {
+            make.top.mas_equalTo(oriPassTF.mas_bottom).offset(15);
+        }
         make.height.mas_equalTo(50);
         make.left.mas_equalTo(@(KFit_W(38)));
         make.right.mas_equalTo(@(KFit_W(-38)));
     }];
     _setPassTF = setPassTF;
     [self setTextField:setPassTF];
-    
+
     //再次输入密码
     UITextField *setPassAgainTF = [[UITextField alloc] init];
     setPassAgainTF.secureTextEntry = YES;
@@ -207,21 +212,14 @@
     }];
     _setPassAgainTF = setPassAgainTF;
     [self setTextField:setPassAgainTF];
-    
-    NSString *btnTitle = [NSString string];
-    if ([_passType isEqualToString:@""]) {
-        btnTitle = @"重置密码";
-    } else {
-        btnTitle = @"修改密码";
-    }
-    
+
     //注册按钮
     UIButton *submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     CGRect rect = CGRectMake(0, 0, SCREEN_WIDTH - KFit_W(38 * 2), 49);
     [ClassTool addLayer:submitBtn frame:rect];
     submitBtn.layer.cornerRadius = 5;
     submitBtn.clipsToBounds = YES;
-    [submitBtn setTitle:btnTitle forState:UIControlStateNormal];
+    [submitBtn setTitle:self.title forState:UIControlStateNormal];
     [submitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [submitBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateHighlighted];
     submitBtn.titleLabel.font = [UIFont systemFontOfSize:18];
@@ -237,7 +235,7 @@
         make.height.mas_equalTo(@49);
         make.top.mas_equalTo(setPassAgainTF.mas_bottom).offset(18);
     }];
-    
+
 }
 
 //设置textfield
@@ -256,8 +254,6 @@
     leftView.contentMode = UIViewContentModeCenter;
     tf.leftView = leftView;
     tf.leftViewMode = UITextFieldViewModeAlways;
-    //placeholder颜色
-    [tf setValue:HEXColor(@"#C8C8C8", 1) forKeyPath:@"_placeholderLabel.textColor"];
     tf.delegate = self;
     tf.font = [UIFont systemFontOfSize:15];
     tf.layer.borderWidth = 1;

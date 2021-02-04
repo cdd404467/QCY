@@ -7,9 +7,7 @@
 //
 
 #import "AskToBuyVC.h"
-#import "MacroHeader.h"
 #import "AskToBuyCell.h"
-#import <Masonry.h>
 #import "PostBuyingVC.h"
 #import "HelperTool.h"
 #import "AskToBuyDetailsVC.h"
@@ -21,11 +19,12 @@
 #import "CddHUD.h"
 #import "PYSearch.h"
 #import "SearchResultPageVC.h"
-#import "BaseNavigationController.h"
 #import "NavControllerSet.h"
+#import <UMAnalytics/MobClick.h>
+
 
 @interface AskToBuyVC ()<UITableViewDelegate, UITableViewDataSource>
-@property (nonatomic, strong)UITableView *tableView;
+@property (nonatomic, strong)BaseTableView *tableView;
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, copy)NSArray *tempArr;
 @property (nonatomic, assign)int totalNum;
@@ -54,6 +53,19 @@
     [self requestData];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:self.title];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:self.title];
+}
+
+
 
 - (void)setNavBar {
     self.title = @"求购大厅";
@@ -70,13 +82,14 @@
     //历史搜索风格
     searchViewController.searchHistoryStyle = PYSearchHistoryStyleNormalTag;
     BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:searchViewController];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav  animated:NO completion:nil];
 }
 
 //懒加载tableView
-- (UITableView *)tableView {
+- (BaseTableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[BaseTableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -86,12 +99,9 @@
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
-            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
-        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+//        _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
         DDWeakSelf;
 //        _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
 //            weakself.page = 1;
@@ -127,7 +137,7 @@
     UIImageView *issueImg = [[UIImageView alloc] init];
     issueImg.image = [UIImage imageNamed:@"issue_img"];
     issueImg.layer.shadowColor = RGBA(0, 0, 0, 0.5).CGColor;
-    issueImg.layer.shadowOffset = CGSizeMake(0, 6);
+    issueImg.layer.shadowOffset = CGSizeMake(-6, 6);
     issueImg.layer.shadowOpacity = 1.0f;
     [HelperTool addTapGesture:issueImg withTarget:self andSEL:@selector(jumpToPostVC)];
     [self.view insertSubview:issueImg aboveSubview:_tableView];
@@ -162,23 +172,22 @@
     
     self.view.userInteractionEnabled = NO;
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-//        NSLog(@"--- %@",json);
-        weakself.totalNum = [json[@"totalCount"] intValue];
-        weakself.view.userInteractionEnabled = YES;
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-            weakself.tempArr = [AskToBuyModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
-            [weakself.dataSource addObjectsFromArray:weakself.tempArr];
-            [weakself.tableView.mj_footer endRefreshing];
-            if (weakself.isFirstLoad == YES) {
-                [weakself setupUI];
-                weakself.isFirstLoad = NO;
-            } else {
-                [weakself.tableView reloadData];
+//            NSLog(@"--- %@",json);
+            weakself.totalNum = [json[@"totalCount"] intValue];
+            weakself.view.userInteractionEnabled = YES;
+            if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+                weakself.tempArr = [AskToBuyModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
+                [weakself.dataSource addObjectsFromArray:weakself.tempArr];
+                [weakself.tableView.mj_footer endRefreshing];
+                if (weakself.isFirstLoad == YES) {
+                    [weakself setupUI];
+                    weakself.isFirstLoad = NO;
+                } else {
+                    [weakself.tableView reloadData];
+                }
             }
-        } else {
-            
         }
-        
         [CddHUD hideHUD:weakself.view];
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);

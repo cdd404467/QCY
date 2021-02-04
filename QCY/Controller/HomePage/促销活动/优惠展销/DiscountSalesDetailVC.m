@@ -7,7 +7,6 @@
 //
 
 #import "DiscountSalesDetailVC.h"
-#import "MacroHeader.h"
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
 #import "ClassTool.h"
@@ -15,9 +14,10 @@
 #import <YNPageViewController.h>
 #import "DiscountSalesDetailHV.h"
 #import "GroupBuyRecordVC.h"
-#import <Masonry.h>
 #import "DiscountBuyVC.h"
 #import "BaseParameterTextVC.h"
+#import <UMAnalytics/MobClick.h>
+
 
 @interface DiscountSalesDetailVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
 @property (nonatomic, strong)DiscountSalesModel *dataSource;
@@ -32,7 +32,17 @@
     [self requestData];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:[NSString stringWithFormat:@"%@-%@",self.title,_productName]];
+}
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:[NSString stringWithFormat:@"%@-%@",self.title,_productName]];
+}
 
 - (void)requestData {
     NSString *urlString = [NSString stringWithFormat:URL_DisCount_Sales_Detail,_productID];
@@ -40,7 +50,7 @@
     [CddHUD show:self.view];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
-//                NSLog(@"---- %@",json);
+        //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [DiscountSalesModel mj_objectWithKeyValues:json[@"data"]];
             weakself.dataSource.listPrice = [ListPrice mj_objectArrayWithKeyValuesArray:weakself.dataSource.listPrice];
@@ -128,13 +138,18 @@
     } else {
         return [(GroupBuyRecordVC *)vc tableView];
     }
-      
+    
 }
 
 - (void)iwillBuy {
+    if (!GET_USER_TOKEN) {
+        [self jumpToLogin];
+        return;
+    }
     DiscountBuyVC *vc = [[DiscountBuyVC alloc] init];
     vc.productID = _productID;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end
+

@@ -14,11 +14,8 @@
 
 - (void)addRightBarButtonWithFirstImage:(UIImage *)firstImage action:(SEL)action;
 - (void)addRightBarButtonItemWithTitle:(NSString *)itemTitle action:(SEL)action;
+- (void)addRightBarButtonItemWithTitle:(NSString *)itemTitle titleColor:(UIColor *)color action:(SEL)action;
 - (void)addLeftBarButtonItemWithTitle:(NSString *)itemTitle action:(SEL)action;
-
-- (void)addRightTwoBarButtonsWithFirstImage:(UIImage *)firstImage firstAction:(SEL)firstAction secondImage:(UIImage *)secondImage secondAction:(SEL)secondAction;
-- (void)addRightThreeBarButtonsWithFirstImage:(UIImage *)firstImage firstAction:(SEL)firstAction secondImage:(UIImage *)secondImage secondAction:(SEL)secondAction thirdImage:(UIImage *)thirdImage thirdAction:(SEL)thirdAction;
-- (void)addRightFourBarButtonsWithFirstImage:(UIImage *)firstImage firstAction:(SEL)firstAction secondImage:(UIImage *)secondImage secondAction:(SEL)secondAction thirdImage:(UIImage *)thirdImage thirdAction:(SEL)thirdAction fourthImage:(UIImage *)fourthImage fourthAction:(SEL)fourthAction;
 
 
 

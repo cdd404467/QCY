@@ -7,12 +7,10 @@
 //
 
 #import "GoToGroupBuyVC.h"
-#import "MacroHeader.h"
 #import <YYText.h>
-#import <Masonry.h>
 #import "SelectedView.h"
 #import "HelperTool.h"
-#import <BRPickerView.h>
+#import "BRPickerView.h"
 #import "UITextView+Placeholder.h"
 #import "ClassTool.h"
 #import "CddHUD.h"
@@ -28,7 +26,6 @@
 @property (nonatomic, strong)UITextField *contactTF;
 @property (nonatomic, strong)UITextField *phoneTF;
 @property (nonatomic, strong)UITextField *companyTF;
-@property (nonatomic, strong)UITextField *heroNumTF;
 @property (nonatomic, strong)SelectedView *placeArea;
 @property (nonatomic, strong)UITextView *textView;
 @property (nonatomic, strong)UIButton *selectedBtn; //选中按钮
@@ -43,7 +40,7 @@
     [super viewDidLoad];
     self.title = @"我要团购";
     [self.view addSubview:self.scrollView];
-    [self setupUI];
+    [self getDefaultInfo];
 }
 
 - (UIScrollView *)scrollView {
@@ -57,6 +54,9 @@
         sv.showsHorizontalScrollIndicator = NO;
         sv.bounces = NO;
         _scrollView = sv;
+        if (@available(iOS 11.0, *)) {
+            _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } 
     }
     
     return _scrollView;
@@ -72,18 +72,37 @@
     } cancelBlock:^{
         //        NSLog(@"点击了背景视图或取消按钮");
     }];
-    
 }
 
-#pragma mark - 参与认购
 
+//自动填充
+- (void)getDefaultInfo {
+    NSString *urlString = [NSString stringWithFormat:URL_Default_Address,User_Token];
+    DDWeakSelf;
+    [CddHUD show:self.view];
+    [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
+        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"] && isRightData(To_String(json[@"data"]))) {
+            [weakself setupUIWithInfoDict:json[@"data"]];
+        } else {
+            [weakself setupUIWithInfoDict:nil];
+        }
+    } Failure:^(NSError *error) {
+        NSLog(@" Error : %@",error);
+    }];
+}
+
+
+
+#pragma mark - 参与认购
 - (void)joinGroupBuy {
     if ([self judgeRight] == NO) {
         return;
     }
-    
+   
     NSArray *areaArray = [_placeArea.textLabel.text componentsSeparatedByString:@"-"];
-    NSDictionary *dict = @{@"mainId":_groupID,
+    NSDictionary *dict = @{@"token":User_Token,
+                           @"mainId":_groupID,
                            @"contact":_contactTF.text,
                            @"phone":_phoneTF.text,
                            @"companyName":_companyTF.text,
@@ -93,7 +112,6 @@
                            @"city":areaArray[1],
                            @"address":_textView.text,
                            @"isSendSample":[NSString stringWithFormat:@"%ld",(long)currentSelectBtnTag],
-                           @"invitationCode":_heroNumTF.text,
                            @"from":@"app_ios"
                            };
     DDWeakSelf;
@@ -102,7 +120,7 @@
         [CddHUD hideHUD:weakself.view];
 //                NSLog(@"----- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-            NSString *notiName = @"groupBuySuc";
+            NSString *notiName = @"requestData";
             [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:nil userInfo:nil];
             [CddHUD showTextOnlyDelay:@"团购成功" view:weakself.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -121,11 +139,10 @@
 - (void)checkInfo {
     LookOverHowToUseVC *vc = [[LookOverHowToUseVC alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
-    
 }
 
 
-- (void)setupUI {
+- (void)setupUIWithInfoDict:(NSDictionary *)dict {
     CGFloat newCoordinateHeight ;
     //提示
     YYLabel *tipLabel = [[YYLabel alloc] init];
@@ -141,8 +158,8 @@
     tipLabel.layer.cornerRadius = 8.f;
     
     //for循环创建
-    NSArray *titleArr = @[@"我的认领量:",@"英雄码:",@"是否需要样品:",@"联系人:",@"联系人方式:", @"公司名称:",@"公司所属区域:",@"公司详细地址:"];
-    for (int i = 0; i < 8; i++) {
+    NSArray *titleArr = @[@"我的认领量:",@"是否需要样品:",@"联系人:",@"联系人方式:", @"公司名称:",@"公司所属区域:",@"公司详细地址:"];
+    for (int i = 0; i < titleArr.count; i++) {
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.text = titleArr[i];
         titleLabel.textColor = HEXColor(@"#3C3C3C", 1);
@@ -156,7 +173,7 @@
             make.height.mas_equalTo(32);
         }];
         
-        if (i == 0 || (i > 1 && i < 7)) {
+        if (i != 6) {
             UIImageView *tabIcon = [[UIImageView alloc] init];
             tabIcon.image = [UIImage imageNamed:@"tab_icon"];
             [_scrollView addSubview:tabIcon];
@@ -169,7 +186,7 @@
     }
     
     UIView *leftView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, KFit_W(12), 30)];
-    UIView *leftView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, KFit_W(12), 30)];
+//    UIView *leftView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, KFit_W(12), 30)];
     UIView *leftView3 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, KFit_W(12), 30)];
     UIView *leftView4 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, KFit_W(12), 30)];
     UIView *leftView5 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, KFit_W(12), 30)];
@@ -203,63 +220,67 @@
         make.centerY.mas_equalTo(buyTF);
         make.left.mas_equalTo(buyTF.mas_right).offset(3);
         make.height.mas_equalTo(buyTF);
+        make.width.mas_equalTo(20);
     }];
+    [unitLabel sizeToFit];
     
     //认领量范围
     UILabel *buyLabel = [[UILabel alloc] init];
     buyLabel.textColor = MainColor;
     buyLabel.font = [UIFont systemFontOfSize:12];
-    buyLabel.text = [NSString stringWithFormat:@"%@吨<认领量<%@吨",_minNum,_maxNum];
+    buyLabel.numberOfLines = 2;
+    buyLabel.text = [NSString stringWithFormat:@"%@<认领量<%@",_minNum,_maxNum];
     [_scrollView addSubview:buyLabel];
     [buyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(unitLabel);
-        make.right.mas_equalTo(self.view.mas_right).offset(KFit_W(-9));
-        make.left.mas_equalTo(unitLabel.mas_right).offset(KFit_W(10));
+        make.right.mas_equalTo(self.view.mas_right).offset(KFit_W(-5));
+        make.left.mas_equalTo(unitLabel.mas_right).offset(KFit_W(7));
+        make.height.mas_equalTo(buyTF);
     }];
     
-    //英雄码
-    UITextField *heroNumTF = [[UITextField alloc] init];
-    heroNumTF.backgroundColor = HEXColor(@"#E8E8E8", 1);
-    heroNumTF.font = [UIFont systemFontOfSize:12];
-    heroNumTF.textColor = HEXColor(@"#1E2226", 1);
-    heroNumTF.leftViewMode = UITextFieldViewModeAlways;
-    heroNumTF.layer.borderWidth = 1.f;
-    heroNumTF.leftView = leftView2;
-    heroNumTF.placeholder = @"推荐人英雄码";
-    heroNumTF.layer.borderColor = HEXColor(@"#E6E6E6", 1).CGColor;
-    [_scrollView addSubview:heroNumTF];
-    [heroNumTF mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(buyTF.mas_bottom).offset(20);
-        make.height.left.mas_equalTo(buyTF);
-        make.width.mas_equalTo(buyTF);
-    }];
-    _heroNumTF = heroNumTF;
+//    //英雄码
+//    UITextField *heroNumTF = [[UITextField alloc] init];
+//    heroNumTF.backgroundColor = HEXColor(@"#E8E8E8", 1);
+//    heroNumTF.font = [UIFont systemFontOfSize:12];
+//    heroNumTF.textColor = HEXColor(@"#1E2226", 1);
+//    heroNumTF.leftViewMode = UITextFieldViewModeAlways;
+//    heroNumTF.layer.borderWidth = 1.f;
+//    heroNumTF.leftView = leftView2;
+//    heroNumTF.placeholder = @"推荐人英雄码";
+//    heroNumTF.layer.borderColor = HEXColor(@"#E6E6E6", 1).CGColor;
+//    [_scrollView addSubview:heroNumTF];
+//    [heroNumTF mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(buyTF.mas_bottom).offset(20);
+//        make.height.left.mas_equalTo(buyTF);
+//        make.width.mas_equalTo(buyTF);
+//    }];
+//    _heroNumTF = heroNumTF;
+//
+//    //查看英雄码使用说明
+//    NSString *btnText = @"查看使用说明";
+//    UIButton *seeDetailBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    seeDetailBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+//    seeDetailBtn.backgroundColor = [UIColor whiteColor];
+//    [seeDetailBtn setTitle:btnText forState:UIControlStateNormal];
+//    [seeDetailBtn addTarget:self action:@selector(checkInfo) forControlEvents:UIControlEventTouchUpInside];
+//    [seeDetailBtn setTitleColor:MainColor forState:UIControlStateNormal];
+//    [_scrollView addSubview:seeDetailBtn];
+//    [seeDetailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(buyLabel);
+//        make.width.mas_equalTo(KFit_W(90));
+//        make.centerY.height.mas_equalTo(heroNumTF);
+//    }];
     
-    //查看英雄码使用说明
-    NSString *btnText = @"查看使用说明";
-    UIButton *seeDetailBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    seeDetailBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-    seeDetailBtn.backgroundColor = [UIColor whiteColor];
-    [seeDetailBtn setTitle:btnText forState:UIControlStateNormal];
-    [seeDetailBtn addTarget:self action:@selector(checkInfo) forControlEvents:UIControlEventTouchUpInside];
-    [seeDetailBtn setTitleColor:MainColor forState:UIControlStateNormal];
-    [_scrollView addSubview:seeDetailBtn];
-    [seeDetailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(buyLabel);
-        make.width.mas_equalTo(KFit_W(90));
-        make.centerY.height.mas_equalTo(heroNumTF);
-    }];
-    
-    //line
-    UIView *btnLine = [[UIView alloc] init];
-    btnLine.backgroundColor = MainColor;
-    [seeDetailBtn addSubview:btnLine];
-    [btnLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(KFit_W(9));
-        make.right.mas_equalTo(KFit_W(-9));
-        make.bottom.mas_equalTo(-5);
-        make.height.mas_equalTo(1);
-    }];
+//    //line
+//    UIView *btnLine = [[UIView alloc] init];
+//    btnLine.backgroundColor = MainColor;
+//    [seeDetailBtn addSubview:btnLine];
+//    [btnLine mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(KFit_W(9));
+//        make.right.mas_equalTo(KFit_W(-9));
+//        make.bottom.mas_equalTo(-5);
+//        make.height.mas_equalTo(1);
+//    }];
     
     CGFloat imageWH = 20.0;
     //是否需要样品
@@ -282,7 +303,7 @@
     .leftEqualToView(buyTF)
     .widthIs(50)
     .heightIs(32)
-    .topSpaceToView(heroNumTF, 20);
+    .topSpaceToView(buyTF, 20);
     
     yesBtn.imageView.sd_layout
     .leftSpaceToView(yesBtn, 0)
@@ -331,6 +352,7 @@
     .widthIs(imageWH)
     .heightIs(imageWH);
     
+    /****** 自动l填写信息 ******/
     
     //联系人
     UITextField *contactTF = [[UITextField alloc] init];
@@ -349,6 +371,8 @@
         make.right.mas_equalTo(buyLabel);
     }];
     _contactTF = contactTF;
+    if isRightData(dict[@"contact"])
+        contactTF.text = dict[@"contact"];
     
     //联系人方式
     UITextField *phoneTF = [[UITextField alloc] init];
@@ -368,6 +392,8 @@
         make.right.mas_equalTo(buyLabel);
     }];
     _phoneTF = phoneTF;
+    if isRightData(dict[@"phone"])
+        phoneTF.text = dict[@"phone"];
 
     //联系人公司
     UITextField *companyTF = [[UITextField alloc] init];
@@ -386,6 +412,8 @@
         make.right.mas_equalTo(buyLabel);
     }];
     _companyTF = companyTF;
+    if isRightData(dict[@"companyName"])
+        companyTF.text = dict[@"companyName"];
     
     //公司所在区域
     SelectedView *placeArea = [[SelectedView alloc] init];
@@ -398,6 +426,8 @@
         make.right.mas_equalTo(buyLabel);
     }];
     _placeArea = placeArea;
+    if (isRightData(dict[@"province"]) && isRightData(dict[@"city"]))
+        placeArea.textLabel.text = [NSString stringWithFormat:@"%@-%@",dict[@"province"],dict[@"city"]];
     
     //详细说明
     UITextView *textView = [[UITextView alloc] init];
@@ -412,6 +442,8 @@
         make.top.mas_equalTo(placeArea.mas_bottom).offset(20);
     }];
     _textView = textView;
+    if isRightData(dict[@"address"])
+        textView.text = dict[@"address"];
     
     //提交按钮
     UIButton *submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];

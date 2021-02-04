@@ -7,22 +7,23 @@
 //
 
 #import "JoinPriceVC.h"
-#import "MacroHeader.h"
 #import "PaddingLabel.h"
 #import <YYText.h>
-#import <Masonry.h>
 #import <SDAutoLayout.h>
 #import "UITextView+Placeholder.h"
 #import "ClassTool.h"
 #import "NetWorkingPort.h"
-#import <BRPickerView.h>
+#import "BRPickerView.h"
 #import "HelperTool.h"
 #import "TimeAbout.h"
 #import "CddHUD.h"
 #import "UITextField+Limit.h"
+#import "QCYAlertView.h"
+#import "MyInfoCenterVC.h"
+#import "UpgradeVIPVC.h"
 
 
-@interface JoinPriceVC ()
+@interface JoinPriceVC ()<UITextFieldDelegate>
 
 @property (nonatomic, strong)UIScrollView *scrollView;
 @property (nonatomic, strong)UIButton *selectedBtn; //选中按钮
@@ -31,6 +32,7 @@
 @property (nonatomic, strong)UITextField *contactTF;
 @property (nonatomic, strong)PaddingLabel *timeEffective;
 @property (nonatomic, strong)UITextView *expTextView;
+@property (nonatomic, assign)BOOL isHaveDian;
 @end
 
 @implementation JoinPriceVC {
@@ -62,7 +64,7 @@
         sv.backgroundColor = [UIColor whiteColor];
         sv.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT);
         //150 + 680 + 6
-        sv.contentSize = CGSizeMake(SCREEN_WIDTH, 600);
+//        sv.contentSize = CGSizeMake(SCREEN_WIDTH, 600);
         sv.showsVerticalScrollIndicator = YES;
         sv.showsHorizontalScrollIndicator = NO;
         sv.bounces = NO;
@@ -71,6 +73,7 @@
 
     return _scrollView;
 }
+
 
 #pragma mark - 发布报价
 - (void)joinOffer {
@@ -92,7 +95,7 @@
     NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:dict];
     //公司名称（个人报价时必填），企业用户不需要
     NSString *companyName = [NSString string];
-    if ([isCompany boolValue] == NO) {
+    if (!isCompanyUser) {
         companyName = _companyTF.text;
     } else {
         companyName = @"";
@@ -101,21 +104,68 @@
     
     [CddHUD show:self.view];
     [ClassTool postRequest:URL_JOIN_OFFER Params:mDict Success:^(id json) {
-        
         [CddHUD hideHUD:weakself.view];
         if ([json[@"code"] isEqualToString:@"SUCCESS"]) {
-            BOOL isSuc = [json[@"data"] boolValue];
-            if (isSuc == YES) {
-                [CddHUD showTextOnlyDelay:@"发布报价成功" view:self.view];
+            //剩余报价次数
+            NSInteger count = [json[@"data"] integerValue];
+            NSString *text;
+            if (User_Type == 1) {
+                if (count > 0) {
+                    text = [NSString stringWithFormat:@"您本月剩余报价次数%ld次。",(long)count];
+                } else {
+                    text = @"您本月剩余报价次数0次,您升级为企业账户获取更多权益。";
+                }
+                [QCYAlertView showWithTitle:@"报价成功" text:text btnTitle:@"认证企业账户" handler:^{
+                    MyInfoCenterVC *vc = [[MyInfoCenterVC alloc] init];
+                    BaseNavigationController *nav = (BaseNavigationController *)weakself.navigationController;
+                    [nav pushViewController:vc animated:YES];
+                    NSMutableArray *newArr = [NSMutableArray array];
+                    newArr = [vc.navigationController.viewControllers mutableCopy];
+                    if (newArr.count >= 4) {
+                        [newArr removeObjectAtIndex:3];
+                    }
+                    vc.navigationController.viewControllers = [newArr copy];
+                } cancel:^{
+                    [weakself refresh];
+                }];
+            } else if (User_Type == 2) {
+                if (count > 0) {
+                    text = [NSString stringWithFormat:@"您本月剩余报价次数%ld次。",(long)count];
+                } else {
+                    text = @"您本月剩余报价次数0次，您可以升级为付费企业账户获取更多权益。";
+                }
+                [QCYAlertView showWithTitle:@"报价成功" text:text btnTitle:@"付费企业账户" handler:^{
+                    [weakself clickUpgrade];
+                    UpgradeVIPVC *vc = [[UpgradeVIPVC alloc] init];
+                    BaseNavigationController *nav = (BaseNavigationController *)weakself.navigationController;
+                    [nav pushViewController:vc animated:YES];
+                    NSMutableArray *newArr = [NSMutableArray array];
+                    newArr = [vc.navigationController.viewControllers mutableCopy];
+                    if (newArr.count >= 4) {
+                        [newArr removeObjectAtIndex:3];
+                    }
+                    vc.navigationController.viewControllers = [newArr copy];
+                } cancel:^{
+                    [weakself refresh];
+                }];
+            } else if (User_Type == 3) {
+                [CddHUD showTextOnlyDelay:@"报价成功" view:weakself.view];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [weakself refresh];
                 });
-            } else if (isSuc == NO){
-                
             }
         }
     } Failure:^(NSError *error) {
         
+    }];
+}
+
+//点击了付费账户按钮
+- (void)clickUpgrade {
+    NSDictionary *dict = @{@"token":User_Token};
+    [ClassTool postRequest:URLPost_Click_UpgradeVIP Params:[dict mutableCopy] Success:^(id json) {
+        
+    } Failure:^(NSError *error) {
     }];
 }
 
@@ -142,7 +192,7 @@
 }
 
 - (BOOL)judgeData {
-    if ([isCompany boolValue] == NO && _companyTF.text.length == 0) {
+    if (!isCompanyUser && _companyTF.text.length == 0) {
         [CddHUD showTextOnlyDelay:@"请输入公司名称" view:self.view];
         return NO;
     } else if (_contactTF.text.length != 11) {
@@ -181,11 +231,16 @@
     nameLabel.font = [UIFont boldSystemFontOfSize:14];
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.textColor = HEXColor(@"#1E2226", 1);
+    nameLabel.numberOfLines = 0;
     [_scrollView addSubview:nameLabel];
+    CGFloat height = [_productName boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, CGFLOAT_MAX)
+                                                options:NSStringDrawingUsesLineFragmentOrigin
+                                             attributes:@{NSFontAttributeName:nameLabel.font}
+                                                context:nil].size.height;
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(tipLabel.mas_bottom).offset(12);
         make.width.mas_equalTo(SCREEN_WIDTH - 40);
-        make.height.mas_equalTo(14);
+        make.height.mas_equalTo(height);
         make.centerX.mas_equalTo(self.scrollView);
     }];
 
@@ -226,7 +281,7 @@
         make.top.mas_equalTo(nameLabel.mas_bottom).offset(16 + 8);
     }];
     //判断是否是企业用户来显示不同的ui
-    if ([isCompany boolValue]) {
+    if (isCompanyUser) {
         UILabel *companyNameLabel = [[UILabel alloc] init];
         companyNameLabel.font = [UIFont systemFontOfSize:12];
         companyNameLabel.textColor = HEXColor(@"#1E2226", 1);
@@ -272,7 +327,8 @@
 
     //价格
     UITextField *priceTF = [[UITextField alloc] init];
-    priceTF.keyboardType = UIKeyboardTypeNumberPad;
+    priceTF.delegate = self;
+    priceTF.keyboardType = UIKeyboardTypeDecimalPad;
     priceTF.backgroundColor = HEXColor(@"#E8E8E8", 1);
     priceTF.font = [UIFont systemFontOfSize:12];
     priceTF.textColor = HEXColor(@"#1E2226", 1);
@@ -425,6 +481,8 @@
         make.bottom.mas_equalTo(-Bottom_Height_Dif);
         make.height.mas_equalTo(49);
     }];
+    
+    self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, 590 + height);
 }
 
 //YYLbael计算高度
@@ -445,22 +503,72 @@
     return introHeight;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    // 判断是否有小数点
+    if ([textField.text containsString:@"."]) {
+        self.isHaveDian = YES;
+    }else{
+        self.isHaveDian = NO;
+    }
+    
+    if (string.length > 0) {
+        //当前输入的字符
+        unichar single = [string characterAtIndex:0];
+        // 不能输入.0-9以外的字符
+        if (!((single >= '0' && single <= '9') || single == '.'))
+        {
+            //            [MBProgressHUD bwm_showTitle:@"您的输入格式不正确" toView:self hideAfter:1.0];
+            return NO;
+        }
+        // 只能有一个小数点
+        if (self.isHaveDian && single == '.') {
+            //            [MBProgressHUD bwm_showTitle:@"最多只能输入一个小数点" toView:self hideAfter:1.0];
+            return NO;
+        }
+        // 如果第一位是.则前面加上0.
+        if ((textField.text.length == 0) && (single == '.')) {
+            textField.text = @"0";
+        }
+        // 如果第一位是0则后面必须输入点，否则不能输入。
+        if ([textField.text hasPrefix:@"0"]) {
+            if (textField.text.length > 1) {
+                NSString *secondStr = [textField.text substringWithRange:NSMakeRange(1, 1)];
+                if (![secondStr isEqualToString:@"."]) {
+                    return NO;
+                }
+            }else{
+                if (![string isEqualToString:@"."]) {
+                    return NO;
+                }
+            }
+        }
+        // 小数点后最多能输入1位
+        if (self.isHaveDian) {
+            NSRange ran = [textField.text rangeOfString:@"."];
+            // 由于range.location是NSUInteger类型的，所以这里不能通过(range.location - ran.location)>2来判断
+            if (range.location > ran.location) {
+                if ([textField.text pathExtension].length > 0) {
+                    return NO;
+                }
+            }
+        }
+        
+    }
+    
+    return YES;
+}
+
 //判断选择的按钮
 - (void)btnClickSelected:(UIButton *)sender {
     //其他按钮
     self.selectedBtn.selected = NO;
-//    self.selectedBtn.backgroundColor = RGBA(245, 244, 244, 1);
-//    self.selectedBtn.layer.borderColor = [UIColor whiteColor].CGColor;
     //当前选中按钮
     //如果按下的按钮是之前已经按下的
     if (sender == self.selectedBtn ) {
-//        sender.backgroundColor = [UIColor whiteColor];
-//        sender.layer.borderColor = RGBA(84, 204, 84, 1).CGColor;
         sender.selected = YES;
     } else {
         sender.selected = !sender.selected;
-//        sender.backgroundColor = [UIColor whiteColor];
-//        sender.layer.borderColor = RGBA(84, 204, 84, 1).CGColor;
         currentSelectBtnTag = sender.tag;
     }
     

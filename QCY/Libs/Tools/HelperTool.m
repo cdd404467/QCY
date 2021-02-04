@@ -7,7 +7,6 @@
 //
 
 #import "HelperTool.h"
-#import <Masonry.h>
 #import <AVFoundation/AVFoundation.h>
 
 @implementation HelperTool
@@ -243,6 +242,7 @@
     formatter.groupingSeparator = @"";
     formatter.numberStyle = NSNumberFormatterDecimalStyle;
     stringValue = [formatter stringFromNumber:@(doubleVal)];
+    
     
     return stringValue;
 }

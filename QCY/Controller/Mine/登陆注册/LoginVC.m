@@ -7,11 +7,8 @@
 //
 
 #import "LoginVC.h"
-#import "MacroHeader.h"
 #import "ClassTool.h"
-#import <Masonry.h>
 #import "RegisterVC.h"
-#import "CommonNav.h"
 #import "FindPasswordVC.h"
 #import "NetWorkingPort.h"
 #import "UIDevice+UUID.h"
@@ -21,29 +18,37 @@
 #import "WXAuth.h"
 #import <WXApi.h>
 #import "HelperTool.h"
-#import "BindMobileView.h"
-#import "UIView+Geometry.h"
-
+#import <JPUSHService.h>
+#import "BindPhoneNumberVC.h"
 
 @interface LoginVC ()<UITextFieldDelegate>
 @property (nonatomic, strong)UITextField *userNameTF;
 @property (nonatomic, strong)UITextField *passwdTF;
-@property (nonatomic, strong)UITextField *checkCodeTF;
-@property (nonatomic,strong) UIImageView *checkImage;
-@property (nonatomic, strong)BindMobileView *bindView;
 @property (nonatomic, strong)UIScrollView *scrollView;
 @end
 
 @implementation LoginVC
-
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [super useImgMode];
+    }
+    return self;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.navigationController.navigationBar.hidden = YES;
-    [self setupNav];
+    self.title = @"登陆";
+//    [self setNavBar];
     [self setupUI];
-    [self requestImageCode];
     [self registerNoti];
+}
+
+- (void)setNavBar {
+    [self vhl_setNavBarBackgroundColor:Like_Color];
+    [self vhl_setNavBarShadowImageHidden:YES];
+    [self.backBtn setImage:[UIImage imageNamed:@"close_back"] forState:UIControlStateNormal];
+    self.backBtn.left = self.backBtn.left + 2;
 }
 
 //懒加载scrollview
@@ -79,25 +84,7 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)setupNav {
-    CommonNav *nav = [[CommonNav alloc] init];
-    nav.titleLabel.text = @"登录";
-    [nav.backBtn addTarget:self action:@selector(disMiss) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nav];
-}
-
 #pragma mark - 网络请求
-//图形验证码
-- (void)requestImageCode {
-    DDWeakSelf;
-    NSString *urlString = [NSString stringWithFormat:URL_IMG_CODE,[UIDevice getDeviceID]];
-    [ClassTool getRequestWithStream:urlString Params:nil Success:^(id json) {
-        weakself.checkImage.image = [UIImage imageWithData:json];
-    } Failure:^(NSError *error) {
-        NSLog(@"error");
-    }];
-}
-
 //登录
 - (void)requestLogin {
     [self.view endEditing:YES];
@@ -109,15 +96,26 @@
         [CddHUD showTextOnlyDelay:@"请输入密码" view:self.view];
         return;
     }
+    NSString *jpushStr = [NSString string];
+    if (JPushID) {
+        jpushStr = JPushID;
+    } else {
+        jpushStr = [JPUSHService registrationID];
+    }
     
     DDWeakSelf;
     NSDictionary *dict = @{@"username":_userNameTF.text,
                            @"aesPass":[AES128 AES128Encrypt:_passwdTF.text],
-//                           @"captcha":_checkCodeTF.text,
-                           @"deviceNo":[UIDevice getDeviceID]
+                           @"deviceNo":[UIDevice getDeviceID],
+                           @"from":@"app_ios"
                            };
+    NSMutableDictionary *mDict = [dict mutableCopy];
+    if (isRightData(jpushStr)) {
+        [mDict setObject:jpushStr forKey:@"registrationId"];
+    }
+    
     [CddHUD showWithText:@"登录中..." view:self.view];
-    [ClassTool postRequest:URL_USER_LOGIN Params:[dict mutableCopy] Success:^(id json) {
+    [ClassTool postRequest:URLPost_User_Login Params:mDict Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
 //        NSLog(@"-----ppp %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
@@ -128,7 +126,6 @@
             if (weakself.isJump == YES) {
                 tb.selectedIndex = weakself.jumpIndex;
             }
-            
         }
         
     } Failure:^(NSError *error) {
@@ -139,17 +136,27 @@
 //微信登录
 - (void)loginWithWeiChat:(NSNotification *)notification {
     [self.view endEditing:YES];
-    
-    NSDictionary *dict = @{@"code":notification.userInfo[@"weixinCode"]
+    NSString *jpushStr = [NSString string];
+    if (JPushID) {
+        jpushStr = JPushID;
+    } else {
+        jpushStr = [JPUSHService registrationID];
+    }
+    NSDictionary *dict = @{@"code":notification.userInfo[@"weixinCode"],
+                           @"from":@"app_ios"
                            };
+    NSMutableDictionary *mDict = [dict mutableCopy];
+    if (isRightData(jpushStr)) {
+        [mDict setObject:jpushStr forKey:@"registrationId"];
+    }
     DDWeakSelf;
     [CddHUD showWithText:@"登录中..." view:self.view];
-    [ClassTool postRequest:URL_WeiChat_Login Params:[dict mutableCopy] Success:^(id json) {
+    [ClassTool postRequest:URL_WeiChat_Login Params:mDict Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
 //                NSLog(@"-----ppp %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             if ([To_String(json[@"data"][@"needPhone"]) isEqualToString:@"1"]) {
-                [weakself alertBindMobile:To_String(json[@"data"][@"token"])];
+                [weakself goBindVC:To_String(json[@"data"][@"token"])];
             } else {
                 //用户信息存入字典
                 [weakself saveInfo:json];
@@ -168,58 +175,19 @@
     
 }
 
-//绑定手机号
-- (void)bindPhone {
-    NSDictionary *dict = @{@"phone":_bindView.phoneTF.text,
-                           @"token":_bindView.bToken,
-                           @"smsCode":_bindView.passwdTF.text,
-                           @"inviteCode":_bindView.inviteTF.text,
-                           @"from":@"app_ios"
-                            };
-    
-    DDWeakSelf;
-    [CddHUD show:_bindView];
-    [ClassTool postRequest:URL_Bind_PhoneNum Params:[dict mutableCopy] Success:^(id json) {
-        [CddHUD hideHUD:weakself.bindView];
-//        NSLog(@"-----=== %@",json);
-        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-            //用户信息存入字典
-            [weakself saveInfo:json];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [CddHUD showTextOnlyDelay:@"绑定成功" view:weakself.bindView];
-            });
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakself.bindView removeSignView];
-                    [weakself disMiss];
-                });
-            });
-            UITabBarController *tb=(UITabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
-            if (weakself.isJump == YES) {
-                tb.selectedIndex = weakself.jumpIndex;
-            }
-        }
-    } Failure:^(NSError *error) {
-        
-    }];
-}
 
 //弹框
-- (void)alertBindMobile:(NSString *)token {
-    BindMobileView *bindView = [[BindMobileView alloc]init];
-    bindView.bToken = token;
-    [bindView.loginBtn addTarget:self action:@selector(bindPhone) forControlEvents:UIControlEventTouchUpInside];
-    [bindView.cancelBtn addTarget:self action:@selector(cancelBind) forControlEvents:UIControlEventTouchUpInside];
-    [UIApplication.sharedApplication.keyWindow addSubview:bindView];
-    _bindView = bindView;
+- (void)goBindVC:(NSString *)token {
+    BindPhoneNumberVC *vc = [[BindPhoneNumberVC alloc] init];
+    vc.bindToken = token;
+    vc.isJump = _isJump;
+    vc.jumpIndex = _jumpIndex;
+    DDWeakSelf;
+    vc.bindCompleteBlock = ^{
+        [weakself disMiss];
+    };
+    [self.navigationController pushViewController:vc animated:YES];
 }
-
-//取消
-- (void)cancelBind {
-    [CddHUD hideHUD:_bindView];
-    [_bindView removeSignView];
-}
-
 
 //第三方登录,获取微信信息
 - (void)getWeixinInfo {
@@ -227,6 +195,10 @@
 }
 
 - (void)saveInfo:(id)json {
+    //登录成功回调
+    if (self.loginCompleteBlock) {
+        self.loginCompleteBlock();
+    }
     NSString *companyName = [json[@"data"][@"isCompany"] boolValue] ? json[@"data"][@"companyName"] : @"";
     NSDictionary *userDict = @{@"userName":json[@"data"][@"loginName"],
                                @"token":json[@"data"][@"token"],
@@ -234,6 +206,11 @@
                                @"isCompany":json[@"data"][@"isCompany"]
                                };
     NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:userDict];
+    //用户类型
+    if (isRightData(To_String(json[@"data"][@"userType"]))) {
+        [mDict setObject:json[@"data"][@"userType"] forKey:@"userType"];
+    }
+    
     //我的头像
     if isRightData(To_String(json[@"data"][@"photo"])) {
         [mDict setObject:json[@"data"][@"photo"] forKey:@"userHeaderImage"];
@@ -305,67 +282,6 @@
     }];
     _passwdTF = passwdTF;
     [self setTextField:passwdTF];
-    
-//    //密码TF黑线
-//    UIView *line_2 = [[UIView alloc] init];
-//    line_2.backgroundColor = HEXColor(@"#D6D6D6", 0.5);
-//    [passwdTF addSubview:line_2];
-//    [line_2 mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.bottom.mas_equalTo(@0);
-//        make.height.mas_equalTo(@1);
-//    }];
-    
-//    //验证码TF
-//    UITextField *checkCodeTF = [[UITextField alloc] init];
-//    [tfView addSubview:checkCodeTF];
-//    [checkCodeTF mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(@0);
-//        make.width.mas_equalTo(@(158 * Scale_W));
-//        make.top.mas_equalTo(passwdTF.mas_bottom);
-//        make.height.mas_equalTo(50);
-//    }];
-//    [checkCodeTF lengthLimit:^{
-//        if (checkCodeTF.text.length > 4) {
-//            checkCodeTF.text = [checkCodeTF.text substringToIndex:4];
-//        }
-//    }];
-//    _checkCodeTF = checkCodeTF;
-//    [self setTextField:checkCodeTF];
-//
-//    //分割线
-//    UIView *sLine = [[UIView alloc] init];
-//    sLine.backgroundColor = HEXColor(@"#D7D7D7", 1);
-//    [tfView addSubview:sLine];
-//    [sLine mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(checkCodeTF.mas_right);
-//        make.height.mas_equalTo(30);
-//        make.width.mas_equalTo(1);
-//        make.centerY.mas_equalTo(checkCodeTF.mas_centerY);
-//    }];
-    
-//    //图片验证码
-//    UIImageView *checkImage = [[UIImageView alloc] init];
-//    checkImage.backgroundColor = [UIColor grayColor];
-//    [tfView addSubview:checkImage];
-//    [checkImage mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(sLine.mas_right).offset(13 * Scale_W);
-//        make.height.mas_equalTo(30);
-//        make.width.mas_equalTo(@(65 * Scale_W));
-//        make.centerY.mas_equalTo(sLine.mas_centerY);
-//    }];
-//    _checkImage = checkImage;
-//
-//    //换一张按钮
-//    UIButton *changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [changeBtn setImage:[UIImage imageNamed:@"change_next"] forState:UIControlStateNormal];
-//    [changeBtn addTarget:self action:@selector(requestImageCode) forControlEvents:UIControlEventTouchUpInside];
-//    [tfView addSubview:changeBtn];
-//    [changeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(checkImage.mas_right);
-//        make.right.mas_equalTo(@0);
-//        make.height.mas_equalTo(30);
-//        make.centerY.mas_equalTo(sLine.mas_centerY);
-//    }];
     
     //登录按钮
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -462,10 +378,10 @@
     
 }
 
-
-
 //设置textfield
 - (void)setTextField:(UITextField *)tf {
+    tf.tintColor = MainColor;
+    tf.textColor = UIColor.blackColor;
     NSString *imageName = @"";
     if ([tf isEqual:_userNameTF]) {
         imageName = @"tf_icon1";
@@ -474,19 +390,15 @@
         imageName = @"tf_icon2";
         tf.secureTextEntry = YES;
         tf.placeholder = @"请输入密码";
-    } else {
-        imageName = @"tf_icon3";
-        tf.placeholder = @"请输入验证码";
-        tf.keyboardType = UIKeyboardTypeNumberPad;
     }
     //添加leftView
-    UIImageView *leftView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, KFit_W(50), 50)];
-    leftView.image = [UIImage imageNamed:imageName];
-    leftView.contentMode = UIViewContentModeCenter;
+    UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
+    imageView.image = [UIImage imageNamed:imageName];
+    imageView.contentMode = UIViewContentModeCenter;
+    [leftView addSubview:imageView];
     tf.leftView = leftView;
     tf.leftViewMode = UITextFieldViewModeAlways;
-    //placeholder颜色
-    [tf setValue:HEXColor(@"#C8C8C8", 1) forKeyPath:@"_placeholderLabel.textColor"];
     tf.delegate = self;
     tf.font = [UIFont systemFontOfSize:15];
 }
@@ -498,7 +410,6 @@
 }
 
 - (void)disMiss {
-    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

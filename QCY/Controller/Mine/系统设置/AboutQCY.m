@@ -7,9 +7,8 @@
 //
 
 #import "AboutQCY.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import <YYText.h>
+#import "NavControllerSet.h"
 
 @interface AboutQCY ()
 @property (nonatomic, strong)UIScrollView *scrollView;
@@ -19,7 +18,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.nav.titleLabel.text = @"关于七彩云";
+    self.title = @"关于七彩云";
+    [self vhl_setNavBarBackgroundColor:HEXColor(@"#DDA0DD", 1)];
+    [self vhl_setNavBarShadowImageHidden:YES];
+    [self vhl_setNavBarTitleColor:UIColor.whiteColor];
+    self.backBtnTintColor = UIColor.whiteColor;
     [self setupUI];
 }
 

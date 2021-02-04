@@ -7,7 +7,6 @@
 //
 
 #import "VoteVC.h"
-#import "MacroHeader.h"
 #import "NetWorkingPort.h"
 #import "ClassTool.h"
 #import <MJRefresh.h>
@@ -73,9 +72,7 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
+        } 
         _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;
         DDWeakSelf;

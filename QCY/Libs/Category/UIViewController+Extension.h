@@ -11,7 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (Extension)
-- (BaseNavigationController *)mainNavController;
+//- (BaseNavigationController *)mainNavController;
+@property(nonatomic,strong,readonly) BaseNavigationController *mainNavController;
 @end
 
 NS_ASSUME_NONNULL_END

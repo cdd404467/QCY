@@ -8,14 +8,11 @@
 
 
 #import "SelectStandardView.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
-#import "UIView+Geometry.h"
 #import "HelperTool.h"
 #import "SelectStandardCell.h"
 #import "PrchaseLeagueModel.h"
 
-#define AniTime 0.25
+#define AniTime 0.3
 @interface SelectStandardView()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, strong)UIView *selectView;

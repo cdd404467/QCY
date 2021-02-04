@@ -25,8 +25,9 @@
 @property (weak, nonatomic) id<HXCustomCameraControllerDelegate> delegate;
 @property (strong, nonatomic, readonly) AVCaptureSession *captureSession;
 
-- (BOOL)setupSession:(NSError *)error;
-- (void)startSessionComplete:(void (^)(void))complete;
+- (void)initSeesion;
+- (void)setupPreviewLayer:(AVCaptureVideoPreviewLayer *)previewLayer startSessionCompletion:(void (^)(BOOL success))completion;
+
 - (void)startSession;
 - (void)stopSession;
 
@@ -46,6 +47,10 @@
 @property (nonatomic, readonly) BOOL cameraSupportsTapToExpose;
 @property (nonatomic) AVCaptureTorchMode torchMode;
 @property (nonatomic) AVCaptureFlashMode flashMode;
+
+
+@property (copy, nonatomic) NSString *videoCodecKey;
+@property (copy, nonatomic) NSString *sessionPreset;
 
 - (void)focusAtPoint:(CGPoint)point;
 - (void)exposeAtPoint:(CGPoint)point;

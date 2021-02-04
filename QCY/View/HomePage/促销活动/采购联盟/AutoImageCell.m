@@ -7,7 +7,6 @@
 //
 
 #import "AutoImageCell.h"
-#import <Masonry.h>
 
 @implementation AutoImageCell
 

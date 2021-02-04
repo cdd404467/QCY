@@ -8,9 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^TapIconsBlock)(NSInteger tag);
+@class BannerModel;
+
+typedef void(^TapIconsBlock)(NSString *code);
+typedef void(^ClickBanerBlock)(BannerModel *model);
 @interface HomePageHeaderView : UIView
 
 @property (nonatomic, copy)NSArray *bannerArray;
+@property (nonatomic, copy)NSArray *iconArray;
 @property (nonatomic, copy)TapIconsBlock tapIconsBlock;
+@property (nonatomic, copy)ClickBanerBlock clickBanerBlock;
 @end

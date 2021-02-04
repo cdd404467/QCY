@@ -8,8 +8,8 @@
 
 #import "MineCollectionCell.h"
 #import <SDAutoLayout.h>
-#import <Masonry.h>
-#import "MacroHeader.h"
+#import "MinePageModel.h"
+
 
 @implementation MineCollectionCell
 
@@ -68,10 +68,22 @@
     
 }
 
+- (void)setModel:(MineCellModel *)model {
+    _model = model;
+    
+    [_iconBtn setTitle:model.iconTitle forState:UIControlStateNormal];
+    [_iconBtn setImage:[UIImage imageNamed:model.imageName] forState:UIControlStateNormal];
+    
+    if (![model.iconNum isEqualToString:@"0"]) {
+        _numberLabel.hidden = NO;
+    } else {
+        _numberLabel.hidden = YES;
+    }
+    _numberLabel.text = model.iconNum;
+}
+
+
 - (void)configData:(NSString *)text {
-    
-    
-    
     if (![text isEqualToString:@"0"] && isRightData(text)) {
         _numberLabel.hidden = NO;
     } else {

@@ -7,10 +7,8 @@
 //
 
 #import "ManifestScetionFooter.h"
-#import "MacroHeader.h"
 #import "PrchaseLeagueModel.h"
 #import "ClassTool.h"
-#import "UIView+Geometry.h"
 #import "UIView+Border.h"
 
 @implementation ManifestScetionFooter {

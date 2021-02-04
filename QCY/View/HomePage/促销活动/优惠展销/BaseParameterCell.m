@@ -7,8 +7,6 @@
 //
 
 #import "BaseParameterCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "DiscountSalesModel.h"
 
 @implementation BaseParameterCell {

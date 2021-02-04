@@ -7,7 +7,6 @@
 //
 
 #import "LookOverHowToUseVC.h"
-#import "MacroHeader.h"
 #import <YYText.h>
 
 @interface LookOverHowToUseVC ()

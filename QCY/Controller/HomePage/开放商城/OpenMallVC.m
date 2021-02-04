@@ -7,7 +7,6 @@
 //
 
 #import "OpenMallVC.h"
-#import "MacroHeader.h"
 #import "OpenMallVC_Cell.h"
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
@@ -15,67 +14,27 @@
 #import "OpenMallModel.h"
 #import <MJRefresh.h>
 #import "ShopMainPageVC.h"
-#import "PYSearch.h"
-#import "SearchResultPageVC.h"
-#import "BaseNavigationController.h"
-#import "UIViewController+BarButton.h"
+#import <UIScrollView+EmptyDataSet.h>
 
-@interface OpenMallVC ()<UITableViewDelegate, UITableViewDataSource>
+
+@interface OpenMallVC ()<UITableViewDelegate, UITableViewDataSource,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, strong)NSMutableArray *dataSource;
-@property (nonatomic, assign)int page;
-@property (nonatomic, assign)BOOL isFirstLoad;
 @property (nonatomic, copy)NSArray *tempArr;
 @property (nonatomic, assign)int totalNum;
 @end
 
 @implementation OpenMallVC
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _page = 1;
-         _isFirstLoad = YES;
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"开放商城";
-    [self setNavBar];
     [self requestData];
 }
 
-- (void)setNavBar {
-//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    btn.frame = CGRectMake(0, 0, 50, 44);
-//    btn.imageEdgeInsets = UIEdgeInsetsMake(0, 15, 0, -15);
-//    [btn setImage:[UIImage imageNamed:@"search"] forState:UIControlStateNormal];
-//
-//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
-//    //    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-//    //    spaceItem.width = -15;
-//    [btn addTarget:self action:@selector(jumpToSearch) forControlEvents:UIControlEventTouchUpInside];
-//    //    self.navigationItem.rightBarButtonItems = @[spaceItem,rightItem];
-//    self.navigationItem.rightBarButtonItem = rightItem;
-    [self addRightBarButtonWithFirstImage:[UIImage imageNamed:@"search"] action:@selector(jumpToSearch)];
-}
 
-- (void)jumpToSearch {
-    //    NSArray *arr = @[@"阿伦",@"封金能"];
-    PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"输入关键词搜索" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
-        SearchResultPageVC *vc = [[SearchResultPageVC alloc]init];
-        vc.keyWord = searchText;
-        vc.type = @"openMall";
-        [searchViewController.navigationController pushViewController:vc animated:NO];
-    }];
-    //历史搜索风格
-    searchViewController.searchHistoryStyle = PYSearchHistoryStyleNormalTag;
-    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:searchViewController];
-    [self presentViewController:nav  animated:NO completion:nil];
-}
+
+
 
 //初始化数据源
 - (NSMutableArray *)dataSource {
@@ -89,26 +48,26 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:SCREEN_BOUNDS style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - 40) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.emptyDataSetSource = self;
+        _tableView.emptyDataSetDelegate = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         //取消垂直滚动条
-        _tableView.showsVerticalScrollIndicator = NO;
+//        _tableView.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11.0, *)) {
-            //            _tableView.estimatedRowHeight = 0;
+            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
-        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
-        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+//        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
+//        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         DDWeakSelf;
         _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            if (weakself.totalNum - Page_Count * weakself.page > 0) {
-                weakself.page++;
+            if (weakself.totalNum - Page_Count * weakself.pageNumber > 0) {
+                weakself.pageNumber++;
                 [weakself requestData];
             } else {
                 [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -121,9 +80,10 @@
 
 #pragma mark - 获取列表
 - (void)requestData {
-    NSString *urlString = [NSString stringWithFormat:URL_Shop_List,_page,Page_Count,@""];
+    NSString *urlString = [NSString stringWithFormat:URL_Shop_List,self.pageNumber,Page_Count,@"",_classifyValue];
+    urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     DDWeakSelf;
-    if (_isFirstLoad == YES) {
+    if (self.isRefreshList == NO) {
         [CddHUD show:self.view];
     }
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
@@ -137,13 +97,12 @@
             }
             [weakself.dataSource addObjectsFromArray:weakself.tempArr];
             [weakself.tableView.mj_footer endRefreshing];
-            if (weakself.isFirstLoad == YES) {
+            if (weakself.isRefreshList == NO) {
                 [weakself.view addSubview:weakself.tableView];
-                weakself.isFirstLoad = NO;
+                weakself.isRefreshList = YES;
             } else {
                 [weakself.tableView reloadData];
             }
-            
         }
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);
@@ -151,6 +110,19 @@
 
 }
 
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
+    NSString *title = @"暂无店铺";
+    NSDictionary *attributes = @{
+                                 NSFontAttributeName:[UIFont boldSystemFontOfSize:16.0f],
+                                 NSForegroundColorAttributeName:HEXColor(@"#708090", 1)
+                                 };
+    return [[NSAttributedString alloc] initWithString:title attributes:attributes];
+}
+
+// 如果不实现此方法的话,无数据时下拉刷新不可用
+- (BOOL)emptyDataSetShouldAllowScroll:(UIScrollView *)scrollView {
+    return YES;
+}
 
 #pragma mark - tableView代理方法
 //分区数

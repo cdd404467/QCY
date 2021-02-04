@@ -9,13 +9,11 @@
 #import "PostBuyingVC.h"
 #import "CommonNav.h"
 #import "ClassTool.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "AskToBuyBottomView.h"
 #import "NetWorkingPort.h"
 #import <MJExtension.h>
 #import "HomePageModel.h"
-#import <BRPickerView.h>
+#import "BRPickerView.h"
 #import "CddHUD.h"
 #import "SelectedView.h"
 #import "TimeAbout.h"
@@ -79,9 +77,7 @@
     if (!_scrollView) {
         UIScrollView *sv = [[UIScrollView alloc] init];
         sv.backgroundColor = [UIColor whiteColor];
-        sv.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT);
-        //150 + 680 + 6
-        sv.contentSize = CGSizeMake(SCREEN_WIDTH, 680 + 50);
+        sv.frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT);
         sv.showsVerticalScrollIndicator = YES;
         sv.bounces = NO;
         
@@ -222,10 +218,15 @@
     NSDate *minDate = [TimeAbout getNDay:3];
     //最大日期
     NSDate *maxDate = [TimeAbout getNDay:30];
+    
     //    NSDate *maxDate = [NSDate br_setYear:2030 month:1 day:1];
     [BRDatePickerView showDatePickerWithTitle:@"选择结束时间" dateType:BRDatePickerModeYMD defaultSelValue:[TimeAbout stringFromDate:minDate] minDate:minDate maxDate:maxDate isAutoSelect:NO themeColor:MainColor resultBlock:^(NSString *selectValue) {
         weakself.bView.endTime.textLabel.text = selectValue;
         weakself.endDate = [TimeAbout stringToDate:selectValue];
+        //如果交货日期选择了，那就要清空
+        if (![weakself.bView.deliveryDate.textLabel.text isEqualToString:@"请选择日期"] || weakself.bView.deliveryDate.textLabel.text.length <= 6) {
+            weakself.bView.deliveryDate.textLabel.text = @"请选择日期";
+        }
     }];
 }
 
@@ -251,9 +252,9 @@
     if ([self judgeRight] == NO) {
         return;
     }
-  //公司名称（个人报价时必填），企业用户不需要
+    //公司名称（个人报价时必填），企业用户不需要
     NSString *companyName = [NSString string];
-    if ([isCompany boolValue] == YES) {
+    if (isCompanyUser) {
         companyName = @"";
     } else {
         companyName = _bView.companyNameTF.text;
@@ -264,7 +265,7 @@
     NSArray *areaArr = [_bView.placeArea.textLabel.text componentsSeparatedByString:@"-"];
     
     NSString *dDate = [NSString string];
-    if (_bView.checkBox.on == YES) {
+    if (_bView.dateCheckBox.on == YES) {
         dDate = _bView.billTF.text;
     } else {
         dDate = _bView.billDate.textLabel.text;
@@ -285,7 +286,7 @@
                            @"deliveryDate":_bView.deliveryDate.textLabel.text,
                            @"paymentType":_bView.payType.textLabel.text,
                            @"description":_bView.textView.text,
-                           @"from":@"app_ios"
+                           @"showInfo":_bView.agreeZTC.on ? @"1" : @"0"
                            };
     
     DDWeakSelf;
@@ -329,14 +330,15 @@
 
 - (void)setupUI {
     AskToBuyBottomView *bView = [[AskToBuyBottomView alloc] init];
-    bView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 680);
     [_scrollView addSubview:bView];
+    _scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, bView.height);
     _bView = bView;
     
     bView.buyCountTF.delegate = self;
     bView.specificationTF.delegate = self;
     [bView.buyCountTF addTarget:self action:@selector(changeLabel) forControlEvents:UIControlEventEditingChanged];
     [bView.specificationTF addTarget:self action:@selector(changeLabel) forControlEvents:UIControlEventEditingChanged];
+
     //添加点击事件
     [HelperTool addTapGesture:bView.productClassifyOne withTarget:self andSEL:@selector(getSupID)];
     [HelperTool addTapGesture:bView.productClassifyTwo withTarget:self andSEL:@selector(getSupID_second)];
@@ -349,7 +351,7 @@
     [HelperTool addTapGesture:bView.endTime withTarget:self andSEL:@selector(showPickView_endTime)];
     //交货时间
     [HelperTool addTapGesture:bView.deliveryDate withTarget:self andSEL:@selector(showPickView_deliveryDate)];
-
+    
     UIButton *postBuyingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [postBuyingBtn setTitle:@"发布求购" forState:UIControlStateNormal];
     [postBuyingBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -400,7 +402,7 @@
 
 
 - (BOOL)judgeRight {
-    if ([isCompany boolValue] == NO && _bView.companyNameTF.text.length == 0) {
+    if (!isCompanyUser && _bView.companyNameTF.text.length == 0) {
         [CddHUD showTextOnlyDelay:@"请填写公司名称" view:self.view];
         return NO;
     } else if ([_bView.productClassifyOne.textLabel.text isEqualToString:@"请选择分类"]) {
@@ -421,10 +423,10 @@
     } else if ([_bView.payType.textLabel.text isEqualToString:@"请选择"]) {
         [CddHUD showTextOnlyDelay:@"请选择付款方式" view:self.view];
         return NO;
-    } else if (_bView.checkBox.on == YES && _bView.billTF.text.length == 0) {
+    } else if (_bView.dateCheckBox.on == YES && _bView.billTF.text.length == 0) {
         [CddHUD showTextOnlyDelay:@"请输入帐期时间" view:self.view];
         return NO;
-    } else if (_bView.checkBox.on == NO && [_bView.billDate.textLabel.text isEqualToString:@"输入帐期时间"]) {
+    } else if (_bView.dateCheckBox.on == NO && [_bView.billDate.textLabel.text isEqualToString:@"输入帐期时间"]) {
         [CddHUD showTextOnlyDelay:@"请输入帐期时间" view:self.view];
         return NO;
     } else if ([_bView.placeArea.textLabel.text isEqualToString:@"请选择地区"]) {
@@ -433,7 +435,7 @@
     } else if ([_bView.endTime.textLabel.text isEqualToString:@"请选择时间"]) {
         [CddHUD showTextOnlyDelay:@"请选择结束日期" view:self.view];
         return NO;
-    } else if ([_bView.deliveryDate.textLabel.text isEqualToString:@"请选择日期"]) {
+    } else if ([_bView.deliveryDate.textLabel.text isEqualToString:@"请选择日期"] || _bView.deliveryDate.textLabel.text.length <= 6) {
         [CddHUD showTextOnlyDelay:@"请选择交货日期" view:self.view];
         return NO;
     }

@@ -7,8 +7,6 @@
 //
 
 #import "PrchaseLeagueCell.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
 #import "PrchaseLeagueModel.h"
 #import "UIView+Border.h"
 #import <YYText.h>
@@ -130,7 +128,7 @@
 
 - (void)btnClick:(UIButton *)sender {
     if (self.btnClickBlock) {
-        self.btnClickBlock(sender.tag, _model.goodsID, _model.isType);
+        self.btnClickBlock(sender.tag, _model);
     }
 }
 

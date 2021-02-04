@@ -7,8 +7,6 @@
 //
 
 #import "MineHeaderReusableView.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import <SDAutoLayout.h>
 
 
@@ -44,6 +42,7 @@
     
     //左边icion
     UIImageView *leftImageView = [[UIImageView alloc] init];
+    leftImageView.contentMode = UIViewContentModeCenter;
     [bgView addSubview:leftImageView];
     [leftImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(KFit_W(49));
@@ -65,6 +64,7 @@
     
     //右边按钮
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightBtn addTarget:self action:@selector(rightBtnClick) forControlEvents:UIControlEventTouchUpInside];
     rightBtn.adjustsImageWhenHighlighted = NO;
     [rightBtn setTitleColor:HEXColor(@"#BCBCBC", 1) forState:UIControlStateNormal];
     rightBtn.titleLabel.font = [UIFont systemFontOfSize:11];
@@ -86,6 +86,12 @@
     rightBtn.titleLabel.sd_layout
     .leftSpaceToView(rightBtn, 0)
     .centerYEqualToView(rightBtn);
+}
+
+- (void)rightBtnClick {
+    if (self.rightBtnClickBlock) {
+        self.rightBtnClickBlock();
+    }
 }
 
 @end

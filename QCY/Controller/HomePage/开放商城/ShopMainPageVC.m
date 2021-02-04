@@ -7,7 +7,6 @@
 //
 
 #import "ShopMainPageVC.h"
-#import "MacroHeader.h"
 #import "ShopMainPageHeaderView.h"
 #import <YNPageViewController.h>
 #import "AllProductsVC.h"
@@ -18,6 +17,8 @@
 #import "OpenMallModel.h"
 #import <WXApi.h>
 #import "NavControllerSet.h"
+#import "CheckForBusinessVC.h"
+
 
 @interface ShopMainPageVC ()<YNPageViewControllerDataSource, YNPageViewControllerDelegate>
 
@@ -44,14 +45,10 @@
     self.title = @"店铺主页";
     [self setNavBar];
     [self requestData];
-   
+    
 }
 
 - (void)setNavBar {
-    [self vhl_setNavBarBackgroundAlpha:0.0];
-    [self vhl_setNavBarTitleColor:RGBA(0, 0, 0, 0)];
-    [self vhl_setNavBarShadowImageHidden:YES];
-    
     if([WXApi isWXAppInstalled]) {//判断用户是否已安装微信App
         [self addRightBarButtonItemWithTitle:@"分享" action:@selector(share)];
     }
@@ -96,7 +93,8 @@
     dispatch_group_async(group, globalQueue, ^{
         NSString *urlString = [NSString stringWithFormat:URL_Shop_Product_List,weakself.page,Page_Count,weakself.storeID];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-            if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+//            NSLog(@"----aaaa     %@",json);
+            if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"] && isRightData(To_String(json[@"data"]))) {
                 weakself.totalNum = [json[@"totalCount"] intValue];
                 NSArray *tempArr  = [ProductInfoModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
                 [weakself.secondDataSource addObjectsFromArray:tempArr];
@@ -113,9 +111,10 @@
     dispatch_group_async(group, globalQueue, ^{
         NSString *urlString = [NSString stringWithFormat:URL_Shop_Info,weakself.storeID];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-//            NSLog(@"---- %@",json);
+//                        NSLog(@"----bbbb  %@",json);
             if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
                 weakself.firstDateSource = [OpenMallModel mj_objectWithKeyValues:json[@"data"]];
+                weakself.firstDateSource.businessList = [BusinessList mj_objectArrayWithKeyValuesArray:weakself.firstDateSource.businessList];
             }
             dispatch_group_leave(group);
         } Failure:^(NSError *error) {
@@ -137,9 +136,9 @@
     YNPageConfigration *configration = [YNPageConfigration defaultConfig];
     configration.pageStyle = YNPageStyleSuspensionTopPause;
     configration.headerViewCouldScale = YES;
-//    /// 控制tabbar 和 nav
+    //    /// 控制tabbar 和 nav
     configration.showTabbar = NO;
-    configration.showNavigation = NO;
+    configration.showNavigation = YES;
     configration.scrollMenu = NO;
     configration.aligmentModeCenter = NO;
     configration.lineWidthEqualFontWidth = YES;
@@ -149,27 +148,46 @@
     configration.lineColor = MainColor;
     configration.itemFont = [UIFont systemFontOfSize:15];
     configration.selectedItemFont = [UIFont boldSystemFontOfSize:15];
-
-////    configration.showBottomLine = YES;
-//    /// 设置悬浮停顿偏移量
-    configration.suspenOffsetY = NAV_HEIGHT;
-//
+    
+    ////    configration.showBottomLine = YES;
+    //    /// 设置悬浮停顿偏移量
+    configration.suspenOffsetY = 0;
+    //
     YNPageViewController *vc = [YNPageViewController pageViewControllerWithControllers:self.getArrayVCs
                                                                                 titles:[self getArrayTitles]
                                                                                 config:configration];
     vc.dataSource = self;
     vc.delegate = self;
     
-//
+    //
     ShopMainPageHeaderView *header = [[ShopMainPageHeaderView alloc] init];
+    DDWeakSelf
+    header.jumpToCheckBlock = ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!GET_USER_TOKEN) {
+                [self jumpToLogin];
+                return ;
+            }
+            
+            CheckForBusinessVC *vc = [[CheckForBusinessVC alloc] init];
+            vc.imgUrl = weakself.firstDateSource.busInformation;
+            [weakself.navigationController pushViewController:vc animated:YES];
+        });
+    };
     [header setupUI:_firstDateSource.creditLevel model:_firstDateSource];
     header.frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(KFit_W(210)) + 50);
     vc.headerView = header;
-//    /// 指定默认选择index 页面
+    //    /// 指定默认选择index 页面
     vc.pageIndex = 0;
     
     /// 作为自控制器加入到当前控制器
     [vc addSelfToParentViewController:self];
+    vc.view.top = NAV_HEIGHT;
+    //    [_nav removeFromSuperview];
+    //    [self.view addSubview:self.nav];
+    
+    /// 如果隐藏了导航条可以 适当改y值
+    //    pageVC.view.yn_y = kYNPAGE_NAVHEIGHT;
     
 }
 
@@ -181,7 +199,8 @@
     vc_1.storeID = _storeID;
     vc_1.totalNum = _totalNum;
     CompanyInfoVC *vc_2 = [[CompanyInfoVC alloc] init];
-    vc_2.companyDesc = _firstDateSource.descriptionStr;
+    vc_2.navModel = _navModel;
+    vc_2.dataSource = _firstDateSource;
     
     return @[vc_1, vc_2];
 }
@@ -202,26 +221,23 @@
 - (void)pageViewController:(YNPageViewController *)pageViewController
             contentOffsetY:(CGFloat)contentOffset
                   progress:(CGFloat)progress {
+    
 //    NSLog(@"--- contentOffset = %f, progress = %f", contentOffset, progress);
     
-    [self vhl_setNavBarBackgroundAlpha:progress];
-    [self vhl_setNavBarTitleColor:RGBA(0, 0, 0, progress)];
-    if (progress == 1.0) {
-        [self vhl_setNavBarShadowImageHidden:NO];
-    } else {
-        [self vhl_setNavBarShadowImageHidden:YES];
-    }
-    
-//    _nav.backgroundColor = HEXColor(@"ffffff", progress);
-//    _nav.titleLabel.textColor = RGBA(0, 0, 0, progress);
+    //    NSLog(@"--- contentOffset = %f, progress = %f", contentOffset, progress);
+//    [self vhl_setNavBarBackgroundAlpha:progress];
+//    [self vhl_setNavBarTitleColor:RGBA(0, 0, 0, progress)];
+//    if (progress == 1.0) {
+//        [self vhl_setNavBarShadowImageHidden:NO];
+//    } else {
+//        [self vhl_setNavBarShadowImageHidden:YES];
+//    }
 }
 
 
 - (void)back {
     [self.navigationController popViewControllerAnimated:YES];
 }
-
-
 
 @end
 

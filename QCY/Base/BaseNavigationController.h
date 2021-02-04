@@ -10,6 +10,6 @@
 #import <UIKit/UIKit.h>
 
 @interface BaseNavigationController : UINavigationController
-@property (nonatomic, strong)UIColor *backBtnTintColor;
+@property (nonatomic, strong)UIButton *backBtn;
 @end
 

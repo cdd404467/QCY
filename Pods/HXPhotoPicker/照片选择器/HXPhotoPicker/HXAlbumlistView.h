@@ -17,11 +17,13 @@
 @property (copy, nonatomic) void (^didSelectRowBlock)(HXAlbumModel *model);
 - (instancetype)initWithManager:(HXPhotoManager *)manager;
 - (void)refreshCamearCount;
+- (void)selectCellScrollToCenter;
 @end
 
 @interface HXAlbumlistViewCell : UITableViewCell
 @property (strong, nonatomic) HXAlbumModel *model;
 @property (strong, nonatomic) HXPhotoManager *manager;
+@property (copy, nonatomic) void (^getResultCompleteBlock)(NSInteger count, HXAlbumlistViewCell *myCell);
 - (void)cancelRequest ;
 @end
 
@@ -33,4 +35,8 @@
 - (instancetype)initWithManager:(HXPhotoManager *)manager; 
 - (void)deSelect;
 - (void)setupAlpha:(BOOL)anima;
+@end
+
+@interface HXAlbumTitleButton : UIButton
+@property (copy, nonatomic) void (^ highlightedBlock)(BOOL highlighted);
 @end

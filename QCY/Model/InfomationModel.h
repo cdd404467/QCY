@@ -11,24 +11,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
-@interface InfoDetail : NSObject
-
-@property (nonatomic, copy)NSString *infoID;                    //资讯ID,跳转详情
-@property (nonatomic, copy)NSString *content;                   //html正文标签
-@property (nonatomic, copy)NSString *title;                     //标题
-@end
-
 @interface InfomationModel : NSObject
 @property (nonatomic, copy)NSString *infoID;                    //资讯ID,跳转详情
 @property (nonatomic, copy)NSString *title;                     //资讯标题
+@property (nonatomic, copy)NSString *content;                   //html正文标签
 @property (nonatomic, copy)NSString *content_summary;           //资讯概要
 @property (nonatomic, copy)NSString *img_url;                   //资讯图片
 @property (nonatomic, copy)NSString *news_date;                 //资讯日期
 
-@property (nonatomic, strong)InfoDetail *infoDetail;            //webView信息,一个字典
-@property (nonatomic, strong)InfoDetail *prev;                  //上一条信息
-@property (nonatomic, strong)InfoDetail *next;                  //下一条信息
+@property (nonatomic, strong)InfomationModel *infoDetail;       //webView信息,一个字典
+@property (nonatomic, strong)InfomationModel *prev;             //上一条信息
+@property (nonatomic, strong)InfomationModel *next;             //下一条信息
 @end
 
 NS_ASSUME_NONNULL_END

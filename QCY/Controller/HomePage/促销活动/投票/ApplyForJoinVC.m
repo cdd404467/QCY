@@ -8,13 +8,10 @@
 
 #import "ApplyForJoinVC.h"
 #import <YNPageTableView.h>
-#import "MacroHeader.h"
-#import <Masonry.h>
-#import "UIView+Geometry.h"
 #import "ClassTool.h"
 #import "UITextField+Limit.h"
 #import "SelectedView.h"
-#import <BRPickerView.h>
+#import "BRPickerView.h"
 #import "HelperTool.h"
 #import "UITextView+Placeholder.h"
 #import "VoteModel.h"
@@ -49,9 +46,7 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
+        } 
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 49 + Bottom_Height_Dif)];
         //提交按钮

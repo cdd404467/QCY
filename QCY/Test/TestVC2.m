@@ -8,7 +8,6 @@
 
 #import "TestVC2.h"
 #import <YNPageTableView.h>
-#import "MacroHeader.h"
 #import "ProductInfoCell.h"
 #import "OpenMallModel.h"
 #import <MJRefresh.h>
@@ -37,8 +36,6 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
        

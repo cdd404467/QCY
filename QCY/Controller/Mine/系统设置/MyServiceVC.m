@@ -7,7 +7,6 @@
 //
 
 #import "MyServiceVC.h"
-#import "MacroHeader.h"
 #import "MyServiceCell.h"
 
 @interface MyServiceVC ()<UITableViewDataSource, UITableViewDelegate>
@@ -26,7 +25,7 @@
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.originHeight, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         if (@available(iOS 11.0, *)) {
@@ -34,8 +33,6 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;

@@ -19,7 +19,6 @@
         timestamp = timestamp / 1000;
     }
     
-    
     NSDate *dat = [NSDate dateWithTimeIntervalSinceNow:0];
     NSTimeInterval nowTimestamp = [dat timeIntervalSince1970] ;
     long long int timeDifference = nowTimestamp - timestamp;
@@ -65,7 +64,7 @@
     } else if (isYesterday) {
         return [NSString stringWithFormat:@"昨天"];
     } else {
-        return string;
+        return [TimeAbout timestampToStringAsOfMin:timestamp * 1000];
 //        return [NSString stringWithFormat:@"%lld天前",dayTime];
     }
 

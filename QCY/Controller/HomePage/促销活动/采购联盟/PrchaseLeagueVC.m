@@ -7,7 +7,6 @@
 //
 
 #import "PrchaseLeagueVC.h"
-#import "MacroHeader.h"
 #import "PromotionsHeaderView.h"
 #import "CddHUD.h"
 #import "NetWorkingPort.h"
@@ -15,7 +14,6 @@
 #import <MJRefresh.h>
 #import "PrchaseLeagueCell.h"
 #import "PrchaseLeagueModel.h"
-#import <Masonry.h>
 #import "MyManifestVC.h"
 #import "PromotionsModel.h"
 #import "OrderGoodsVC.h"
@@ -106,7 +104,7 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -117,11 +115,9 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
-        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
-        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+//        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
+//        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         
         PromotionsHeaderView *header = [[PromotionsHeaderView alloc] init];
         header.bannerArray = [_bannerDataSource copy];
@@ -271,17 +267,19 @@
     PrchaseLeagueCell *cell = [PrchaseLeagueCell cellWithTableView:tableView];
     cell.model = _dataSource[indexPath.row];
     DDWeakSelf;
-    cell.btnClickBlock = ^(NSInteger tag, NSString * _Nonnull goodsID, NSString * _Nonnull state) {
-        //订货
+    cell.btnClickBlock = ^(NSInteger tag, PrchaseLeagueModel * _Nonnull model) {
+        //订货(采购)
         if (tag == 1000) {
             OrderGoodsVC *vc = [[OrderGoodsVC alloc] init];
-            vc.goodsID = goodsID;
-            vc.state = state;
+            vc.goodsID = model.goodsID;
+            vc.state = model.isType;
+            vc.pName = model.meetingName;
             [weakself.navigationController pushViewController:vc animated:YES];
         } else {
             SupplyGoodsVC *vc = [[SupplyGoodsVC alloc] init];
-            vc.goodsID = goodsID;
-            vc.state = state;
+            vc.goodsID = model.goodsID;
+            vc.state = model.isType;
+            vc.pName = model.meetingName;
             [weakself.navigationController pushViewController:vc animated:YES];
         }
     };

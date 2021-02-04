@@ -8,18 +8,22 @@
 
 #import "InfomationDetailVC.h"
 #import <WebKit/WebKit.h>
-#import "MacroHeader.h"
 #import "CommonNav.h"
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
 #import "ClassTool.h"
 #import "InfomationModel.h"
 #import "UIView+Border.h"
+#import <WXApi.h>
+#import <ShareSDKUI/ShareSDKUI.h>
+#import "NavControllerSet.h"
+#import "PublishFriendCircleVC.h"
 
 
 @interface InfomationDetailVC ()
 
 @property (nonatomic, strong)InfomationModel *dataSource;
+@property (nonatomic, strong)InfomationModel *model;
 @property (nonatomic, strong)WKWebView *webView;
 @property (nonatomic, assign)BOOL isFirstLoad;
 @property (nonatomic, strong)UIButton *prevBtn;
@@ -34,8 +38,10 @@
     [super viewDidLoad];
     _isFirstLoad = YES;
     self.title = @"资讯详情";
+    [self setNavBar];
     [self setupUI];
     [self requestData];
+    
 }
 
 - (void)setupUI {
@@ -44,6 +50,44 @@
     WKWebView *webView = [[WKWebView alloc] initWithFrame:frame configuration:[self fitWebView]];
     [self.view addSubview:webView];
     _webView = webView;
+}
+
+- (void)setNavBar {
+    self.title = @"资讯详情";
+    [self vhl_setNavBarBackgroundColor:Like_Color];
+    [self vhl_setNavBarShadowImageHidden:YES];
+    [self vhl_setNavigationSwitchStyle:1];
+    [self.backBtn setImage:[UIImage imageNamed:@"close_back"] forState:UIControlStateNormal];
+    self.backBtn.left = self.backBtn.left + 2;
+    if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
+        [self addRightBarButtonItemWithTitle:@"分享" action:@selector(share)];
+    }
+}
+
+- (void)share{
+    NSMutableArray *imageArray = [NSMutableArray arrayWithCapacity:0];
+    [imageArray addObject:Logo];
+    NSString *shareStr = [NSString stringWithFormat:@"http://%@.i7colors.com/groupBuyMobile/openApp/information.html?id=%@",ShareString,_infoID];
+    
+    NSString *text = [NSString stringWithFormat:@"%@",_model.content_summary];
+    
+    //添加一个自定义的平台（非必要）
+    SSUIPlatformItem *item = [[SSUIPlatformItem alloc] init];
+    item.iconNormal = [UIImage imageNamed:@"fc_shareinside"];
+    item.platformName = @"站内印染圈";
+    [item addTarget:self action:@selector(shareInSide)];
+    [ClassTool shareSomething:imageArray urlStr:shareStr title:_model.title text:text customItem:@[item,@(SSDKPlatformTypeWechat)]];
+}
+
+
+- (void)shareInSide {
+    if (!GET_USER_TOKEN) {
+        [self jumpToLogin];
+        return;
+    }
+    PublishFriendCircleVC *vc = [[PublishFriendCircleVC alloc] init];
+    vc.shareZinXunModel = _model;
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)setBottomBtn {
@@ -74,7 +118,6 @@
     [nextBtn addBorderView:[UIColor whiteColor] width:1.f direction:BorderDirectionLeft];
     [self.view addSubview:nextBtn];
     _nextBtn = nextBtn;
-    
 }
 
 //网页适配屏幕
@@ -122,14 +165,13 @@
     DDWeakSelf;
     NSString *urlString = [NSString stringWithFormat:URL_Infomation_Detail,_infoID];
     
-    
-    
     [CddHUD show:self.view];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
         [CddHUD hideHUD:weakself.view];
 //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [InfomationModel mj_objectWithKeyValues:json[@"data"]];
+            weakself.model = weakself.dataSource.infoDetail;
             if (weakself.isFirstLoad == YES) {
                 [weakself setBottomBtn];
             }
@@ -153,8 +195,6 @@
             } else {
                 weakself.nextBtn.enabled = NO;
             }
-            
-            
         }
     } Failure:^(NSError *error) {
         NSLog(@" Error : %@",error);

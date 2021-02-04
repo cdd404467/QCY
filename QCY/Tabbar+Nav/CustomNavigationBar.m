@@ -7,9 +7,6 @@
 //
 
 #import "CustomNavigationBar.h"
-#import "UIView+Geometry.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 
 @interface CustomNavigationBar()
 @property (nonatomic, strong)UIView *backgroundView;
@@ -89,7 +86,7 @@
 - (void)setLeftBtnTintColor:(UIColor *)leftBtnTintColor {
     _leftBtnTintColor = leftBtnTintColor;
     UIImage *image = [UIImage imageNamed:@"back_black"];
-    [_leftBtn setImage:[image imageWithTintColor:leftBtnTintColor] forState:UIControlStateNormal];
+    [_leftBtn setImage:[image imageWithTintColor_My:leftBtnTintColor] forState:UIControlStateNormal];
     _leftBtn.tintColor = leftBtnTintColor;
 }
 

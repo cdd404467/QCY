@@ -7,8 +7,6 @@
 //
 
 #import "FCDetailCell.h"
-#import "UIView+Geometry.h"
-#import "MacroHeader.h"
 #import <YYText.h>
 #import "FriendCricleModel.h"
 #import "Friend.h"
@@ -52,9 +50,9 @@
     // 时间
     _timeLabel = [[UILabel alloc] init];
     _timeLabel.textColor = [UIColor colorWithRed:0.43 green:0.43 blue:0.43 alpha:1.0];
-    _timeLabel.frame = CGRectMake(SCREEN_WIDTH - 100, _cUserLabel.top , 87, 15);
+//    _timeLabel.frame = CGRectMake(SCREEN_WIDTH - 100, _cUserLabel.top , 87, 15);
     _timeLabel.font = [UIFont systemFontOfSize:13.0f];
-    _timeLabel.textAlignment = NSTextAlignmentRight;
+//    _timeLabel.textAlignment = NSTextAlignmentRight;
     [self addSubview:_timeLabel];
     
     //评论
@@ -97,7 +95,7 @@
     _cUserLabel.height = labHeight;
     
     //时间
-    _timeLabel.text = [TimeAbout timestampToString:[model.createdAtStamp longLongValue] isSecondMin:NO];
+    _timeLabel.text = [TimeAbout timestampToString:[model.createdAtStamp longLongValue] isSecondMin:YES];
     
     CGFloat width = SCREEN_WIDTH - 20 - 15;
     //评论内容
@@ -116,6 +114,7 @@
         _deleteBtn.left = SCREEN_WIDTH - _deleteBtn.width - 13;
         _deleteBtn.hidden = NO;
         _commentBtn.hidden = YES;
+        _timeLabel.frame = CGRectMake(_cUserLabel.left, _deleteBtn.top, 200, _deleteBtn.height);
         model.cellHeight = _deleteBtn.bottom + 18;
     } else {
         _commentBtn.frame = CGRectMake(SCREEN_WIDTH - 75, _commentLabel.bottom + 10, 60, 20);
@@ -124,6 +123,7 @@
         _commentBtn.left = SCREEN_WIDTH - _commentBtn.width - 13;
         _deleteBtn.hidden = YES;
         _commentBtn.hidden = NO;
+        _timeLabel.frame = CGRectMake(_cUserLabel.left, _commentBtn.top, 200, _commentBtn.height);
         model.cellHeight = _commentBtn.bottom + 18;
     }
 }
@@ -146,7 +146,7 @@
         [mText yy_setFont:[UIFont boldSystemFontOfSize:kComTextFont] range:NSMakeRange(_model.commentUser.length + 4, _model.byCommentUser.length)];
         //被评论人点击事件
         [mText yy_setTextHighlightRange:NSMakeRange(_model.commentUser.length + 4, _model.byCommentUser.length) color:kHLTextColor backgroundColor:kHLBgColor tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-//            NSLog(@"-------2");
+            NSLog(@"-------2");
         }];
     }
     

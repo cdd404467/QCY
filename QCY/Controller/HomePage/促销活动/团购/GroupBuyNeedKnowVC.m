@@ -6,7 +6,6 @@
 //
 
 #import "GroupBuyNeedKnowVC.h"
-#import "MacroHeader.h"
 #import <YNPageTableView.h>
 #import <XHWebImageAutoSize.h>
 #import "ImageCell.h"

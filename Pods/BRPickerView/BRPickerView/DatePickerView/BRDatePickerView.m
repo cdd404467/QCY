@@ -183,13 +183,13 @@ typedef NS_ENUM(NSInteger, BRDatePickerStyle) {
         }
         
 #ifdef DEBUG
-//        NSLog(@"最小时间date：%@", self.minLimitDate);
-//        NSLog(@"默认时间date：%@", self.selectDate);
-//        NSLog(@"最大时间date：%@", self.maxLimitDate);
-//
-//        NSLog(@"最小时间：%@", [NSDate br_getDateString:self.minLimitDate format:self.selectDateFormatter]);
-//        NSLog(@"默认时间：%@", [NSDate br_getDateString:self.selectDate format:self.selectDateFormatter]);
-//        NSLog(@"最大时间：%@", [NSDate br_getDateString:self.maxLimitDate format:self.selectDateFormatter]);
+        NSLog(@"最小时间date：%@", self.minLimitDate);
+        NSLog(@"默认时间date：%@", self.selectDate);
+        NSLog(@"最大时间date：%@", self.maxLimitDate);
+        
+        NSLog(@"最小时间：%@", [NSDate br_getDateString:self.minLimitDate format:self.selectDateFormatter]);
+        NSLog(@"默认时间：%@", [NSDate br_getDateString:self.selectDate format:self.selectDateFormatter]);
+        NSLog(@"最大时间：%@", [NSDate br_getDateString:self.maxLimitDate format:self.selectDateFormatter]);
 #endif
         
         if (self.style == BRDatePickerStyleCustom) {

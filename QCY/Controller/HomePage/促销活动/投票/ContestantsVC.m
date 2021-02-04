@@ -8,7 +8,6 @@
 
 #import "ContestantsVC.h"
 #import <YNPageTableView.h>
-#import "MacroHeader.h"
 #import "NetWorkingPort.h"
 #import "ClassTool.h"
 #import "VoteModel.h"
@@ -70,9 +69,7 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
+        } 
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, Bottom_Height_Dif, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -140,8 +137,6 @@
 //               NSLog(@"-----== %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             [weakself requestData:YES];
-        } else {
-            [CddHUD showTextOnlyDelay:json[@"msg"] view:[[UIApplication sharedApplication].windows lastObject]];
         }
     } Failure:^(NSError *error) {
 
@@ -160,6 +155,7 @@
     //历史搜索风格
     searchViewController.searchHistoryStyle = PYSearchHistoryStyleNormalTag;
     BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:searchViewController];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav  animated:NO completion:nil];
 }
 

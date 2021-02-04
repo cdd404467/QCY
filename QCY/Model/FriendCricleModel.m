@@ -47,4 +47,77 @@
              @"isCompanyType" : @"isCompany"
              };
 }
+
+- (BOOL)isSelectFriend {
+    if (!_isSelectFriend) {
+        _isSelectFriend = NO;
+    }
+    return _isSelectFriend;
+}
+
+@end
+
+@implementation FriendTopicModel
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"descriptionStr" : @"description",
+             @"secondTopicID" : @"id"
+             };
+}
+
+@end
+
+@implementation ShareBeanModel
+
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"zixunID" : @"id"
+             };
+}
+@end
+
+
+@implementation ZiMuModel
+
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"special" : @"#"
+             };
+}
+
+@end
+
+@implementation FCMsgModel
+
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"messageID" : @"id"
+             };
+}
+
+@end
+
+@implementation MarketModel
+
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"descriptionStr" : @"description"
+             };
+}
+
+@end
+
+@implementation FCMapModel
+
+- (NSString *)shopArea {
+    return [NSString stringWithFormat:@"%@%@",self.province,self.city];
+}
+
+@end
+
+
+@implementation FCMapNavigationModel
+
+
+
 @end

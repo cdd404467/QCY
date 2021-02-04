@@ -15,14 +15,21 @@
     if (self) {
         self.emptyDataSetSource = self;
         self.emptyDataSetDelegate = self;
+        self.backgroundColor = UIColor.whiteColor;
+        if (@available(iOS 11.0, *)) {
+            self.estimatedRowHeight = 0;
+            self.estimatedSectionHeaderHeight = 0;
+            self.estimatedSectionFooterHeight = 0;
+            self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }
     
     return self;
 }
 
-- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
-    return [UIImage imageNamed:@""];
-}
+//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+//    return [UIImage imageNamed:@""];
+//}
 
 
 

@@ -10,9 +10,9 @@
 @class CommentListModel;
 
 
-typedef void(^ClickPLBlock)(NSString *commentID, NSString *isSelf, NSString *user);
-NS_ASSUME_NONNULL_BEGIN
 
+NS_ASSUME_NONNULL_BEGIN
+typedef void(^ClickPLBlock)(NSString *commentID, NSString *isSelf, NSString *user);
 @interface FCDetailCell : UITableViewCell
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 @property (nonatomic, strong)CommentListModel *model;

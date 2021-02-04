@@ -7,7 +7,6 @@
 //
 
 #import "ChangeHeaderVC.h"
-#import "MacroHeader.h"
 #import "ClassTool.h"
 #import <UIImageView+WebCache.h>
 #import "YYImageClipViewController.h"
@@ -17,6 +16,7 @@
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
 #import <Photos/Photos.h>
+#import "NavControllerSet.h"
 
 @interface ChangeHeaderVC ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,YYImageClipDelegate>
 
@@ -34,13 +34,15 @@
 }
 
 - (void)setNavBar {
-    self.nav.titleLabel.text = [_changeType isEqualToString:@"uc"] ? @"用户头像" : @"印染圈头像";
-    self.nav.titleLabel.textColor = [UIColor whiteColor];
-    [self.nav.backBtn setImage:[UIImage imageNamed:@"back_white"] forState:UIControlStateNormal];
-    [self.nav.rightBtn addTarget:self action:@selector(selectedPhoto) forControlEvents:UIControlEventTouchUpInside];
-    [self.nav.rightBtn setImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    self.nav.bottomLine.hidden = YES;
-    [ClassTool addLayer:self.nav frame:CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT)];
+    self.title = [_changeType isEqualToString:@"uc"] ? @"用户头像" : @"印染圈头像";
+    UIView *nav = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT)];
+    [ClassTool addLayer:nav frame:CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT) startPoint:CGPointMake(0, 0) endPoint:CGPointMake(1.0, 0)];
+    [self vhl_setNavBarShadowImageHidden:YES];
+    [self vhl_setNavBarBackgroundView:nav];
+    [self addRightBarButtonWithFirstImage:[UIImage imageNamed:@"more"] action:@selector(selectedPhoto)];
+    [self vhl_setNavBarTitleColor:UIColor.whiteColor];
+    self.backBtnTintColor = UIColor.whiteColor;
+    [self vhl_setNavigationSwitchStyle:VHLNavigationSwitchStyleFakeNavBar];
 }
 
 - (void)setupUI {
@@ -60,7 +62,11 @@
         }
     } else {
         if isRightData(_fcHeaderUrl) {
-            [headerImage sd_setImageWithURL:ImgUrl(_fcHeaderUrl) placeholderImage:nil];
+            if ([[_fcHeaderUrl substringToIndex:4] isEqualToString:@"http"]) {
+                [headerImage sd_setImageWithURL:[NSURL URLWithString:_fcHeaderUrl] placeholderImage:PlaceHolderImg];
+            } else {
+                [headerImage sd_setImageWithURL:ImgUrl(_fcHeaderUrl) placeholderImage:nil];
+            }
         } else {
             headerImage.image = [UIImage imageNamed:@"default_750"];
         }
@@ -88,7 +94,6 @@
         [CddHUD hideHUD:weakself.view];
 //        NSLog(@"-------  %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-            
             //取出用户信息的字典
             NSMutableDictionary *userDict = [[UserDefault objectForKey:@"userInfo"] mutableCopy];
             //改变头像信息
@@ -97,7 +102,6 @@
             [UserDefault setObject:userDict forKey:@"userInfo"];
             NSString *notiName1 = @"changeHeader";
             [[NSNotificationCenter defaultCenter]postNotificationName:notiName1 object:nil userInfo:@{@"cHeader":json[@"data"]}];
-            
             [CddHUD showTextOnlyDelay:@"头像上传成功" view:weakself.view];
         }
         

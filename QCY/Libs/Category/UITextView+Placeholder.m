@@ -45,7 +45,7 @@
     dispatch_once(&onceToken, ^{
         UITextField *textField = [[UITextField alloc] init];
         textField.placeholder = @" ";
-        color = [textField valueForKeyPath:@"_placeholderLabel.textColor"];
+        color = HEXColor(@"#C8C8C8", 1);
     });
     return color;
 }

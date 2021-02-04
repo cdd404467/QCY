@@ -7,15 +7,12 @@
 //
 
 #import "RankDetailVC.h"
-#import "MacroHeader.h"
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
 #import "ClassTool.h"
-#import "UIView+Geometry.h"
 #import "VoteModel.h"
 #import <UIImageView+WebCache.h>
 #import <YYText.h>
-#import <Masonry.h>
 #import <WXApi.h>
 #import "NavControllerSet.h"
 #import "UIViewController+BarButton.h"
@@ -63,7 +60,9 @@
 }
 
 - (void)setNavBar {
-    self.title = _pageTitle;
+    if (_pageTitle) {
+        self.title = _pageTitle;
+    }
     if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
         [self addRightBarButtonItemWithTitle:@"分享" action:@selector(share)];
     }
@@ -256,15 +255,12 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"vote_refresh" object:nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"vote_home_add" object:nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"vote_header_add" object:nil];
-        } else {
-            [CddHUD showTextOnlyDelay:json[@"msg"] view:[[UIApplication sharedApplication].windows lastObject]];
         }
+
     } Failure:^(NSError *error) {
         
     }];
 }
-
-
 
 
 - (void)requestData {
@@ -276,6 +272,9 @@
 //                        NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.dataSource = [VoteUserModel mj_objectWithKeyValues:json[@"data"]];
+            if (weakself.pageTitle == nil) {
+                weakself.title = weakself.dataSource.name;
+            }
             [weakself setData];
         }
         

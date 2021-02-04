@@ -11,8 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GroupBuyingDetailVC : BaseViewController
-
 @property (nonatomic, copy)NSString *groupID;
+@property (nonatomic, copy)NSString *productName;
 @end
 
 NS_ASSUME_NONNULL_END

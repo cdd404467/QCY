@@ -7,8 +7,6 @@
 //
 
 #import "DiscountSalesCell.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
 #import "DiscountSalesModel.h"
 #import <UIImageView+WebCache.h>
 #import <YYText.h>

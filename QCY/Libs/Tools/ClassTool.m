@@ -7,7 +7,6 @@
 //
 
 #import "ClassTool.h"
-#import "MacroHeader.h"
 #import <AFNetworking.h>
 #import "NetWorkingPort.h"
 #import "AES128.h"
@@ -56,12 +55,16 @@
     gradientLayer.startPoint = CGPointMake(0.0, 0.3);
     gradientLayer.endPoint = CGPointMake(1.0,0.7);
     gradientLayer.frame = frame;
-//    [view.layer addSublayer:gradientLayer];
+    //    [view.layer addSublayer:gradientLayer];
     [view.layer insertSublayer:gradientLayer atIndex:0];
 }
 
 + (void)addLayer:(UIView *)view {
     [self addLayer:view frame:CGRectMake(0, 0, SCREEN_WIDTH, 49)];
+}
+
++ (void)addLayerAutoSize:(UIView *)view {
+    [self addLayer:view frame:view.bounds];
 }
 
 + (void)addLayer:(UIView *)view frame:(CGRect)frame startPoint:(CGPoint)sPoint endPoint:(CGPoint)ePoint {
@@ -81,7 +84,7 @@
         [ar addObject:(id)c.CGColor];
     }
     UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, 1);
-//    UIGraphicsBeginImageContext(view.frame.size);
+    //    UIGraphicsBeginImageContext(view.frame.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context);
     CGColorSpaceRef colorSpace = CGColorGetColorSpace([[colors lastObject] CGColor]);
@@ -126,7 +129,7 @@
     gradientLayer.endPoint = CGPointMake(1.0, 0);
     gradientLayer.frame = view.frame;
     
-//    return gradientLayer;
+    //    return gradientLayer;
     UIGraphicsBeginImageContextWithOptions(gradientLayer.frame.size, NO, 0);
     
     [gradientLayer renderInContext:UIGraphicsGetCurrentContext()];
@@ -166,7 +169,8 @@
 
 + (void)showMSG:(id)json {
     if (![To_String(json[@"code"]) isEqualToString:@"NO_LOGIN"] && ![To_String(json[@"code"]) isEqualToString:@"INVALID_SIGN"]) {
-        [CddHUD showTextOnlyDelay:json[@"msg"] view:[HelperTool getCurrentVC].view];
+        if (isRightData(To_String(json[@"msg"])))
+            [CddHUD showTextOnlyDelay:json[@"msg"] view:[HelperTool getCurrentVC].view];
     }
 }
 
@@ -174,23 +178,23 @@
 + (NSString *)getApiToken:(BOOL)isGetFromNet {
     
     NSString *apiName = [NSString stringWithFormat:URL_API_TOKEN,[AES128 AES128Encrypt]];
-//    NSString *apiTokenUrlString = [NSString stringWithFormat:@"%@%@",URL_ALL_API,apiName];
+    //    NSString *apiTokenUrlString = [NSString stringWithFormat:@"%@%@",URL_ALL_API,apiName];
     //获取本地存储的apiToken
     __block NSString *localApiToken = [UserDefault objectForKey:@"apiToken"];
     //创建信号
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     //本地如果没有apiToken，就去后台请求
     if (!localApiToken || [localApiToken isEqualToString:@""] || isGetFromNet == YES) {
-//        AFHTTPSessionManager * apiTokenManager = [AFHTTPSessionManager manager];
+        //        AFHTTPSessionManager * apiTokenManager = [AFHTTPSessionManager manager];
         NSURL *URL = [NSURL URLWithString:URL_ALL_API];
         AFHTTPSessionManager *apiTokenManager = [[AFHTTPSessionManager alloc] initWithBaseURL:URL];
-//        [apiTokenManager setSecurityPolicy:[self customSecurityPolicy]];
+        //        [apiTokenManager setSecurityPolicy:[self customSecurityPolicy]];
         //将参数json序列化
         apiTokenManager.requestSerializer = [AFJSONRequestSerializer serializer];
         apiTokenManager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         [apiTokenManager GET:apiName parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             localApiToken = responseObject[@"data"];
-//            if (localApiToken && ![localApiToken isEqualToString:@""] && ![localApiToken isEqualToString:@"null"] && localApiToken != NULL) {
+            //            if (localApiToken && ![localApiToken isEqualToString:@""] && ![localApiToken isEqualToString:@"null"] && localApiToken != NULL) {
             if (isRightData(localApiToken)){
                 [UserDefault setObject:localApiToken forKey:@"apiToken"];
                 [UserDefault synchronize];
@@ -209,23 +213,24 @@
     return localApiToken;
 }
 
+
 //接收非json的数据，文件流
 + (void)getRequestWithStream:(NSString *)requestUrl Params:(NSDictionary *)params Success:(void (^)(id json))success Failure:(void (^)(NSError *error))failure {
-//    NSString *urlString = [URL_ALL_API stringByAppendingString:requestUrl];
+    //    NSString *urlString = [URL_ALL_API stringByAppendingString:requestUrl];
     //请求
-//    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    //    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
     NSURL *URL = [NSURL URLWithString:URL_ALL_API];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:URL];
-//    [manager setSecurityPolicy:[self customSecurityPolicy]];
+    //    [manager setSecurityPolicy:[self customSecurityPolicy]];
     //将参数json序列化
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     //将返回的头http序列化
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-//    manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    //    manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     [manager GET:requestUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) {
             success(responseObject);
-        }
+        } 
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) {
             NSLog(@" Error : %@",error);
@@ -239,24 +244,25 @@
 // Get请求带apiToken
 + (void)getRequest:(NSString *)requestUrl Params:(NSDictionary *)params Success:(void (^)(id json))success Failure:(void (^)(NSError *error))failure {
     NSString *requestOne = [requestUrl stringByReplacingOccurrencesOfString:@"QCYDSSIGNCDD" withString:[ClassTool getApiToken:NO]];
-//    NSString *urlStringOne = [URL_ALL_API stringByAppendingString:requestOne];
+//    NSLog(@"token---- %@",[ClassTool getApiToken:NO]);
+    //    NSString *urlStringOne = [URL_ALL_API stringByAppendingString:requestOne];
     //获得请求管理者
-//    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    //    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
     NSURL *URL = [NSURL URLWithString:URL_ALL_API];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:URL];
     manager.requestSerializer.timeoutInterval = 30.0f;
-//    [manager setSecurityPolicy:[self customSecurityPolicy]];
-
+    //    [manager setSecurityPolicy:[self customSecurityPolicy]];
+    
     //json序列化
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
-
+    
     //发送Get请求
     [manager GET:requestOne parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
         if ([code isEqualToString:@"INVALID_SIGN"]) {
             //第二次请求的参数要改变（apiToken）
             NSString *requestTwo = [requestUrl stringByReplacingOccurrencesOfString:@"QCYDSSIGNCDD" withString:[ClassTool getApiToken:YES]];
-//            NSString *urlStringTwo = [URL_ALL_API stringByAppendingString:requestTwo];
+            //            NSString *urlStringTwo = [URL_ALL_API stringByAppendingString:requestTwo];
             //发起第二次请求
             [manager GET:requestTwo parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 if (success) {
@@ -293,7 +299,7 @@
                     NSArray *arr1 = [URL_Unread_MsgCounts componentsSeparatedByString:@"?"];
                     if (![arr[0] isEqualToString:arr1[0]]) {
                         [CddHUD hideHUD:[HelperTool getCurrentVC].view];
-                        [self showMSG:responseObject];
+                        [self   :responseObject];
                     }
                 }
             }
@@ -316,15 +322,16 @@
 // Post请求
 + (void)postRequest:(NSString *)requestUrl Params:(NSMutableDictionary *)params  Success:(void (^)(id json))success Failure:(void (^)(NSError *error))failure {
     [params setValue:[ClassTool getApiToken:NO] forKey:@"sign"];
-//    NSString *urlString = [URL_ALL_API stringByAppendingString:requestUrl];
+    [params setValue:@"app_ios" forKey:@"from"];
+    //    NSString *urlString = [URL_ALL_API stringByAppendingString:requestUrl];
     
-//    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    //    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
     NSURL *URL = [NSURL URLWithString:URL_ALL_API];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:URL];
-   
+    
     manager.requestSerializer.timeoutInterval = 30.0f;
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-//    [manager setSecurityPolicy:[self customSecurityPolicy]];
+    //    [manager setSecurityPolicy:[self customSecurityPolicy]];
     
     //发送Post请求
     [manager POST:requestUrl parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -332,11 +339,11 @@
         if ([code isEqualToString:@"INVALID_SIGN"]) {
             //修改第二次请求字典中的apiToken
             [params setValue:[ClassTool getApiToken:YES] forKey:@"apiToken"];
-//            //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
-//            if ([params objectForKey:@"sign"]) {
-//                [params removeObjectForKey:@"sign"];
-//                [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
-//            }
+            //            //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
+            //            if ([params objectForKey:@"sign"]) {
+            //                [params removeObjectForKey:@"sign"];
+            //                [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
+            //            }
             //发起第二次请求
             [manager POST:requestUrl parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 if (success) {
@@ -374,7 +381,7 @@
 //上传文件
 + (void)uploadFile:(NSString *)requestUrl Params:(NSMutableDictionary *)params DataSource:(FormData *)dataSource Success:(void (^)(id json))success Failure:(void (^)(NSError * error))failure Progress:(void(^)(float percent))percent {
     [params setValue:[ClassTool getApiToken:NO] forKey:@"sign"];
-//    NSString *urlString = [URL_ALL_API stringByAppendingString:requestUrl];
+    //    NSString *urlString = [URL_ALL_API stringByAppendingString:requestUrl];
     // 1.获得请求管理者
     NSURL *URL = [NSURL URLWithString:URL_ALL_API];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:URL];
@@ -384,17 +391,17 @@
                                     name:dataSource.name
                                 fileName:dataSource.fileName
                                 mimeType:dataSource.fileType];
-
+        
     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
         if ([code isEqualToString:@"INVALID_SIGN"]) {
             //修改第二次请求字典中的apiToken
             [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
-//            //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
-//            if ([params objectForKey:@"sign"]) {
-//                [params removeObjectForKey:@"sign"];
-//                [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
-//            }
+            //            //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
+            //            if ([params objectForKey:@"sign"]) {
+            //                [params removeObjectForKey:@"sign"];
+            //                [params setValue:[ClassTool getApiToken:YES] forKey:@"sign"];
+            //            }
             [manager POST:requestUrl parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                 [formData appendPartWithFileData:dataSource.fileData
                                             name:dataSource.name
@@ -448,22 +455,22 @@
                                     mimeType:data.fileType];
         }
     } progress:^(NSProgress * _Nonnull uploadProgress) {
-//            float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
-//            percent(progress);
+        //            float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
+        //            percent(progress);
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *code = [NSString stringWithFormat:@"%@", responseObject[@"code"]];
         if ([code isEqualToString:@"INVALID_SIGN"]) {
             //修改第二次请求字典中的apiToken
             [params setValue:[ClassTool getApiToken:YES] forKey:@"apiToken"];
             //修改签名,判断字典里有没有签名这个字段，有的话修改后再请求
-//            if ([params objectForKey:@"sign"]) {
-//                [params removeObjectForKey:@"sign"];
-//                [params setValue:[ClassTool getAutograph:params] forKey:@"sign"];
-//            }
+            //            if ([params objectForKey:@"sign"]) {
+            //                [params removeObjectForKey:@"sign"];
+            //                [params setValue:[ClassTool getAutograph:params] forKey:@"sign"];
+            //            }
             //再次请求
             [manager POST:urlString parameters:params progress:^(NSProgress * _Nonnull uploadProgress) {
-//                float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
-//                percent(progress);
+                //                float progress =  1.0 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
+                //                percent(progress);
             } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 if (success) {
                     success(responseObject);
@@ -513,7 +520,7 @@
     else {
         NSLog(@"ssl证书不存在");
     }
-  
+    
     //AFSSLPinningModeCertificate 使用证书验证模式
     AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
     
@@ -534,6 +541,10 @@
 
 
 + (void)shareSomething:(NSMutableArray<NSString *> *)imageArray urlStr:(NSString *)urlStr title:(NSString *)title text:(NSString *)text {
+    [self shareSomething:imageArray urlStr:urlStr title:title text:text customItem:nil];
+}
+
++ (void)shareSomething:(NSMutableArray<NSString *> *)imageArray urlStr:(NSString *)urlStr title:(NSString *)title text:(NSString *)text customItem:(NSArray *)items {
     NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
     [shareParams SSDKSetShareFlags:@[@"统计1"]];
     [shareParams SSDKSetupShareParamsByText:text
@@ -541,7 +552,7 @@
                                         url:[NSURL URLWithString:urlStr]
                                       title:title
                                        type:SSDKContentTypeAuto];
-    [ShareSDK showShareActionSheet:nil customItems:nil shareParams:shareParams sheetConfiguration:nil onStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+    [ShareSDK showShareActionSheet:nil customItems:items shareParams:shareParams sheetConfiguration:nil onStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
         switch (state) {
             case SSDKResponseStateSuccess:
             {
@@ -554,7 +565,7 @@
                 break;
             }
             case SSDKResponseStateCancel:{
-//                [CddHUD showTextOnlyDelay:@"分享已取消" view:[HelperTool getCurrentVC].view];
+                //                [CddHUD showTextOnlyDelay:@"分享已取消" view:[HelperTool getCurrentVC].view];
                 break;
             }
                 

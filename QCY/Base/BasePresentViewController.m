@@ -8,8 +8,7 @@
 
 #import "BasePresentViewController.h"
 #import "CustomNavigationBar.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
+
 
 @interface BasePresentViewController ()
 
@@ -29,14 +28,13 @@
     [_navBar.rightBtn setTitle:@"完成" forState:UIControlStateNormal];
     [_navBar.leftBtn mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(5);
-        make.width.mas_equalTo(48);
+        make.width.mas_equalTo(45);
     }];
     [_navBar.rightBtn mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-10);
-        make.width.mas_equalTo(58);
-        make.height.mas_equalTo(32);
+        make.width.mas_equalTo(56);
+        make.height.mas_equalTo(30);
     }];
-//    _navBar.rightBtn.backgroundColor = MainColor;
     
     [_navBar.rightBtn setBackgroundImage:[UIImage imageWithColor:HEXColor(@"#ef3673", 1)] forState:UIControlStateNormal];
     [_navBar.rightBtn setBackgroundImage:[UIImage imageWithColor:HEXColor(@"#ef3673", .5)] forState:UIControlStateDisabled];

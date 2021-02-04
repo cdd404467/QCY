@@ -7,8 +7,7 @@
 //
 
 #import "WithoutNetView.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
+
 
 @implementation WithoutNetView
 

@@ -7,8 +7,6 @@
 //
 
 #import "VoteCell.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
 #import "VoteModel.h"
 #import <UIImageView+WebCache.h>
 #import "UIView+Border.h"

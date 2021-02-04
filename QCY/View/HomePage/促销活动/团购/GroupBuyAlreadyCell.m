@@ -7,8 +7,6 @@
 //
 
 #import "GroupBuyAlreadyCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "GroupBuyingModel.h"
 
 @implementation GroupBuyAlreadyCell {

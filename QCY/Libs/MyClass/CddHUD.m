@@ -7,7 +7,7 @@
 //
 
 #import "CddHUD.h"
-#import "MacroHeader.h"
+
 
 #define DELAY_TIME 1.5f
 @implementation CddHUD
@@ -20,15 +20,15 @@
     hud.userInteractionEnabled= NO;
     hud.bezelView.color = [UIColor blackColor];
     hud.contentColor = [UIColor whiteColor];
-    hud.userInteractionEnabled = NO;
     if (icon != nil) {
+        hud.mode = MBProgressHUDModeCustomView;
         UIImage *image = [[UIImage imageNamed:icon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         hud.customView = [[UIImageView alloc] initWithImage:image];
     }
     if (isOnly == YES) {
         hud.mode = MBProgressHUDModeText;
     }
-    hud.margin = 18;
+    hud.margin = 20;
     hud.label.text = text;
     //不设置的话hud为半透明
     hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;

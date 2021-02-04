@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface MsgChildVC : BaseViewController
 
-@property (nonatomic, strong)NSString *type;
+@property (nonatomic, strong)NSString *userType;
 
 @end
 

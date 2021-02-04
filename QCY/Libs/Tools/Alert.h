@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)alertOne:(NSString *)title okBtn:(NSString *)okTitle OKCallBack:(void(^)(void))OK;
 + (void)alertOne:(NSString *)title okBtn:(NSString *)okTitle  msg:(NSString *)msg  OKCallBack:(void(^)(void))OK;
 + (void)alertTwo:(NSString *)title cancelBtn:(NSString *)cancelTitle okBtn:(NSString *)okTitle OKCallBack:(void(^)(void))OK;
++ (void)alertTwo:(NSString *)title cancelBtn:(NSString *)cancelTitle okBtn:(NSString *)okTitle cancelCallBack:(void(^)(void))cancel OKCallBack:(void(^)(void))OK;
+
+
+
 @end
 
 NS_ASSUME_NONNULL_END

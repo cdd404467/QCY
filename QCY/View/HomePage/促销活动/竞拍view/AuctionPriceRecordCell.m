@@ -7,8 +7,6 @@
 //
 
 #import "AuctionPriceRecordCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "AuctionModel.h"
 
 @implementation AuctionPriceRecordCell {

@@ -7,7 +7,6 @@
 //
 
 #import "GroupBuyingVC.h"
-#import "MacroHeader.h"
 #import "ClassTool.h"
 #import "CddHUD.h"
 #import <MJRefresh.h>
@@ -15,9 +14,9 @@
 #import "PromotionsHeaderView.h"
 #import "GroupBuyingCell.h"
 #import "GroupBuyingModel.h"
-#import <MJExtension.h>
 #import "GroupBuyingDetailVC.h"
-
+#import <UMAnalytics/MobClick.h>
+#import "MyGroupBuyingVC.h"
 
 @interface GroupBuyingVC ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -46,14 +45,48 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"七彩云团购惠";
-    
     [self loadData];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:self.title];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:self.title];
+}
+
+- (void)setupUI {
+    UIButton *lookOverBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [lookOverBtn setTitle:@"查看我的团购" forState:UIControlStateNormal];
+    [lookOverBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [lookOverBtn addTarget:self action:@selector(junpToMyGrouping) forControlEvents:UIControlEventTouchUpInside];
+    [ClassTool addLayer:lookOverBtn];
+    [self.view addSubview:lookOverBtn];
+    [lookOverBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.bottom.mas_equalTo(-Bottom_Height_Dif);
+        make.height.mas_equalTo(49);
+    }];
+}
+
+- (void)junpToMyGrouping {
+    if (!GET_USER_TOKEN) {
+        [self jumpToLogin];
+        return;
+    }
+    MyGroupBuyingVC *vc = [[MyGroupBuyingVC alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -64,11 +97,9 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
-        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
-        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+//        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
+//        _tableView.scrollIndicatorInsets = _tableView.contentInset;
 
         PromotionsHeaderView *header = [[PromotionsHeaderView alloc] init];
         header.frame = CGRectMake(0, 0, SCREEN_WIDTH, KFit_W(144));
@@ -154,6 +185,7 @@
     dispatch_group_notify(group, globalQueue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakself.view addSubview:weakself.tableView];
+            [weakself setupUI];
             [CddHUD hideHUD:weakself.view];
         });
     });
@@ -165,7 +197,6 @@
     DDWeakSelf;
     NSString *urlString = [NSString stringWithFormat:URL_GroupBuying_List,_page,Page_Count];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
-
 //                NSLog(@"---- %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
             weakself.totalNum = [json[@"totalCount"] intValue];
@@ -211,6 +242,7 @@
     GroupBuyingDetailVC *vc = [[GroupBuyingDetailVC alloc] init];
     GroupBuyingModel *model = _dataSource[indexPath.row];
     vc.groupID = model.groupID;
+    vc.productName = model.productName;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

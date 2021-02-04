@@ -7,8 +7,6 @@
 //
 
 #import "ImageCell.h"
-#import <Masonry.h>
-#import "MacroHeader.h"
 
 @implementation ImageCell
 
@@ -41,8 +39,8 @@
     [self.contentView addSubview:cellImageView];
     [cellImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(10);
-        make.left.mas_equalTo(KFit_W(13));
-        make.right.mas_equalTo(KFit_W(-13));
+        make.left.mas_equalTo(13);
+        make.right.mas_equalTo(-13);
         make.bottom.mas_equalTo(0);
     }];
     _cellImageView = cellImageView;

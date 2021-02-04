@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OrderGoodsVC : BaseViewController
 @property (nonatomic, copy)NSString *state;
 @property (nonatomic, copy)NSString *goodsID;
+@property (nonatomic, copy)NSString *pName;    //采购联盟的活动名字
 @end
 
 NS_ASSUME_NONNULL_END

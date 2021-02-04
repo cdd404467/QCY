@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DiscountSalesDetailVC : BaseViewController
 @property (nonatomic, copy)NSString *productID;
+@property (nonatomic, copy)NSString *productName;
 @end
 
 NS_ASSUME_NONNULL_END

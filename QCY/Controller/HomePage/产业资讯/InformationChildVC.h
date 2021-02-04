@@ -7,12 +7,14 @@
 //
 
 #import "BaseViewController.h"
+@class InfomationModel;
 
 NS_ASSUME_NONNULL_BEGIN
-
+typedef void(^SelectedZXBlock)(InfomationModel *model);
 @interface InformationChildVC : BaseViewController
-
+@property (nonatomic, copy)NSString *fromPage;
 @property (nonatomic, copy)NSString *typeID;
+@property (nonatomic, copy)SelectedZXBlock selectedZXBlock;
 @end
 
 NS_ASSUME_NONNULL_END

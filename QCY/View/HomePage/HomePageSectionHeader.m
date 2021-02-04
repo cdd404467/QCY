@@ -7,8 +7,6 @@
 //
 
 #import "HomePageSectionHeader.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "HelperTool.h"
 
 @implementation HomePageSectionHeader

@@ -7,7 +7,6 @@
 //
 
 #import "UIView+Border.h"
-#import <Masonry.h>
 
 @implementation UIView (Border)
 /*** 添加layer ***/

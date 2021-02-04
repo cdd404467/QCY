@@ -7,11 +7,10 @@
 //
 
 #import "LXTagsView.h"
-#import <Masonry.h>
 #import "UIButton+LXExpandBtn.h"
 #import "NSString+Extension.h"
 #import "UIColor+LXExpand.h"
-#import "MacroHeader.h"
+
 
 @interface LXTagsView()
 @property(nonatomic,strong)NSMutableArray *tagsArray;
@@ -72,14 +71,13 @@
     }
     return self;
 }
--(void)setDataA:(NSArray *)dataA{
+-(void)setDataA:(NSArray *)dataA {
     _dataA = dataA;
     
     [self buildTags];
     
 }
 -(void)buildTags{
-    
     //移除所有的tags
     for (UIButton *button in self.tagsArray) {
         [button removeFromSuperview];
@@ -94,7 +92,6 @@
         button.layer.cornerRadius = 8;
         button.layer.borderWidth = 1.f;
         button.layer.borderColor = HEXColor(@"#666666", 1).CGColor;
-        
         
         DDWeakSelf;
         [button addClickBlock:^(UIButton *button) {
@@ -111,6 +108,7 @@
     //刷新布局
     [self layoutItems];
 }
+
 -(void)layoutItems{
     CGFloat viewVMargin =  self.viewVMargin;//整体上间距
     CGFloat viewHMargin = self.viewHMargin;//整体左右间距

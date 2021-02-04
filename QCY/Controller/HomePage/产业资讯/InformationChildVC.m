@@ -7,7 +7,6 @@
 //
 
 #import "InformationChildVC.h"
-#import "MacroHeader.h"
 #import "CommonNav.h"
 #import "NetWorkingPort.h"
 #import "ClassTool.h"
@@ -56,7 +55,7 @@
 //懒加载tableView
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - 35) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - 40) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -67,9 +66,7 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
+        } 
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, Bottom_Height_Dif, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;
        
@@ -141,15 +138,23 @@
 
 //点击
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    InfomationDetailVC *vc = [[InfomationDetailVC alloc] init];
     InfomationModel *model = _dataSource[indexPath.row];
-    vc.infoID = model.infoID;
-    [self.navigationController pushViewController:vc animated:YES];
+    if ([_fromPage isEqualToString:@"pfPage"]) {
+        if (self.selectedZXBlock) {
+            self.selectedZXBlock(model);
+        }
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        InfomationDetailVC *vc = [[InfomationDetailVC alloc] init];
+        vc.infoID = model.infoID;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 //数据源
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     InformationChildCell *cell = [InformationChildCell cellWithTableView:tableView];
+    cell.cellType = _fromPage;
     cell.model = _dataSource[indexPath.row];
     
     return cell;

@@ -18,3 +18,9 @@ typedef void(^PromotionsBlock)(NSInteger type);
 
 @property (nonatomic, copy)PromotionsBlock promotionsBlock;
 @end
+
+@interface ImagesViewDisPlay : UIView
+@property (nonatomic, copy)PromotionsBlock promotionsBlock;
+@property (nonatomic, strong)NSMutableArray *dataSource;
+
+@end

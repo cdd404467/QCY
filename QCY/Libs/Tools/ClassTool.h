@@ -17,7 +17,6 @@
 @property(nonatomic,copy)NSString * fileType;//文件类型
 @end
 
-
 typedef enum  {
     topToBottom = 0,//从上到小
     leftToRight = 1,//从左到右
@@ -32,6 +31,7 @@ typedef enum  {
 /*** (0,0)(1.0,0) 水平
     (0,0)(0,1.0) 垂直 ***/
 + (void)addLayer:(UIView *)view;
++ (void)addLayerAutoSize:(UIView *)view;
 + (void)addLayer:(UIView *)view frame:(CGRect)frame;
 + (void)addLayer:(UIView *)view frame:(CGRect)frame startPoint:(CGPoint)sPoint endPoint:(CGPoint)ePoint;
 //水平渐变
@@ -71,6 +71,7 @@ typedef enum  {
 
 //分享
 + (void)shareSomething:(NSMutableArray<NSString *> *)imageArray urlStr:(NSString *)urlStr title:(NSString *)title text:(NSString *)text;
++ (void)shareSomething:(NSMutableArray<NSString *> *)imageArray urlStr:(NSString *)urlStr title:(NSString *)title text:(NSString *)text customItem:(NSArray *)items;
 
 //数组转json字符串
 + (NSString *)arrayToJSONString:(NSArray *)array;

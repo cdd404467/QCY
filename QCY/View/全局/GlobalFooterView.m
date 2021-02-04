@@ -7,15 +7,13 @@
 //
 
 #import "GlobalFooterView.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 
 @implementation GlobalFooterView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.frame = CGRectMake(0, 0, SCREEN_WIDTH, 80);
-        self.backgroundColor = HEXColor(@"f1f1f1", 1);
+        self.backgroundColor = Like_Color;
         [self setupUI];
     }
     return self;

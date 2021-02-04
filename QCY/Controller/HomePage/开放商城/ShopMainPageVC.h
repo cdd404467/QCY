@@ -7,11 +7,11 @@
 //
 
 #import "BaseViewController.h"
-
+@class FCMapNavigationModel;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ShopMainPageVC : BaseViewController
-
+@property (nonatomic, strong) FCMapNavigationModel *navModel;
 @property (nonatomic, copy)NSString *storeID;
 @end
 

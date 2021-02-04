@@ -1,1 +1,1 @@
-../../../HXPhotoPicker/照片选择器/HXPhotoPicker/NSBundle+HXPhotoPicker.h
+../../../HXPhotoPicker/照片选择器/HXPhotoPicker/Category/NSBundle+HXPhotoPicker.h

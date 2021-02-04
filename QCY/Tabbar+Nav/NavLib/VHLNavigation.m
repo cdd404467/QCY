@@ -55,7 +55,8 @@ static char kVHLDefaultIgnoreVCListKey;             // 全局忽略数组
     }
     // 判断底部安全区域
     if (@available(iOS 11.0, *)) {
-        UIWindow *mainWindow = [[[UIApplication sharedApplication] delegate] window];
+        // [[[UIApplication sharedApplication] delegate] window];
+        UIWindow *mainWindow = [UIApplication sharedApplication].windows.firstObject;
         if (mainWindow.safeAreaInsets.bottom > 0.0) {
             iPhoneXSeries = YES;
         }
@@ -256,7 +257,8 @@ static char kVHLBackgroundImageViewKey;
     
     if (@available(iOS 11.0, *)) {  // iOS11 下 UIBarBackground -> UIView/UIImageViwe
         for (UIView *view in self.subviews) {
-            if ([NSStringFromClass([view class]) containsString:@"UIbarBackGround"]) {
+            NSString *viewClassName = NSStringFromClass([view class]);
+            if ([viewClassName containsString:@"UIbarBackGround"]) {        // iOS 13 下名字变为 UIBarBackground
                 view.alpha = 0;
             }
         }
@@ -545,6 +547,10 @@ static int vhlPushDisplayCount = 0;
     NSUInteger n = self.viewControllers.count >= itemCount ? 2 : 1;
     UIViewController *popToVC = self.viewControllers[self.viewControllers.count - n];
     [self popToViewController:popToVC animated:YES];
+    // fix: iOS 13 默认导航栏返回按钮点击闪退问题
+    if (@available(iOS 13.0, *)) {
+        return NO;
+    }
     return YES;
 }
 // 处理侧滑手势
@@ -928,6 +934,12 @@ static char kVHLTempBackViewKey;                    // 用于放在 view 最底�
         
         CGRect fakeNavFrame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds),
                                          [self vhl_navigationBarAndStatusBarHeight]);
+        // fix: iOS 13 下模态跳转 pageSheet 导航栏问题
+        if (@available(iOS 13.0, *)) {
+            if (fromVC.presentingViewController != nil && fromVC.navigationController.modalPresentationStyle == 1) {
+                fakeNavFrame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), [self vhl_navgationBarHeight]);
+            }
+        }
         // 2. 判断当前 vc 是否是 UITableViewController 或 UICollectionViewController , 因为这种 vc.view 会为 scrollview
         // ** 虽然 view frame 为全屏开始，但是因为安全区域，使得内容视图在导航栏下面 **
         // ** 千万不要再设置 edgesForExtendedLayout 为 None，因为 tableview 默认开启了 clipsToBounds 会使得添加的导航栏失效 **
@@ -943,7 +955,11 @@ static char kVHLTempBackViewKey;                    // 用于放在 view 最底�
             view.bounds = fromVC.vhl_fakeNavigationBar.bounds;
             [fromVC.vhl_fakeNavigationBar addSubview:view];
         } else {
-            fromVC.vhl_fakeNavigationBar.backgroundColor = [fromVC vhl_navBarBackgroundColor];
+            if (@available(iOS 13.0, *)) {
+                fromVC.vhl_fakeNavigationBar.backgroundColor = [[fromVC vhl_navBarBackgroundColor] colorWithAlphaComponent:[fromVC vhl_navBarBackgroundAlpha]];
+            } else {
+                fromVC.vhl_fakeNavigationBar.backgroundColor = [fromVC vhl_navBarBackgroundColor];
+            }
             fromVC.vhl_fakeNavigationBar.image = [fromVC vhl_navBarBackgroundImage];
             if ([VHLNavigation vhl_isIgnoreVC:NSStringFromClass([fromVC class])] && fromVC.navigationController.navigationBar.barTintColor) {
                 fromVC.vhl_fakeNavigationBar.backgroundColor = fromVC.navigationController.navigationBar.barTintColor;
@@ -969,6 +985,12 @@ static char kVHLTempBackViewKey;                    // 用于放在 view 最底�
         ![VHLNavigation vhl_isIgnoreVC:NSStringFromClass([toVC class])] && ![toVC vhl_navBarHidden])) {
         
         CGRect fakeNavFrame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds),[self vhl_navigationBarAndStatusBarHeight]);
+        // fix: iOS 13 下模态跳转 pageSheet 导航栏问题
+        if (@available(iOS 13.0, *)) {
+            if (toVC.presentingViewController != nil && toVC.navigationController.modalPresentationStyle == 1) {
+                fakeNavFrame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), [self vhl_navgationBarHeight]);
+            }
+        }
         // 判断边缘布局的方式，UIRectEdgeNone 是以导航栏下面开始的
         if (toVC.edgesForExtendedLayout == UIRectEdgeNone) {
             fakeNavFrame = CGRectMake(0, -[self vhl_navigationBarAndStatusBarHeight], CGRectGetWidth(self.view.bounds),
@@ -991,7 +1013,11 @@ static char kVHLTempBackViewKey;                    // 用于放在 view 最底�
             view.frame = CGRectMake(0, 0, fakeNavFrame.size.width,fakeNavFrame.size.height);
             [toVC.vhl_fakeNavigationBar addSubview:view];
         } else {
-            toVC.vhl_fakeNavigationBar.backgroundColor = [toVC vhl_navBarBackgroundColor];
+            if (@available(iOS 13.0, *)) {
+                toVC.vhl_fakeNavigationBar.backgroundColor = [[toVC vhl_navBarBackgroundColor] colorWithAlphaComponent:[toVC vhl_navBarBackgroundAlpha]];
+            } else {
+                toVC.vhl_fakeNavigationBar.backgroundColor = [toVC vhl_navBarBackgroundColor];
+            }
             toVC.vhl_fakeNavigationBar.image = [toVC vhl_navBarBackgroundImage];
             if ([VHLNavigation vhl_isIgnoreVC:NSStringFromClass([toVC class])] && toVC.navigationController.navigationBar.barTintColor) {
                 toVC.vhl_fakeNavigationBar.backgroundColor = toVC.navigationController.navigationBar.barTintColor;
@@ -1193,8 +1219,8 @@ static char kVHLTempBackViewKey;                    // 用于放在 view 最底�
 }
 /** 获取导航栏加状态栏高度*/
 - (CGFloat)vhl_navigationBarAndStatusBarHeight {
-    CGFloat navHeight = CGRectGetHeight(self.navigationController.navigationBar.bounds);
-    CGFloat statusHeight = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
+    CGFloat navHeight = [self vhl_navgationBarHeight];
+    CGFloat statusHeight = [self vhl_statusBarHeight];
     // 分享热点，拨打电话等。导航栏从 20 变成 40。
     statusHeight = [VHLNavigation vhl_isIPhoneXSeries]?statusHeight:MIN(20, statusHeight);
     
@@ -1220,3 +1246,4 @@ static char kVHLTempBackViewKey;                    // 用于放在 view 最底�
 /**
  objc_setAssociatedObject 来把一个对象与另外一个对象进行关联。该函数需要四个参数：源对象，关键字，关联的对象和一个关联策略。
  */
+

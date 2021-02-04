@@ -15,6 +15,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "UIImage+HXExtension.h"
 #import <CoreLocation/CoreLocation.h>
+#import "HXPhotoCustomNavigationBar.h"
 
 @interface HXCustomCameraViewController ()<HXCustomPreviewViewDelegate,HXCustomCameraBottomViewDelegate,HXCustomCameraControllerDelegate, CLLocationManagerDelegate>
 @property (strong, nonatomic) HXCustomCameraController *cameraController;
@@ -35,102 +36,149 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *location;
 @property (strong, nonatomic) UIVisualEffectView *effectView;
+@property (strong, nonatomic) UINavigationBar *customNavigationBar;
+@property (strong, nonatomic) UINavigationItem *navItem;
+@property (assign, nonatomic) BOOL statusBarShouldBeHidden;
 @end
 
 @implementation HXCustomCameraViewController
-
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.statusBarShouldBeHidden = YES;
+    }
+    return self;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [UINavigationBar appearance].translucent = YES;
-    if (self.manager.configuration.saveSystemAblum && !self.manager.albums.count) { 
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self.manager getAllPhotoAlbums:nil albums:nil isFirst:NO];
+    if (self.manager.configuration.saveSystemAblum && !self.manager.albums) {
+        dispatch_async(self.manager.loadAssetQueue, ^{
+            [self.manager getAllAlbumModelFilter:NO select:nil completion:nil];
         });
     }
-    self.view.backgroundColor = [UIColor grayColor];
+    self.view.backgroundColor = [UIColor blackColor];
     
     if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied) {
         [self.locationManager startUpdatingLocation];
     }
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
-    if (self.manager.configuration.videoMaximumDuration > self.manager.configuration.videoMaxDuration) {
-        self.manager.configuration.videoMaximumDuration = self.manager.configuration.videoMaxDuration;
+//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
+    if (self.manager.configuration.videoMaximumDuration > self.manager.configuration.videoMaximumSelectDuration) {
+        self.manager.configuration.videoMaximumDuration = self.manager.configuration.videoMaximumSelectDuration;
     }else if (self.manager.configuration.videoMaximumDuration < 3.f) {
         self.manager.configuration.videoMaximumDuration = 4.f;
     }
     
     [self.view addSubview:self.previewView];
     self.cameraController = [[HXCustomCameraController alloc] init];
+    self.cameraController.sessionPreset = self.manager.configuration.sessionPreset;
+    self.cameraController.videoCodecKey = self.manager.configuration.videoCodecKey;
     self.cameraController.delegate = self;
-    if ([self.cameraController setupSession:nil]) {
-        [self.previewView setSession:self.cameraController.captureSession];
-        self.previewView.delegate = self;
-        if (self.manager.type == HXPhotoManagerSelectedTypePhoto) {
-            [self.cameraController initImageOutput];
-        }else if (self.manager.type == HXPhotoManagerSelectedTypeVideo) {
-            [self.view insertSubview:self.playVideoView belowSubview:self.bottomView];
-            [self.cameraController addAudioInput];
-            self.addAudioInputComplete = YES;
-            [self.cameraController initMovieOutput];
-        }else {
-            if (!self.manager.configuration.selectTogether && self.isOutside) {
-                if (self.manager.afterSelectedPhotoArray.count > 0) {
-                    [self.cameraController initImageOutput];
-                }else if (self.manager.afterSelectedVideoArray.count > 0) {
-                    [self.view insertSubview:self.playVideoView belowSubview:self.bottomView];
-                    [self.cameraController addAudioInput];
-                    self.addAudioInputComplete = YES;
-                    [self.cameraController initMovieOutput];
-                }else {
-                    [self.view insertSubview:self.playVideoView belowSubview:self.bottomView];
-                    [self.cameraController initImageOutput];
-                    [self.previewView addSwipeGesture];
-                }
-            }else {
-                [self.view insertSubview:self.playVideoView belowSubview:self.bottomView];
-                [self.cameraController initImageOutput];
-                [self.previewView addSwipeGesture];
-            }
-        }
-        if (self.manager.tempCameraView) { 
-            self.manager.tempCameraView.frame = self.view.bounds;
-            [self.previewView addSubview:self.manager.tempCameraView];
-            [self.previewView addSubview:self.effectView];
-        }
-        HXWeakSelf
-        self.bottomView.userInteractionEnabled = NO;
-        [self.cameraController startSessionComplete:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.bottomView.userInteractionEnabled = YES;
-            });
-            if (weakSelf.manager.tempCameraView) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [UIView animateWithDuration:0.3 animations:^{
-                        weakSelf.manager.tempCameraView.alpha = 0;
-                        weakSelf.effectView.effect = nil;
-                    } completion:^(BOOL finished) {
-                        [weakSelf.effectView removeFromSuperview];
-                        [weakSelf.manager.tempCameraView removeFromSuperview];
-                    }];
-                });
-            }
-        }];
+    if ([HXPhotoCommon photoCommon].tempCameraView) {
+        [HXPhotoCommon photoCommon].tempCameraView.frame = self.previewView.bounds;
+        [self.previewView addSubview:[HXPhotoCommon photoCommon].tempCameraView];
+        [self.previewView addSubview:self.effectView];
     }
-    self.previewView.tapToFocusEnabled = self.cameraController.cameraSupportsTapToFocus;
-    self.previewView.tapToExposeEnabled = self.cameraController.cameraSupportsTapToExpose;
+    
+    self.bottomView.userInteractionEnabled = NO;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.cameraController initSeesion];
+        self.previewView.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.cameraController.captureSession];
+        HXWeakSelf
+        [self.cameraController setupPreviewLayer:self.previewView.previewLayer startSessionCompletion:^(BOOL success) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (success) {
+                    [weakSelf.previewView setupPreviewLayer];
+                    weakSelf.previewView.delegate = self;
+                    [weakSelf setupCamera];
+                }
+            });
+        }];
+    });
+    
     [self.view addSubview:self.bottomView];
     [self.view addSubview:self.topView];
+    
+    [self changeSubviewFrame];
+    
+    [self.view addSubview:self.customNavigationBar];
+    
+    if (self.manager.configuration.navigationBar) {
+        self.manager.configuration.navigationBar(self.customNavigationBar, self);
+    }
+    [UINavigationBar appearance].translucent = YES;
+}
+- (void)setupImageOutput {
+    [self.cameraController initImageOutput];
+}
+- (void)setupMovieOutput {
+    [self.view insertSubview:self.playVideoView belowSubview:self.bottomView];
+    [self.cameraController addAudioInput];
+    self.addAudioInputComplete = YES;
+    [self.cameraController initMovieOutput];
+}
+- (void)setupImageAndMovieOutput {
+    [self.view insertSubview:self.playVideoView belowSubview:self.bottomView];
+    [self setupImageOutput];
+    [self.previewView addSwipeGesture];
+}
+- (void)setupCamera {
+    switch (self.manager.configuration.customCameraType) {
+        case HXPhotoCustomCameraTypeUnused: {
+            if (self.manager.type == HXPhotoManagerSelectedTypePhoto) {
+                [self setupImageOutput];
+            }else if (self.manager.type == HXPhotoManagerSelectedTypeVideo) {
+                [self setupMovieOutput];
+            }else {
+                if (!self.manager.configuration.selectTogether && self.isOutside) {
+                    if (self.manager.afterSelectedPhotoArray.count > 0) {
+                        [self setupImageOutput];
+                    }else if (self.manager.afterSelectedVideoArray.count > 0) {
+                        [self setupMovieOutput];
+                    }else {
+                        [self setupImageAndMovieOutput];
+                    }
+                }else {
+                    [self setupImageAndMovieOutput];
+                }
+            }
+        } break;
+        case HXPhotoCustomCameraTypePhoto: {
+            [self setupImageOutput];
+        } break;
+        case HXPhotoCustomCameraTypeVideo: {
+            [self setupMovieOutput];
+        } break;
+        case HXPhotoCustomCameraTypePhotoAndVideo: {
+            [self setupImageAndMovieOutput];
+        } break;
+        default:
+            break;
+    }
+    
+    self.bottomView.userInteractionEnabled = YES;
+    if ([HXPhotoCommon photoCommon].tempCameraView) {
+            [UIView animateWithDuration:0.2 animations:^{
+                [HXPhotoCommon photoCommon].tempCameraView.alpha = 0;
+                self.effectView.effect = nil;
+            } completion:^(BOOL finished) {
+                [self.effectView removeFromSuperview];
+                [[HXPhotoCommon photoCommon].tempCameraView removeFromSuperview];
+            }];
+    }
+    
+    self.previewView.tapToFocusEnabled = self.cameraController.cameraSupportsTapToFocus;
+    self.previewView.tapToExposeEnabled = self.cameraController.cameraSupportsTapToExpose;
     
     UIBarButtonItem *rightBtn1 = [[UIBarButtonItem alloc] initWithCustomView:self.changeCameraBtn];
     UIBarButtonItem *rightBtn2 = [[UIBarButtonItem alloc] initWithCustomView:self.flashBtn];
     if ([self.cameraController canSwitchCameras] && [self.cameraController cameraHasFlash]) {
-        self.navigationItem.rightBarButtonItems = @[rightBtn1,rightBtn2];
+        self.navItem.rightBarButtonItems = @[rightBtn1,rightBtn2];
     }else {
         if ([self.cameraController cameraHasTorch] || [self.cameraController cameraHasFlash]) {
-            self.navigationItem.rightBarButtonItems = @[rightBtn2];
+            self.navItem.rightBarButtonItems = @[rightBtn2];
         }
     }
-    [self changeSubviewFrame];
+    
     self.previewView.maxScale = [self.cameraController maxZoomFactor];
     if ([self.cameraController cameraSupportsZoom]) {
         self.previewView.effectiveScale = 1.0f;
@@ -138,13 +186,11 @@
         [self.cameraController rampZoomToValue:1.0f];
         [self.cameraController cancelZoom];
     }
+    
+    self.cameraController.flashMode = 0;
     [self setupFlashAndTorchBtn];
     self.previewView.tapToExposeEnabled = self.cameraController.cameraSupportsTapToExpose;
     self.previewView.tapToFocusEnabled = self.cameraController.cameraSupportsTapToFocus;
-    
-    if (self.manager.configuration.navigationBar) {
-        self.manager.configuration.navigationBar(self.navigationController.navigationBar, self);
-    }
 }
 - (void)requestAccessForAudio {
     [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL granted) {
@@ -155,14 +201,12 @@
                     self.addAudioInputComplete = YES;
                 }
             }else {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSBundle hx_localizedStringForKey:@"无法使用麦克风"] message:[NSBundle hx_localizedStringForKey:@"请在设置-隐私-相机中允许访问麦克风"] preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:[NSBundle hx_localizedStringForKey:@"取消"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [self.view showImageHUDText:[NSBundle hx_localizedStringForKey:@"麦克风添加失败,录制视频会没有声音哦!"]];
-                }]];
-                [alert addAction:[UIAlertAction actionWithTitle:[NSBundle hx_localizedStringForKey:@"设置"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HXWeakSelf
+                hx_showAlert(self, [NSBundle hx_localizedStringForKey:@"无法使用麦克风"], [NSBundle hx_localizedStringForKey:@"请在设置-隐私-相机中允许访问麦克风"], [NSBundle hx_localizedStringForKey:@"取消"], [NSBundle hx_localizedStringForKey:@"设置"], ^{
+                    [weakSelf.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"麦克风添加失败,录制视频会没有声音哦!"]];
+                }, ^{
                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-                }]];
-                [self presentViewController:alert animated:YES completion:nil];
+                }); 
             }
         });
     }];
@@ -192,34 +236,48 @@
     }
 }
 - (void)changeSubviewFrame {
-    self.topView.frame = CGRectMake(0, 0, self.view.hx_w, hxNavigationBarHeight);
+    self.customNavigationBar.frame = CGRectMake(0, self.previewView.hx_y, self.view.hx_w, hxNavigationBarHeight);
+    self.topView.frame = self.customNavigationBar.frame;
+    if (!HX_IS_IPhoneX_All && HX_IOS11_Later) {
+        self.customNavigationBar.hx_y = self.previewView.hx_y + 10;
+        self.topView.hx_y = -10;
+    }
     self.topMaskLayer.frame = self.topView.bounds;
-    self.bottomView.frame = CGRectMake(0, self.view.hx_h - 120, self.view.hx_w, 120);
+    self.bottomView.frame = CGRectMake(0, self.view.hx_h - 120 - self.previewView.hx_y, self.view.hx_w, 120);
+}
+- (BOOL)prefersStatusBarHidden {
+    return self.statusBarShouldBeHidden;
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar setBackgroundColor:[UIColor clearColor]];
-    [self.navigationController.navigationBar setShadowImage:[[UIImage alloc] init]];
-    [self.navigationController.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController setNavigationBarHidden:YES];
+    [self.customNavigationBar setBackgroundColor:[UIColor clearColor]];
+    [self.customNavigationBar setShadowImage:[[UIImage alloc] init]];
+    [self.customNavigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+    [self.customNavigationBar setTintColor:[UIColor whiteColor]];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-    AVCaptureConnection *previewLayerConnection = [(AVCaptureVideoPreviewLayer *)self.previewView.layer connection]; 
+    AVCaptureConnection *previewLayerConnection = [(AVCaptureVideoPreviewLayer *)self.previewView.previewLayer connection];
     if ([previewLayerConnection isVideoOrientationSupported])
         [previewLayerConnection setVideoOrientation:(AVCaptureVideoOrientation)[[UIApplication sharedApplication] statusBarOrientation]];
+    self.statusBarShouldBeHidden = YES;
+    [self preferredStatusBarUpdateAnimation];
 }
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     [self.cameraController stopMontionUpdate];
+    self.statusBarShouldBeHidden = NO;
+    [self preferredStatusBarUpdateAnimation];
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES];
     [self.cameraController startMontionUpdate];
 }
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self stopTimer];
-    self.manager.tempCameraView = [self.previewView snapshotViewAfterScreenUpdates:YES];
+    [HXPhotoCommon photoCommon].tempCameraView = [self.previewView snapshotViewAfterScreenUpdates:YES];
     [self.cameraController stopSession];
 } 
 - (void)dealloc {
@@ -252,57 +310,68 @@
         if (self.cancelBlock) {
             self.cancelBlock(self);
         }
+        if (self.manager.configuration.restoreNavigationBar && self.isOutside) {
+            [UINavigationBar appearance].translucent = NO;
+        }
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 - (void)didDoneBtnClick {
-    HXPhotoModel *model = [[HXPhotoModel alloc] init];
-    model.location = self.location;
-    if (!self.videoURL) {
-        model.type = HXPhotoModelMediaTypeCameraPhoto;
-        model.subType = HXPhotoModelMediaSubTypePhoto;
-        if (self.imageView.image.imageOrientation != UIImageOrientationUp) {
-            self.imageView.image = [self.imageView.image normalizedImage];
+    if (!self.manager.configuration.saveSystemAblum) {
+        HXPhotoModel *model;
+        if (!self.videoURL) {
+            model = [HXPhotoModel photoModelWithImage:self.imageView.image];
+        }else {
+            if (self.time < 3) {
+                [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"录制时间少于3秒"]];
+                return;
+            }
+            [self.playVideoView stopPlay];
+            model = [HXPhotoModel photoModelWithVideoURL:self.videoURL videoTime:self.time];
         }
-        model.thumbPhoto = self.imageView.image;
-        model.imageSize = self.imageView.image.size;
-        model.previewPhoto = self.imageView.image;
-//        model.cameraIdentifier = [self videoOutFutFileName];
+        model.creationDate = [NSDate date];
+        model.location = self.location;
+        [self doneCompleteWithModel:model];
     }else {
-        if (self.time < 3) {
-            [self.view showImageHUDText:[NSBundle hx_localizedStringForKey:@"录制时间少于3秒"]];
-            return;
-        }
-        [self.playVideoView stopPlay];
-        model.type = HXPhotoModelMediaTypeCameraVideo;
-        model.subType = HXPhotoModelMediaSubTypeVideo;
-        MPMoviePlayerController *player = [[MPMoviePlayerController alloc]initWithContentURL:self.videoURL] ;
-        player.shouldAutoplay = NO;
-        UIImage  *image = [player thumbnailImageAtTime:0.1 timeOption:MPMovieTimeOptionNearestKeyFrame];
-        NSString *videoTime = [HXPhotoTools getNewTimeFromDurationSecond:self.time];
-        model.videoDuration = self.time;
-        model.videoURL = self.videoURL;
-        model.videoTime = videoTime;
-        model.thumbPhoto = image;
-        model.imageSize = image.size;
-        model.previewPhoto = image;
-//        model.cameraIdentifier = [self videoOutFutFileName];
+        HXWeakSelf
+        [self.view hx_immediatelyShowLoadingHudWithText:nil];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (!self.videoURL) {
+                [HXPhotoTools savePhotoToCustomAlbumWithName:self.manager.configuration.customAlbumName photo:self.imageView.image location:self.location complete:^(HXPhotoModel *model, BOOL success) {
+                    if (success) {
+                        [weakSelf doneCompleteWithModel:model];
+                        [weakSelf.view hx_handleLoading:NO];
+                    }else {
+                        [weakSelf.view hx_showImageHUDText:@"保存失败!"];
+                    }
+                }];
+            }else {
+                [HXPhotoTools saveVideoToCustomAlbumWithName:self.manager.configuration.customAlbumName videoURL:self.videoURL location:self.location complete:^(HXPhotoModel *model, BOOL success) {
+                    [weakSelf.view hx_handleLoading:NO];
+                    if (success) {
+                        [weakSelf doneCompleteWithModel:model];
+                    }else {
+                        [weakSelf.view hx_showImageHUDText:@"保存失败!"];
+                    }
+                }];
+            }
+        });
     }
+}
+- (void)doneCompleteWithModel:(HXPhotoModel *)model {
     [self stopTimer];
     [self.cameraController stopMontionUpdate];
-    [self.cameraController stopSession]; 
-    if (self.manager.configuration.saveSystemAblum) {
-        if (model.type == HXPhotoModelMediaTypeCameraPhoto) {
-            [HXPhotoTools savePhotoToCustomAlbumWithName:self.manager.configuration.customAlbumName photo:model.thumbPhoto];
-        }else {
-            [HXPhotoTools saveVideoToCustomAlbumWithName:self.manager.configuration.customAlbumName videoURL:model.videoURL];
-        }
-    }
+    [self.cameraController stopSession];
+    self.cameraController.flashMode = 0;
+    self.cameraController.torchMode = 0;
     if ([self.delegate respondsToSelector:@selector(customCameraViewController:didDone:)]) {
         [self.delegate customCameraViewController:self didDone:model];
     }
     if (self.doneBlock) {
         self.doneBlock(model, self);
+    }
+    if (self.manager.configuration.restoreNavigationBar && self.isOutside) {
+        [UINavigationBar appearance].translucent = NO;
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -352,12 +421,12 @@
     self.bottomView.hidden = NO;
     self.previewView.tapToFocusEnabled = YES;
     self.previewView.pinchToZoomEnabled = [self.cameraController cameraSupportsZoom];
-    [self.view showImageHUDText:[NSBundle hx_localizedStringForKey:@"拍摄失败"]];
+    [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"拍摄失败"]];
 }
 - (void)startTimer {
     self.time = 0;
     [self.timer invalidate];
-    self.timer = [NSTimer timerWithTimeInterval:1.0f
+    self.timer = [NSTimer timerWithTimeInterval:0.2f
                                          target:self
                                        selector:@selector(updateTimeDisplay)
                                        userInfo:nil
@@ -367,12 +436,12 @@
 
 - (void)updateTimeDisplay {
     CMTime duration = self.cameraController.recordedDuration;
-    NSUInteger time = (NSUInteger)CMTimeGetSeconds(duration);
-    self.time = time;
+    NSTimeInterval time = CMTimeGetSeconds(duration);
+    self.time = (NSInteger)time;
     [self.bottomView changeTime:time];
-    if (time == self.manager.configuration.videoMaximumDuration) {
-        [self.cameraController stopRecording];
+    if (time + 0.4f >= self.manager.configuration.videoMaximumDuration) {
         [self stopTimer];
+        [self.cameraController stopRecording];
     }
 }
 
@@ -396,7 +465,7 @@
         self.cancelBtn.selected = NO;
         self.flashBtn.hidden = NO;
         self.changeCameraBtn.hidden = NO;
-        [self.view showImageHUDText:[NSBundle hx_localizedStringForKey:@"3秒内的视频无效哦~"]];
+        [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"3秒内的视频无效哦~"]];
     }else {
         [self.cameraController stopSession];
         self.previewView.tapToFocusEnabled = NO;
@@ -415,7 +484,7 @@
     self.time = 0;
     [self stopTimer];
     [self.bottomView stopRecord];
-    [self.view showImageHUDText:[NSBundle hx_localizedStringForKey:@"录制视频失败!"]];
+    [self.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"录制视频失败!"]];
     self.bottomView.hidden = NO;
     self.cancelBtn.selected = NO;
     self.flashBtn.hidden = NO;
@@ -435,16 +504,14 @@
             return;
         }else {
             if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio] != AVAuthorizationStatusAuthorized) {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSBundle hx_localizedStringForKey:@"无法使用麦克风"] message:[NSBundle hx_localizedStringForKey:@"请在设置-隐私-相机中允许访问麦克风"] preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:[NSBundle hx_localizedStringForKey:@"继续录制"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [self.view showImageHUDText:[NSBundle hx_localizedStringForKey:@"麦克风添加失败,录制视频会没有声音哦!"]];
-                    [self.bottomView beganAnimate];
-                    [self videoNeedHideViews];
-                }]];
-                [alert addAction:[UIAlertAction actionWithTitle:[NSBundle hx_localizedStringForKey:@"设置"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HXWeakSelf
+                hx_showAlert(self, [NSBundle hx_localizedStringForKey:@"无法使用麦克风"], [NSBundle hx_localizedStringForKey:@"请在设置-隐私-相机中允许访问麦克风"], [NSBundle hx_localizedStringForKey:@"继续录制"], [NSBundle hx_localizedStringForKey:@"设置"], ^{
+                    [weakSelf.view hx_showImageHUDText:[NSBundle hx_localizedStringForKey:@"麦克风添加失败,录制视频会没有声音哦!"]];
+                    [weakSelf.bottomView beganAnimate];
+                    [weakSelf videoNeedHideViews];
+                }, ^{
                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-                }]];
-                [self presentViewController:alert animated:YES completion:nil];
+                }); 
             }else {
                 [self.bottomView beganAnimate];
                 [self videoNeedHideViews];
@@ -472,7 +539,9 @@
     if (!self.bottomView.animating) {
         dispatch_async(dispatch_queue_create("com.hxdatephotopicker.kamera", NULL), ^{
             [self.cameraController startRecording];
-            [self startTimer];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self startTimer];
+            });
         });
     }
 }
@@ -489,10 +558,30 @@
 - (void)pinchGestureScale:(CGFloat)scale {
     [self.cameraController setZoomValue:scale];
 }
+- (UINavigationBar *)customNavigationBar {
+    if (!_customNavigationBar) {
+        _customNavigationBar = [[UINavigationBar alloc] init];
+        _customNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [_customNavigationBar pushNavigationItem:self.navItem animated:NO];
+    }
+    return _customNavigationBar;
+}
+- (UINavigationItem *)navItem {
+    if (!_navItem) {
+        _navItem = [[UINavigationItem alloc] init];
+        _navItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
+    }
+    return _navItem;
+}
 - (HXCustomPreviewView *)previewView {
     if (!_previewView) {
-        _previewView = [[HXCustomPreviewView alloc] initWithFrame:self.view.bounds];
-        _previewView.delegate = self;
+        _previewView = [[HXCustomPreviewView alloc] init];
+        if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+            _previewView.frame = self.view.bounds;
+        }else {
+            _previewView.hx_size = CGSizeMake(self.view.hx_w, self.view.hx_w / 9 * 16);
+            _previewView.center = CGPointMake(self.view.hx_w / 2, self.view.hx_h / 2);
+        }
     }
     return _previewView;
 }
@@ -522,7 +611,7 @@
         _cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_cancelBtn setTitle:[NSBundle hx_localizedStringForKey:@"重拍"] forState:UIControlStateSelected];
         [_cancelBtn setTitle:@"" forState:UIControlStateNormal];
-        [_cancelBtn setImage:[HXPhotoTools hx_imageNamed:@"hx_faceu_cancel@3x.png"] forState:UIControlStateNormal];
+        [_cancelBtn setImage:[UIImage hx_imageNamed:@"hx_faceu_cancel"] forState:UIControlStateNormal];
         [_cancelBtn setImage:[[UIImage alloc] init] forState:UIControlStateSelected];
         [_cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         [_cancelBtn addTarget:self action:@selector(cancelClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -534,7 +623,7 @@
 - (UIButton *)changeCameraBtn {
     if (!_changeCameraBtn) {
         _changeCameraBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_changeCameraBtn setImage:[HXPhotoTools hx_imageNamed:@"hx_faceu_camera@3x.png"] forState:UIControlStateNormal];
+        [_changeCameraBtn setImage:[UIImage hx_imageNamed:@"hx_faceu_camera"] forState:UIControlStateNormal];
         [_changeCameraBtn addTarget:self action:@selector(didchangeCameraClick) forControlEvents:UIControlEventTouchUpInside];
         _changeCameraBtn.hx_size = _changeCameraBtn.currentImage.size;
     }
@@ -543,9 +632,10 @@
 - (UIButton *)flashBtn {
     if (!_flashBtn) {
         _flashBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_flashBtn setImage:[HXPhotoTools hx_imageNamed:@"hx_camera_flashlight@2x.png"] forState:UIControlStateNormal];
-        [_flashBtn setImage:[HXPhotoTools hx_imageNamed:@"hx_flash_pic_nopreview@2x.png"] forState:UIControlStateSelected];
-        _flashBtn.hx_size = _flashBtn.currentImage.size;
+        UIImage *normalImage = [UIImage hx_imageNamed:@"hx_camera_flashlight"];
+        [_flashBtn setImage:normalImage forState:UIControlStateNormal];
+        UIImage *selectedImage = [UIImage hx_imageNamed:@"hx_flash_pic_nopreview"];
+        [_flashBtn setImage:selectedImage forState:UIControlStateSelected];
         [_flashBtn addTarget:self action:@selector(didFlashClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _flashBtn;
@@ -559,7 +649,7 @@
 }
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        _imageView = [[UIImageView alloc] initWithFrame:self.previewView.frame];
         _imageView.backgroundColor = [UIColor blackColor];
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
     }
@@ -579,7 +669,10 @@
         [_doneBtn setTitle:[NSBundle hx_localizedStringForKey:@"完成"] forState:UIControlStateNormal];
         [_doneBtn setTitleShadowColor:[[UIColor blackColor] colorWithAlphaComponent:0.4] forState:UIControlStateNormal];
         [_doneBtn.titleLabel setShadowOffset:CGSizeMake(1, 2)];
-        _doneBtn.frame = CGRectMake(self.view.hx_w - 20 - 70, self.view.hx_h - 120 + 70, 70, 35);
+        _doneBtn.hx_h = 40;
+        _doneBtn.hx_w = [_doneBtn.titleLabel hx_getTextWidth];
+        _doneBtn.hx_x = self.view.hx_w - 15 - _doneBtn.hx_w;
+        _doneBtn.hx_y = self.view.hx_h - self.previewView.hx_y - _doneBtn.hx_h;
         [_doneBtn addTarget:self action:@selector(didDoneBtnClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _doneBtn;
@@ -588,7 +681,7 @@
     if (!_effectView) {
         UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         _effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-        _effectView.frame = self.view.bounds;
+        _effectView.frame = self.previewView.bounds;
     }
     return _effectView;
 }
@@ -655,62 +748,74 @@
     self.photoBtn.center = CGPointMake([UIScreen mainScreen].bounds.size.width / 2, 0);
     self.videoBtn.hx_x = CGRectGetMaxX(self.photoBtn.frame) + 10;
     self.titleLb.alpha = 0;
-    if (self.manager.type == HXPhotoManagerSelectedTypePhotoAndVideo) {
-        if (!self.manager.configuration.selectTogether && self.isOutside) {
-            if (self.manager.afterSelectedPhotoArray.count > 0) {
-                self.mode = HXCustomCameraBottomViewModePhoto;
-                self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击拍照"];
-                self.titleLb.alpha = 1;
-                self.photoBtn.hidden = YES;
-                self.videoBtn.hidden = YES;
-            }else if (self.manager.afterSelectedVideoArray.count > 0) {
-                self.mode = HXCustomCameraBottomViewModeVideo;
-                self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击录制"];
-                self.titleLb.alpha = 1;
-                self.photoBtn.hidden = YES;
-                self.videoBtn.hidden = YES;
+    
+    switch (self.manager.configuration.customCameraType) {
+        case HXPhotoCustomCameraTypeUnused: {
+            if (self.manager.type == HXPhotoManagerSelectedTypePhotoAndVideo) {
+                if (!self.manager.configuration.selectTogether && self.isOutside) {
+                    if (self.manager.afterSelectedPhotoArray.count > 0) {
+                        [self setupPhotoAndVideoType];
+                    }else if (self.manager.afterSelectedVideoArray.count > 0) {
+                        [self setupVideoType];
+                    }else {
+                        [self setupPhotoAndVideoType];
+                    }
+                }else {
+                    [self setupPhotoAndVideoType];
+                }
+            }else if (self.manager.type == HXPhotoManagerSelectedTypePhoto) {
+                [self setupPhotoType];
             }else {
-                self.mode = HXCustomCameraBottomViewModePhoto;
-                self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击拍照"];
-                self.photoBtn.hidden = NO;
-                self.videoBtn.hidden = NO;
-                self.photoBtn.enabled = NO;
-                self.videoBtn.enabled = YES;
+                [self setupVideoType];
             }
-        }else {
-            self.mode = HXCustomCameraBottomViewModePhoto;
-            self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击拍照"];
-            self.photoBtn.hidden = NO;
-            self.videoBtn.hidden = NO;
-            self.photoBtn.enabled = NO;
-            self.videoBtn.enabled = YES;
-        }
-    }else if (self.manager.type == HXPhotoManagerSelectedTypePhoto) {
-        self.mode = HXCustomCameraBottomViewModePhoto;
-        self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击拍照"];
-        self.titleLb.alpha = 1;
-        self.photoBtn.hidden = YES;
-        self.videoBtn.hidden = YES;
-    }else {
-        self.mode = HXCustomCameraBottomViewModeVideo;
-        self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击录制"];
-        self.titleLb.alpha = 1;
-        self.photoBtn.hidden = YES;
-        self.videoBtn.hidden = YES;
+        } break;
+        case HXPhotoCustomCameraTypePhoto: {
+            [self setupPhotoType];
+        } break;
+        case HXPhotoCustomCameraTypeVideo: {
+            [self setupVideoType];
+        } break;
+        case HXPhotoCustomCameraTypePhotoAndVideo: {
+            [self setupPhotoAndVideoType];
+        } break;
+        default:
+            break;
     }
+}
+- (void)setupPhotoType {
+    self.mode = HXCustomCameraBottomViewModePhoto;
+    self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击拍照"];
+    self.titleLb.alpha = 1;
+    self.photoBtn.hidden = YES;
+    self.videoBtn.hidden = YES;
+}
+- (void)setupVideoType {
+    self.mode = HXCustomCameraBottomViewModeVideo;
+    self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击录制"];
+    self.titleLb.alpha = 1;
+    self.photoBtn.hidden = YES;
+    self.videoBtn.hidden = YES;
+}
+- (void)setupPhotoAndVideoType {
+    self.mode = HXCustomCameraBottomViewModePhoto;
+    self.titleLb.text = [NSBundle hx_localizedStringForKey:@"点击拍照"];
+    self.photoBtn.hidden = NO;
+    self.videoBtn.hidden = NO;
+    self.photoBtn.enabled = NO;
+    self.videoBtn.enabled = YES;
 }
 - (void)takePictures {
     if ([self.delegate respondsToSelector:@selector(playViewClick)]) {
         [self.delegate playViewClick];
     }
 }
-- (void)changeTime:(NSInteger)time {
+- (void)changeTime:(NSTimeInterval)time {
     if (time < 3) {
         self.timeLb.text = [NSBundle hx_localizedStringForKey:@"3秒内的视频无效哦~"];
     }else {
-        self.timeLb.text = [NSString stringWithFormat:@"%lds",time];
+        self.timeLb.text = [NSString stringWithFormat:@"%.0fs",time];
     }
-    self.playView.progress = (CGFloat)time / self.manager.configuration.videoMaximumDuration;
+    self.playView.progress = time / self.manager.configuration.videoMaximumDuration;
 }
 - (void)beganAnimate {
     self.userInteractionEnabled = NO;
@@ -737,22 +842,31 @@
     self.timeLb.text = [NSBundle hx_localizedStringForKey:@"3秒内的视频无效哦~"];
 }
 - (void)stopRecord {
-    if (self.manager.type == HXPhotoManagerSelectedTypePhotoAndVideo && self.isOutside) {
-        if (!self.manager.configuration.selectTogether) {
-            if (self.manager.afterSelectedPhotoArray.count > 0) {
-                self.titleLb.alpha = 1;
-            }else if (self.manager.afterSelectedVideoArray.count > 0) {
-                self.titleLb.alpha = 1;
+    if (self.manager.configuration.customCameraType == HXPhotoCustomCameraTypeUnused) {
+        if (self.manager.type == HXPhotoManagerSelectedTypePhotoAndVideo && self.isOutside) {
+            if (!self.manager.configuration.selectTogether) {
+                if (self.manager.afterSelectedPhotoArray.count > 0) {
+                    self.titleLb.alpha = 1;
+                }else if (self.manager.afterSelectedVideoArray.count > 0) {
+                    self.titleLb.alpha = 1;
+                }else {
+                    self.photoBtn.hidden = NO;
+                    self.videoBtn.hidden = NO;
+                }
             }else {
                 self.photoBtn.hidden = NO;
                 self.videoBtn.hidden = NO;
             }
         }else {
-            self.photoBtn.hidden = NO;
-            self.videoBtn.hidden = NO;
+            if (self.manager.type == HXPhotoManagerSelectedTypePhotoAndVideo) {
+                self.photoBtn.hidden = NO;
+                self.videoBtn.hidden = NO;
+            }else {
+                self.titleLb.alpha = 1;
+            }
         }
     }else {
-        if (self.manager.type == HXPhotoManagerSelectedTypePhotoAndVideo) {
+        if (self.manager.configuration.customCameraType == HXPhotoCustomCameraTypePhotoAndVideo) {
             self.photoBtn.hidden = NO;
             self.videoBtn.hidden = NO;
         }else {
@@ -769,15 +883,23 @@
     self.playView.center = CGPointMake(self.hx_w / 2, self.hx_h / 2 + 10);
     self.timeLb.frame = CGRectMake(12, self.playView.hx_y - 26, self.hx_w - 24, 15);
     self.titleLb.frame = CGRectMake(12, self.playView.hx_y - 20 - 30, self.hx_w - 24, 15);
-    if (self.manager.type == HXPhotoManagerSelectedTypeVideo || self.manager.type == HXPhotoManagerSelectedTypePhoto) {
-        self.titleLb.hx_y = self.playView.hx_y - 30;
-    }else if (self.manager.type == HXPhotoManagerSelectedTypePhotoAndVideo) {
-        if (!self.manager.configuration.selectTogether && self.isOutside) {
-            if (self.manager.afterSelectedPhotoArray.count > 0) {
-                self.titleLb.hx_y = self.playView.hx_y - 30;
-            }else if (self.manager.afterSelectedVideoArray.count > 0) {
-                self.titleLb.hx_y = self.playView.hx_y - 30;
+    if (self.manager.configuration.customCameraType == HXPhotoCustomCameraTypeUnused) {
+        if (self.manager.type == HXPhotoManagerSelectedTypeVideo ||
+            self.manager.type == HXPhotoManagerSelectedTypePhoto) {
+            self.titleLb.hx_y = self.playView.hx_y - 30;
+        }else if (self.manager.type == HXPhotoManagerSelectedTypePhotoAndVideo) {
+            if (!self.manager.configuration.selectTogether && self.isOutside) {
+                if (self.manager.afterSelectedPhotoArray.count > 0) {
+                    self.titleLb.hx_y = self.playView.hx_y - 30;
+                }else if (self.manager.afterSelectedVideoArray.count > 0) {
+                    self.titleLb.hx_y = self.playView.hx_y - 30;
+                }
             }
+        }
+    }else {
+        if (self.manager.configuration.customCameraType == HXPhotoCustomCameraTypePhoto ||
+            self.manager.configuration.customCameraType == HXPhotoCustomCameraTypeVideo) {
+            self.titleLb.hx_y = self.playView.hx_y - 30;
         }
     }
     self.photoBtn.hx_y = self.playView.hx_y - 30;
@@ -849,6 +971,7 @@
     }
     return _timeLb;
 }
+
 - (CAGradientLayer *)maskLayer {
     if (!_maskLayer) {
         _maskLayer = [CAGradientLayer layer];

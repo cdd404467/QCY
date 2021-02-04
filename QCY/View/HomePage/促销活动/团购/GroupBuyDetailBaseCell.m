@@ -7,8 +7,6 @@
 //
 
 #import "GroupBuyDetailBaseCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 
 @implementation GroupBuyDetailBaseCell
 

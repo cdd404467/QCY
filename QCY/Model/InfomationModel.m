@@ -8,15 +8,6 @@
 
 #import "InfomationModel.h"
 
-@implementation InfoDetail
-
-+ (NSDictionary *)mj_replacedKeyFromPropertyName{
-    return @{
-             @"infoID" : @"id"//前边的是你想用的key，后边的是返回的key
-             };
-}
-@end
-
 @implementation InfomationModel
 
 + (NSDictionary *)mj_replacedKeyFromPropertyName{

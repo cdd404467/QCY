@@ -25,8 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *maxNum;                    //最大认购量
 @property (nonatomic, copy)NSString *startTime;                 //开始时间
 @property (nonatomic, copy)NSString *endTime;                   //结束时间
-//@property (nonatomic, copy)NSString *oldPrice;                  //原价
-@property (nonatomic, assign)double  oldPrice;                  //原价
+@property (nonatomic, assign)double oldPrice;                   //原价
 
 @property (nonatomic, copy)NSString *priceNew;                  //团购价
 @property (nonatomic, copy)NSString *priceUnit;                 //价格单位
@@ -40,8 +39,38 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)NSString *detailMobilePic;         //基本参数
 @property (nonatomic, strong)NSString *noteMobilePic;           //团购须知
 
-/*** 团购详情 ***/
+//用户是否参与团购 1 - 参与过
+@property (nonatomic, copy) NSString *loginUserHasBuy;
+//我的认购量
+@property (nonatomic, copy) NSString *num;
+//当前团购是否可以砍价（是否参与砍价），1可以砍价；0不可砍价
+@property (nonatomic, copy) NSString *isCutPrice;
+//当前认购已砍价格
+@property (nonatomic, copy) NSString *hasCutPrice;
+//当前认购还可砍的价格
+@property (nonatomic, copy) NSString *remainCutPrice;
+//认购id
+@property (nonatomic, copy) NSString *buyerId;
+//砍价完成百分比
+@property (nonatomic, copy) NSString *cutPricePercent;
+//当前用户是否已砍价，1已砍过，0未砍过
+@property (nonatomic, copy) NSString *loginUserHasCut;
+//当前价格
+@property (nonatomic, copy) NSString *realPrice;
+
+//@property (nonatomic, strong) NSDecimalNumber *decNumber;
 @end
+
+//团购帮砍记录
+@interface GroupBuyBarGainModel : NSObject
+//昵称
+@property (nonatomic, copy) NSString *nickName;
+//砍的价
+@property (nonatomic, copy) NSString *cutPrice;
+//价格单位
+@property (nonatomic, copy)NSString *priceUnit;
+@end
+
 
 @interface GroupBuyFinishModel : NSObject
 

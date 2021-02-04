@@ -23,10 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString*)stringFromDate:(NSDate*)date;
 //
 + (NSDate *)stringToDate:(NSString *)string;
-
+//年月日，时分
++ (NSString *)timestampToStringAsOfMin:(long long)time;
 
 //今天、昨天
 + (NSString *)checkTheDate:(long long)string;
+//时间差
++ (void)timeDiffWithStartTimeStamp:(long long)starTimeStamp finishTimeStamp:(long long)finishTimeStamp completeBlock:(void (^)(NSInteger day,NSInteger hour,NSInteger minute,NSInteger second))completeBlock;
+
++ (NSArray *)timeDiffWithStartTimeStamp:(long long)starTimeStamp finishTimeStamp:(long long)finishTimeStamp;
 @end
 
 

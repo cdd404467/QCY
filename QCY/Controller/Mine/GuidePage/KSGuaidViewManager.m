@@ -54,7 +54,7 @@ if (![userDefaults objectForKey:@"isFirstLaunch"]) {
         
         _window.backgroundColor = [UIColor clearColor];
         
-        _window.windowLevel = UIWindowLevelStatusBar;
+//        _window.windowLevel = UIWindowLevelStatusBar;
         
         [_window makeKeyAndVisible];
         

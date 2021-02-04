@@ -18,6 +18,12 @@
 }
 @end
 
+@implementation GroupBuyBarGainModel
+
+
+
+@end
+
 @implementation GroupBuyFinishModel
 
 

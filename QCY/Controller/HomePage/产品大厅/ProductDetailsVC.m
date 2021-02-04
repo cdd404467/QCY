@@ -7,8 +7,6 @@
 //
 
 #import "ProductDetailsVC.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "ProductDetailHeaderView.h"
 #import "UIView+Border.h"
 #import <SDAutoLayout.h>
@@ -21,6 +19,10 @@
 #import "HelperTool.h"
 #import "ShopMainPageVC.h"
 #import "MyServiceVC.h"
+#import <XHWebImageAutoSize.h>
+#import "ImageCell.h"
+#import <UIImageView+WebCache.h>
+#import <WXApi.h>
 
 
 @interface ProductDetailsVC ()<UITableViewDataSource, UITableViewDelegate>
@@ -33,14 +35,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"产品详情";
+    [self setNavBar];
     [self requestData];
+}
+
+- (void)setNavBar {
+    self.title = @"产品详情";
+    if([WXApi isWXAppInstalled]){//判断用户是否已安装微信App
+        [self addRightBarButtonItemWithTitle:@"分享" action:@selector(share)];
+    }
 }
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:SCREEN_BOUNDS style:UITableViewStyleGrouped];
-        _tableView.backgroundColor = HEXColor(@"#d9d9d9", 1);
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT - TABBAR_HEIGHT) style:UITableViewStyleGrouped];
+        _tableView.backgroundColor = Cell_BGColor;
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.bounces = NO;
@@ -52,18 +61,15 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
-        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
-        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+        } 
+//        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, TABBAR_HEIGHT, 0);
+//        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         _tableView.rowHeight = UITableViewAutomaticDimension;
         ProductDetailHeaderView *header = [[ProductDetailHeaderView alloc] initWithDataSource:_dataSource];
-        header.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40 + KFit_W(210) + 60);
+        header.frame = CGRectMake(0, 0, SCREEN_WIDTH, header.viewHeight);
         _tableView.tableHeaderView = header;
-        [header.shareBtn addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
         UIView *footer = [[UIView alloc] init];
-        footer.backgroundColor = HEXColor(@"#d9d9d9", 1);
+        footer.backgroundColor = Cell_BGColor;
         footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 50);
         _tableView.tableFooterView = footer;
     }
@@ -137,8 +143,11 @@
 #pragma mark - UITableView代理
 //section header高度
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    
-    return 51;
+    if (section == 0) {
+        return 51;
+    } else {
+        return 0.00001;
+    }
 }
 
 //section footer高度
@@ -150,23 +159,31 @@
 //分区数
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return 1;
+    return 2;
 }
 
 //cell个数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (_dataSource.propMap.count == 0) {
-        return 1;
+    if (section == 0) {
+        if (_dataSource.propMap.count == 0) {
+            return 1;
+        } else {
+            return _dataSource.propMap.count;
+        }
     } else {
-        return _dataSource.propMap.count;
+        if (_dataSource.detailPicList.count > 0)
+            return _dataSource.detailPicList.count;
+        return 0;
     }
 }
 
 //自定义的section header
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-
-    ProductDetailSectionHeader *header = [ProductDetailSectionHeader headerWithTableView:tableView];
-    return header;
+    if (section == 0) {
+        ProductDetailSectionHeader *header = [ProductDetailSectionHeader headerWithTableView:tableView];
+        return header;
+    }
+    return nil;
 }
 
 //估算高度
@@ -177,12 +194,15 @@
 
 //cell高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (_dataSource.propMap.count == 0) {
-        return 60;
+    if (indexPath.section == 0) {
+        if (_dataSource.propMap.count == 0) {
+            return 60;
+        } else {
+            return UITableViewAutomaticDimension;
+        }
     } else {
-        return UITableViewAutomaticDimension;
+        return [XHWebImageAutoSize imageHeightForURL:ImgUrl(_dataSource.detailPicList[indexPath.row]) layoutWidth:SCREEN_WIDTH estimateHeight:200];
     }
-    
 }
 
 
@@ -200,7 +220,7 @@
     CGMutablePathRef pathRef = CGPathCreateMutable();
     // 获取cell的size
     // 第一个参数,是整个 cell 的 bounds, 第二个参数是距左右两端的距离,第三个参数是距上下两端的距离
-    CGRect bounds = CGRectInset(cell.bounds, KFit_W(13), 0);
+    CGRect bounds = CGRectInset(cell.bounds, 13, 0);
     
     // CGRectGetMinY：返回对象顶点坐标
     // CGRectGetMaxY：返回对象底点坐标
@@ -266,19 +286,35 @@
 
 //数据源
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    ProductDetailBasicParaCell *cell = [ProductDetailBasicParaCell cellWithTableView:tableView];
-    
-    if (_dataSource.propMap.count == 0) {
-        cell.noneLabel.hidden = NO;
-        cell.vLine.hidden = YES;
+    if (indexPath.section == 0) {
+        ProductDetailBasicParaCell *cell = [ProductDetailBasicParaCell cellWithTableView:tableView];
+        if (_dataSource.propMap.count == 0) {
+            cell.noneLabel.hidden = NO;
+            cell.vLine.hidden = YES;
+        } else {
+            cell.noneLabel.hidden = YES;
+            cell.vLine.hidden = NO;
+            cell.model = _dataSource.propMap[indexPath.row];
+        }
+        
+        return cell;
     } else {
-        cell.noneLabel.hidden = YES;
-        cell.vLine.hidden = NO;
-        cell.model = _dataSource.propMap[indexPath.row];
+        static NSString *identifier = @"imageCell";
+        ImageCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if (cell == nil) {
+            cell = [[ImageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        }
+        
+        [cell.cellImageView sd_setImageWithURL:ImgUrl(_dataSource.detailPicList[indexPath.row]) placeholderImage:PlaceHolderImg completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            /** 缓存image size */
+            [XHWebImageAutoSize storeImageSize:image forURL:imageURL completed:^(BOOL result) {
+                /** reload  */
+                if(result)  [tableView  xh_reloadDataForURL:imageURL];
+            }];
+        }];
+        
+        return cell;
     }
-   
-    return cell;
 }
 
 - (void)setupBottomBar {
@@ -366,7 +402,81 @@
 }
 
 
+- (NSArray *)dealWithData:(ProductInfoModel *)model {
+    NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:0];
+    //染料、助剂、其他
+    if (isRightData(@(model.price).stringValue) && [model.displayPrice isEqualToString:@"1"])
+        [tempArr addObject:@{@"key":@"单位", @"value":model.unit}];
+    
+    if (isRightData(@(model.price).stringValue) && [model.displayPrice isEqualToString:@"1"])
+        [tempArr addObject:@{@"key":@"价格", @"value":@(model.price).stringValue}];
 
+    if (isRightData(model.priceUnit))
+        [tempArr addObject:@{@"key":@"价格单位", @"value":model.priceUnit}];
+
+    if (isRightData(model.pack))
+        [tempArr addObject:@{@"key":@"包装规格", @"value":model.pack}];
+    
+    if (isRightData(model.supplierName))
+        [tempArr addObject:@{@"key":@"生产厂商", @"value":model.supplierName}];
+    
+    if (isRightData(model.packLabel))
+        [tempArr addObject:@{@"key":@"包装形式", @"value":model.packLabel}];
+    
+    if (isRightData(model.minNum))
+        [tempArr addObject:@{@"key":@"起订数量", @"value":model.minNum}];
+    
+    //化学品
+    if (isRightData(model.fineness))
+        [tempArr addObject:@{@"key":@"纯度", @"value":model.fineness}];
+    
+    //设备仪器
+    if (isRightData(model.brand))
+        [tempArr addObject:@{@"key":@"品牌", @"value":model.brand}];
+    
+    if (isRightData(model.modelNumber))
+        [tempArr addObject:@{@"key":@"型号", @"value":model.modelNumber}];
+    
+    if (isRightData(model.origin))
+        [tempArr addObject:@{@"key":@"产地", @"value":model.origin}];
+    
+    if (isRightData(model.dateInProduced))
+        [tempArr addObject:@{@"key":@"生产日期", @"value":model.dateInProduced}];
+    
+    if (isRightData(model.overallDimensions))
+        [tempArr addObject:@{@"key":@"外形尺寸", @"value":model.overallDimensions}];
+    
+    //纺织品
+    if (isRightData(model.num))
+        [tempArr addObject:@{@"key":@"数量", @"value":model.num}];
+    
+    if (isRightData(model.colors))
+        [tempArr addObject:@{@"key":@"颜色", @"value":model.colors}];
+    
+    if (isRightData(model.componentContent))
+        [tempArr addObject:@{@"key":@"成分含量", @"value":model.componentContent}];
+    
+    if (isRightData(model.yarnCount))
+        [tempArr addObject:@{@"key":@"纱支", @"value":model.yarnCount}];
+    
+    if (isRightData(model.densityOf))
+        [tempArr addObject:@{@"key":@"密度", @"value":model.densityOf}];
+    
+    if (isRightData(model.gramWeight))
+        [tempArr addObject:@{@"key":@"克重", @"value":model.gramWeight}];
+    
+    if (isRightData(model.breadth))
+        [tempArr addObject:@{@"key":@"幅宽", @"value":model.breadth}];
+    
+    if (isRightData(model.fabric))
+        [tempArr addObject:@{@"key":@"织物组织", @"value":model.fabric}];
+    
+    if (isRightData(model.specificPurpose))
+        [tempArr addObject:@{@"key":@"具体用途", @"value":model.specificPurpose}];
+    
+    return [PropMap mj_objectArrayWithKeyValuesArray:[tempArr copy]];
+//    return [tempArr copy];
+}
 
 
 @end

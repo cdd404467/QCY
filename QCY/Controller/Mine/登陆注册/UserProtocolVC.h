@@ -6,11 +6,11 @@
 //  Copyright © 2018 Shanghai i7colors Ecommerce Co., Ltd. All rights reserved.
 //
 
-#import "BaseViewControllerNav.h"
+#import "BaseSystemPresentVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UserProtocolVC : BaseViewControllerNav
+@interface UserProtocolVC : BaseSystemPresentVC
 
 @property (nonatomic, copy)NSString *webUrl;
 @end

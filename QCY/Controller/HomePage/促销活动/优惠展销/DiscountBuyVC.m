@@ -7,15 +7,13 @@
 //
 
 #import "DiscountBuyVC.h"
-#import "MacroHeader.h"
 #import <YYText.h>
-#import <Masonry.h>
 #import "SelectedView.h"
 #import <SDAutoLayout.h>
 #import "HelperTool.h"
 #import "ClassTool.h"
 #import "UITextView+Placeholder.h"
-#import <BRPickerView.h>
+#import "BRPickerView.h"
 #import "CddHUD.h"
 #import "MobilePhone.h"
 #import "NetWorkingPort.h"
@@ -38,9 +36,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"我要购买";
-   
     [self.view addSubview:self.scrollView];
-    [self setupUI];
+    [self getDefaultInfo];
 }
 
 
@@ -60,7 +57,24 @@
     return _scrollView;
 }
 
-- (void)setupUI {
+//自动填充
+- (void)getDefaultInfo {
+    NSString *urlString = [NSString stringWithFormat:URL_Default_Address,User_Token];
+    DDWeakSelf;
+    [CddHUD show:self.view];
+    [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
+        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"] && isRightData(To_String(json[@"data"]))) {
+            [weakself setupUIWithInfoDict:json[@"data"]];
+        } else {
+            [weakself setupUIWithInfoDict:nil];
+        }
+    } Failure:^(NSError *error) {
+        NSLog(@" Error : %@",error);
+    }];
+}
+
+- (void)setupUIWithInfoDict:(NSDictionary *)dict {
     CGFloat newCoordinateHeight ;
     //提示
     YYLabel *tipLabel = [[YYLabel alloc] init];
@@ -213,6 +227,8 @@
     .widthIs(imageWH)
     .heightIs(imageWH);
     
+    /****** 自动l填写信息 ******/
+    
     //联系人
     UITextField *contactTF = [[UITextField alloc] init];
     contactTF.backgroundColor = HEXColor(@"#E8E8E8", 1);
@@ -230,6 +246,8 @@
         make.right.mas_equalTo(self.view.mas_right).offset(KFit_W(-9));
     }];
     _contactTF = contactTF;
+    if isRightData(dict[@"contact"])
+        contactTF.text = dict[@"contact"];
     
     //联系人方式
     UITextField *phoneTF = [[UITextField alloc] init];
@@ -249,6 +267,8 @@
         make.right.mas_equalTo(contactTF);
     }];
     _phoneTF = phoneTF;
+    if isRightData(dict[@"phone"])
+        phoneTF.text = dict[@"phone"];
     
     //联系人公司
     UITextField *companyTF = [[UITextField alloc] init];
@@ -267,6 +287,8 @@
         make.right.mas_equalTo(contactTF);
     }];
     _companyTF = companyTF;
+    if isRightData(dict[@"companyName"])
+        companyTF.text = dict[@"companyName"];
     
     //公司所在区域
     SelectedView *placeArea = [[SelectedView alloc] init];
@@ -279,6 +301,8 @@
         make.right.mas_equalTo(contactTF);
     }];
     _placeArea = placeArea;
+    if (isRightData(dict[@"province"]) && isRightData(dict[@"city"]))
+        placeArea.textLabel.text = [NSString stringWithFormat:@"%@-%@",dict[@"province"],dict[@"city"]];
     
     //详细说明
     UITextView *textView = [[UITextView alloc] init];
@@ -293,6 +317,8 @@
         make.top.mas_equalTo(placeArea.mas_bottom).offset(20);
     }];
     _textView = textView;
+    if isRightData(dict[@"address"])
+        textView.text = dict[@"address"];
     
     //提交按钮
     UIButton *submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -315,7 +341,8 @@
     }
     
     NSArray *areaArray = [_placeArea.textLabel.text componentsSeparatedByString:@"-"];
-    NSDictionary *dict = @{@"salesId":_productID,
+    NSDictionary *dict = @{@"token":GET_USER_TOKEN,
+                           @"salesId":_productID,
                            @"contact":_contactTF.text,
                            @"phone":_phoneTF.text,
                            @"companyName":_companyTF.text,
@@ -335,8 +362,6 @@
         [CddHUD hideHUD:weakself.view];
 //                        NSLog(@"-----== %@",json);
         if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
-//            NSString *notiName = @"groupBuySuc";
-//            [[NSNotificationCenter defaultCenter]postNotificationName:notiName object:nil userInfo:nil];
             [CddHUD showTextOnlyDelay:@"参与成功" view:weakself.view];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [weakself.navigationController popViewControllerAnimated:YES];

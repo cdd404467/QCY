@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MJExtension.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -62,15 +63,38 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface MineNumberModel : NSObject
+/*** 买家中心 ***/
+//历史求购数目
+@property (nonatomic, copy)NSString *enquiryTimes;
+//历史报价数目
+@property (nonatomic, copy)NSString *offerTimes;
+//正在求购中的个数
+@property (nonatomic, copy)NSString *isEnquiryCount;
+//待确认报价的个数
+@property (nonatomic, copy)NSString *waitSureCount;
+//即将过期的个数
+@property (nonatomic, copy)NSString *myExpireCount;
+//我的试样中的助剂定制个数
+@property (nonatomic, copy)NSString *zhujiDiyingCount;
 
-@property (nonatomic, copy)NSString *enquiryTimes;              //历史求购数目
-@property (nonatomic, copy)NSString *offerTimes;                //历史报价数目
-@property (nonatomic, copy)NSString *isEnquiryCount;            //正在求购中的个数
-@property (nonatomic, copy)NSString *waitSureCount;             //待确认报价的个数
-@property (nonatomic, copy)NSString *myExpireCount;             //即将过期的个数
-//卖家中心
-@property (nonatomic, copy)NSString *myAcceptOfferCount;        //即将过期的个数
+
+/***  卖家中心  ***/
+//我的已被采纳的报价个数
+@property (nonatomic, copy)NSString *myAcceptOfferCount;
+//我的解决方案被采纳的个数
+@property (nonatomic, copy)NSString *zhujiSolutionAcceptCount;
 
 @end
+
+@interface MineCellModel : NSObject
+//cell的图片
+@property (nonatomic, copy) NSString *imageName;
+//cell的标题
+@property (nonatomic, copy) NSString *iconTitle;
+//cell上的数字
+@property (nonatomic, copy) NSString *iconNum;
+
+@end
+
 
 NS_ASSUME_NONNULL_END

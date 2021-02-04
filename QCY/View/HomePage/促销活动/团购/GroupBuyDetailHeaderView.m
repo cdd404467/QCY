@@ -7,11 +7,9 @@
 //
 
 #import "GroupBuyDetailHeaderView.h"
-#import "MacroHeader.h"
 #import "GroupBuyingModel.h"
 #import <YYWebImage.h>
 #import <YYText.h>
-#import <Masonry.h>
 #import "UIView+Border.h"
 #import "CountDown.h"
 #import "HelperTool.h"
@@ -22,6 +20,7 @@
 @property (nonatomic, strong)UILabel *countHour;
 @property (nonatomic, strong)UILabel *countMinute;
 @property (nonatomic, strong)UILabel *countSecond;
+@property (nonatomic, strong) UIView *tipView;
 @end
 
 
@@ -262,6 +261,31 @@
         make.right.mas_equalTo(-2);
     }];
     _progressLabel = progressLabel;
+    
+    ///提示用户是否还可以砍价
+    UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(0, productImageView.bottom + 120, SCREEN_WIDTH, 70)];
+    tipView.backgroundColor = UIColor.whiteColor;
+    tipView.hidden = YES;
+    [self addSubview:tipView];
+    [tipView addBorderView:Like_Color width:0.5 direction:BorderDirectionTop];
+    _tipView = tipView;
+    
+    UIImageView *tipImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"group_share_bargain"]];
+    tipImageView.frame = CGRectMake(0, 1, 90, 69);
+    [tipView addSubview:tipImageView];
+    
+    UILabel *tipLabel = [[UILabel alloc] init];
+    tipLabel.text = @"此团购还可以参与砍价，微信分享给好友并成功砍价，还能拿到更低的价格!";
+    tipLabel.numberOfLines = 3;
+    tipLabel.font = [UIFont systemFontOfSize:14];
+    tipLabel.textColor = HEXColor(@"#868686", 1);
+    [tipView addSubview:tipLabel];
+    [tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(tipImageView.mas_right).offset(20);
+        make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(70);
+        make.top.mas_equalTo(0);
+    }];
 }
 
 //加载数据
@@ -327,9 +351,16 @@
     }
     
     //倒计时
-    NSDate *datenow = [NSDate date];
-    long long nowStamp = (long)[datenow timeIntervalSince1970] * 1000;
-    [self countDownWithBegin:nowStamp endTime:_dataSource.endTimeStamp];
+    if ([_dataSource.endCode isEqualToString:@"10"]) {
+        NSDate *datenow = [NSDate date];
+        long long nowStamp = (long)[datenow timeIntervalSince1970] * 1000;
+        [self countDownWithBegin:nowStamp endTime:_dataSource.endTimeStamp];
+    } else {
+        _countDay.text = @"00";
+        _countHour.text = @"00";
+        _countMinute.text = @"00";
+        _countSecond.text = @"00";
+    }
     
     //已经认领
     if isRightData(_dataSource.subscribedNum)
@@ -341,6 +372,13 @@
         CGFloat percent = [percentStr floatValue] / 100;
         _progressView.progress = percent;
         _progressLabel.text = [NSString stringWithFormat:@"达成%@",_dataSource.numPercent];
+    }
+    
+    //显示提示label
+    if ([_dataSource.isCutPrice isEqualToString:@"1"]) {
+        self.tipView.hidden = NO;
+    } else {
+        self.tipView.hidden = YES;
     }
 }
 

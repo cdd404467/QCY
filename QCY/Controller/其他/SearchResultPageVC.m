@@ -7,7 +7,6 @@
 //
 
 #import "SearchResultPageVC.h"
-#import "MacroHeader.h"
 #import <UIScrollView+EmptyDataSet.h>
 #import "PYSearchConst.h"
 #import "PYSearchSuggestionViewController.h"
@@ -23,11 +22,12 @@
 #import "ProductDetailsVC.h"
 #import "AskToBuyDetailsVC.h"
 #import "ShopMainPageVC.h"
+#import "UITextField+Limit.h"
 
 @interface SearchResultPageVC ()<UITableViewDataSource, UITableViewDelegate,UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 @property (nonatomic, assign)int page;
 @property (nonatomic, assign)BOOL isClick;
-@property (nonatomic, strong)UITableView *tableView;
+@property (nonatomic, strong)BaseTableView *tableView;
 @property (nonatomic, strong)NSMutableArray *dataSource;
 @property (nonatomic, weak) UISearchBar *searchBar;
 @property (nonatomic, assign)int totalNum;
@@ -55,9 +55,9 @@
 }
 
 //懒加载tableView
-- (UITableView *)tableView {
+- (BaseTableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
+        _tableView = [[BaseTableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.emptyDataSetSource = self;
@@ -65,14 +65,6 @@
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         //取消垂直滚动条
         _tableView.showsVerticalScrollIndicator = NO;
-        if (@available(iOS 11.0, *)) {
-            //            _tableView.estimatedRowHeight = 0;
-            _tableView.estimatedSectionHeaderHeight = 0;
-            _tableView.estimatedSectionFooterHeight = 0;
-            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
         _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;
         DDWeakSelf;
@@ -101,58 +93,65 @@
 - (void)setupUI {
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 50, 44);
-    [btn setTitle:@"取消" forState:UIControlStateNormal];
-    btn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [btn setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
-    [btn sizeToFit];
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
-    
-    [btn addTarget:self action:@selector(cancelDidClick) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = rightItem;
-    
-    // 创建搜索框
-    UIView *titleView = [[UIView alloc] init];
-    titleView.py_x = PYMargin * 0.5;
-    titleView.py_y = 7;
-    titleView.py_width = self.view.py_width - 64 - titleView.py_x * 2;
-    
-    titleView.py_height = 30;
-    titleView.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1];
-    
-    titleView.layer.cornerRadius = 13;
-    titleView.clipsToBounds = YES;
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
-    searchBar.py_width -= PYMargin * 1.5;
-    searchBar.placeholder = @"输入关键词搜索";
-    searchBar.text = _keyWord;
-    //    searchBar.placeholder = PYSearchPlaceholderText;
-    //iOS 10 searchBarBackground
-    searchBar.backgroundImage = [UIImage imageNamed:@"PYSearch.bundle/clearImage"];
-    searchBar.delegate = self;
-    //    searchBar.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1];
-    //去掉searchBar的背景色
-    //    for (UIView *view in searchBar.subviews) {
-    //        if ([view isKindOfClass:NSClassFromString(@"UIView")] && view.subviews.count > 0) {
-    //            [[view.subviews objectAtIndex:0] removeFromSuperview];
-    //            break;
-    //        }
-    //    }
-    UITextField * searchTextField = [[[searchBar.subviews firstObject] subviews] lastObject];
-    [searchTextField setClearButtonMode:UITextFieldViewModeNever];
-//    [searchTextField addTarget:self action:@selector(textFieldChange:) forControlEvents:UIControlEventEditingChanged];
-    searchTextField.tintColor = [UIColor blackColor];
-    //限制字数
-    //    [searchTextField lengthLimit:^{
-    //        if (searchTextField.text.length > 10) {
-    //            searchTextField.text = [searchTextField.text substringToIndex:10];
-    //        }
-    //    }];
-    [searchTextField setBackgroundColor:[UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1]];
-    
-    [titleView addSubview:searchBar];
-    self.searchBar = searchBar;
-    self.navigationItem.titleView = titleView;
+        btn.frame = CGRectMake(0, 0, 50, 44);
+        [btn setTitle:@"取消" forState:UIControlStateNormal];
+    //    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, -5)];
+        btn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [btn setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+        [btn sizeToFit];
+        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:btn];
+        
+        [btn addTarget:self action:@selector(cancelDidClick) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = rightItem;
+        
+        // 创建搜索框
+        UIView *titleView = [[UIView alloc] init];
+        titleView.py_x = PYMargin * 0.5;
+        titleView.py_y = 7;
+        titleView.py_width = self.view.py_width - 64 - titleView.py_x * 2;
+        
+        titleView.py_height = 30;
+    //    titleView.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1];
+        titleView.backgroundColor = UIColor.whiteColor;
+        titleView.layer.cornerRadius = 13;
+        titleView.clipsToBounds = YES;
+        UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
+        searchBar.py_width -= PYMargin * 1.5;
+        searchBar.placeholder = @"输入关键词搜索";
+        searchBar.text = _keyWord;
+        //    searchBar.placeholder = PYSearchPlaceholderText;
+        //iOS 10 searchBarBackground
+        searchBar.backgroundImage = [UIImage imageNamed:@"PYSearch.bundle/clearImage"];
+        searchBar.delegate = self;
+        //    searchBar.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1];
+        //去掉searchBar的背景色
+        //    for (UIView *view in searchBar.subviews) {
+        //        if ([view isKindOfClass:NSClassFromString(@"UIView")] && view.subviews.count > 0) {
+        //            [[view.subviews objectAtIndex:0] removeFromSuperview];
+        //            break;
+        //        }
+        //    }
+        
+        
+        UITextField * searchTextField = [[[searchBar.subviews firstObject] subviews] lastObject];
+        if (@available(iOS 13.0, *)) {
+            searchTextField = searchBar.searchTextField;
+        }
+        
+        [searchTextField setClearButtonMode:UITextFieldViewModeNever];
+//        [searchTextField addTarget:self action:@selector(textFieldChange:) forControlEvents:UIControlEventEditingChanged];
+        searchTextField.tintColor = UIColor.blackColor;
+        //限制字数
+        [searchTextField lengthLimit:^{
+            if (searchTextField.text.length > 20) {
+                searchTextField.text = [searchTextField.text substringToIndex:20];
+            }
+        }];
+    //    [searchTextField setBackgroundColor:[UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1]];
+        [searchTextField setBackgroundColor:UIColor.whiteColor];
+        [titleView addSubview:searchBar];
+        self.searchBar = searchBar;
+        self.navigationItem.titleView = titleView;
 }
 
 //searchBar 键盘搜索按钮的点击事件
@@ -246,7 +245,7 @@
     if (_isFirstLoad == YES) {
         [CddHUD show:self.view];
     }
-    NSString *urlString = [NSString stringWithFormat:URL_Shop_List,_page,Page_Count,_keyWord];
+    NSString *urlString = [NSString stringWithFormat:URL_Shop_List,_page,Page_Count,_keyWord,@""];
     urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
         [CddHUD hideHUD:weakself.view];

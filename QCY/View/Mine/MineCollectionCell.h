@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class MineCellModel;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MineCollectionCell : UICollectionViewCell
 @property (nonatomic, strong)UIButton *iconBtn;
 @property (nonatomic, strong)UILabel *numberLabel;
+@property (nonatomic, strong) MineCellModel *model;
 - (void)configData:(NSString *)text;
 @end
 

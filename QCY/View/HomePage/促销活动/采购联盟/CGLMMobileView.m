@@ -7,8 +7,6 @@
 //
 
 #import "CGLMMobileView.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "CountDown.h"
 #import "NetWorkingPort.h"
 #import "ClassTool.h"
@@ -72,7 +70,6 @@
     phoneTF.layer.cornerRadius = 5;
     phoneTF.keyboardType = UIKeyboardTypeNumberPad;
     phoneTF.font = [UIFont systemFontOfSize:14];
-    [phoneTF setValue:RGBA(122, 122, 122, 1) forKeyPath:@"_placeholderLabel.textColor"];
     phoneTF.layer.borderColor= RGBA(219, 222, 224, 1).CGColor;
     phoneTF.layer.borderWidth= 0.5f;
     phoneTF.placeholder = @"手机号";
@@ -100,7 +97,6 @@
     passwdTF.delegate = self;
     passwdTF.font = [UIFont systemFontOfSize:14];
     passwdTF.keyboardType = UIKeyboardTypeNumberPad;
-    [passwdTF setValue:RGBA(122, 122, 122, 1) forKeyPath:@"_placeholderLabel.textColor"];
     passwdTF.placeholder = @"短信验证码";
     passwdTF.layer.borderWidth = 0.5f;
     passwdTF.layer.borderColor = RGBA(219, 222, 224, 1).CGColor;

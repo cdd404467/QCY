@@ -174,7 +174,13 @@
     [self.displayDictM setObject:viewController forKey:[self getKeyWithTitle:title]];
     
     UIScrollView *scrollView = self.currentScrollView;
-    scrollView.frame = viewController.view.bounds;
+    
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(pageViewController:heightForScrollViewAtIndex:)]) {
+        CGFloat scrollViewHeight = [self.dataSource pageViewController:self heightForScrollViewAtIndex:index];
+        scrollView.frame = CGRectMake(0, 0, viewController.view.yn_width, scrollViewHeight);
+    } else {
+        scrollView.frame = viewController.view.bounds;
+    }
     
     [viewController didMoveToParentViewController:self];
     
@@ -359,6 +365,7 @@
 /// 调整scrollMenuView层级，防止TableView Section Header 挡住
 - (void)adjustSectionHeader:(UIScrollView *)scrollview {
     if (scrollview.subviews.lastObject != self.scrollMenuView) {
+        [scrollview bringSubviewToFront:self.headerBgView];
         [scrollview bringSubviewToFront:self.scrollMenuView];
     }
 }
@@ -466,7 +473,7 @@
                                  controllers:(NSArray *)controllers
                                        index:(NSInteger)index {
     index = index < 0 ? 0 : index;
-    index = index > self.controllersM.count - 1 ? self.controllersM.count - 1 : index;
+    index = index > self.controllersM.count ? self.controllersM.count : index;
     NSInteger tarIndex = index;
     BOOL insertSuccess = NO;
     if (titles.count == controllers.count && controllers.count > 0) {
@@ -623,6 +630,19 @@
         [self.currentScrollView setContentOffset:CGPointMake(0, 0) animated:animated];
     }
 }
+
+- (void)scrollToContentOffset:(CGPoint)point animated:(BOOL)animated {
+    
+    if ([self isSuspensionTopStyle] || [self isSuspensionBottomStyle]) {
+        [self.currentScrollView setContentOffset:point animated:animated];
+    } else if ([self isSuspensionTopPauseStyle]) {
+        [self.currentScrollView setContentOffset:point animated:NO];
+        [self.bgScrollView setContentOffset:point animated:animated];
+    } else {
+        [self.currentScrollView setContentOffset:point animated:animated];
+    }
+}
+
 
 #pragma mark - Private Method
 
@@ -1069,6 +1089,11 @@
         self.headerBgView.frame = headerBgViewFrame;
         self.scaleBackgroundView.frame = scaleBgViewFrame;
     }
+}
+
+- (void)setHeaderView:(UIView *)headerView {
+    _headerView = headerView;
+    _headerView.yn_height = ceil(headerView.yn_height);
 }
 
 - (void)dealloc {

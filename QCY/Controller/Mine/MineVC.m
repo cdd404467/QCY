@@ -7,10 +7,7 @@
 //
 
 #import "MineVC.h"
-#import "MacroHeader.h"
 #import "HelperTool.h"
-#import <Masonry.h>
-#import "BaseNavigationController.h"
 #import <UIImageView+WebCache.h>
 #import <YYText.h>
 #import "PaddingLabel.h"
@@ -21,19 +18,20 @@
 #import "MineCollectionCell.h"
 #import "MyOfferPriceVC.h"
 #import "MyAskToBuyVC.h"
-#import "CommonNav.h"
 #import "SettingVC.h"
 #import "ClassTool.h"
 #import "NetWorkingPort.h"
 #import "MinePageModel.h"
-#import <MJExtension.h>
 //跳转的页面
 #import "LoginVC.h"
 #import "SwitchVC.h"
 #import "MyAskBuyListVC.h"
 #import "MyAcceptedOfferListVC.h"
 #import "CddHUD.h"
-
+#import "WXApiManager.h"
+#import <UMAnalytics/MobClick.h>
+#import "MyZhuJiDiyListVC.h"
+#import "MyZhuJiDiySolveListVC.h"
 
 @interface MineVC ()<UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource>
 @property (nonatomic, strong)UICollectionView *collectionView;
@@ -41,7 +39,10 @@
 @property (nonatomic, assign)NSInteger switchID;
 @property (nonatomic, copy)NSArray *sectionOneData_buyArr;
 @property (nonatomic, copy)NSArray *sectionOneData_sellerArr;
-@property (nonatomic, strong)UIButton *selectedBtn; //选中按钮
+
+@property (nonatomic, strong) NSMutableArray<NSMutableArray *> *dataSource_buyer;
+@property (nonatomic, strong) NSMutableArray<NSMutableArray *> *dataSource_seller;
+@property (nonatomic, strong) UIButton *selectedBtn; //选中按钮
 @end
 
 @implementation MineVC
@@ -49,47 +50,140 @@
     [super viewDidLoad];
     _switchID = 0;
     [self.view insertSubview:self.collectionView atIndex:0];
-    [self getNumber];
     [self setupNav];
     [self registerNoti];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-//    [self.navigationController.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
-//    //去掉透明后导航栏下边的黑边
-//    [self.navigationController.navigationBar setShadowImage:[[UIImage alloc] init]];
-//    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-
-//    UIImageView *lineImageView = [HelperTool findNavLine:self.navigationController.navigationBar];
-//    lineImageView.hidden = YES;
+    [self getNumber];
+    [MobClick beginLogPageView:self.navigationItem.title];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
     [super viewWillDisappear:animated];
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-//    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
-//    [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-//    [self.navigationController.navigationBar setShadowImage:nil];
+    [MobClick endLogPageView:self.navigationItem.title];
+}
 
+
+- (NSMutableArray *)dataSource_buyer {
+    if (!_dataSource_buyer) {
+        NSArray *titleArr = [NSArray array];
+        NSArray *imageArr = [NSArray array];
+        _dataSource_buyer = [NSMutableArray arrayWithCapacity:0];
+        for (NSInteger i = 0; i < 2; i++) {
+            NSMutableArray<MineCellModel *> *mArr = [NSMutableArray arrayWithCapacity:0];
+            if (i == 0) {
+                titleArr = @[@"询盘中",@"待确认报价",@"即将过期"];
+                imageArr = @[@"message_light",@"needOffer_light",@"willOutDate_light"];
+                for (NSInteger j = 0; j < titleArr.count; j++) {
+                    MineCellModel *model = [[MineCellModel alloc] init];
+                    model.iconTitle = titleArr[j];
+                    model.imageName = imageArr[j];
+                    [mArr addObject:model];
+                }
+            } else {
+                titleArr = @[@"试样中"];
+                imageArr = @[@"mine_zhujidiy_try"];
+                for (NSInteger j = 0; j < titleArr.count; j++) {
+                    MineCellModel *model = [[MineCellModel alloc] init];
+                    model.iconTitle = titleArr[j];
+                    model.imageName = imageArr[j];
+                    [mArr addObject:model];
+                }
+            }
+            [_dataSource_buyer addObject:mArr];
+        }
+    }
+    return _dataSource_buyer;
+}
+
+- (NSMutableArray *)dataSource_seller {
+    if (!_dataSource_seller) {
+        NSArray *titleArr = [NSArray array];
+        NSArray *imageArr = [NSArray array];
+        _dataSource_seller = [NSMutableArray arrayWithCapacity:0];
+        for (NSInteger i = 0; i < 2; i++) {
+            NSMutableArray<MineCellModel *> *mArr = [NSMutableArray arrayWithCapacity:0];
+            if (i == 0) {
+                titleArr = @[@"买家已接受"];
+                imageArr = @[@"buyer_accept"];
+                for (NSInteger j = 0; j < titleArr.count; j++) {
+                    MineCellModel *model = [[MineCellModel alloc] init];
+                    model.iconTitle = titleArr[j];
+                    model.imageName = imageArr[j];
+                    [mArr addObject:model];
+                }
+            } else {
+                titleArr = @[@"买家已接受"];
+                imageArr = @[@"buyer_accept"];
+                for (NSInteger j = 0; j < titleArr.count; j++) {
+                    MineCellModel *model = [[MineCellModel alloc] init];
+                    model.iconTitle = titleArr[j];
+                    model.imageName = imageArr[j];
+                    [mArr addObject:model];
+                }
+            }
+            [_dataSource_seller addObject:mArr];
+        }
+    }
+    return _dataSource_seller;
+}
+
+//buyer_accept
+- (void)test {
+    NSDictionary *dict = @{@"token":GET_USER_TOKEN,
+                           @"workType":@"auciton",
+                           @"body":@"七彩云电商-分散黄200%支付",
+//                           @"from":@"app_ios"
+                           };
+    NSMutableDictionary *mDict = [dict mutableCopy];
+   
+    DDWeakSelf;
+    [CddHUD showWithText:@"支付中..." view:self.view];
+    [ClassTool postRequest:URL_WXPay_Auction Params:mDict Success:^(id json) {
+        [CddHUD hideHUD:weakself.view];
+        //        NSLog(@"-----ppp %@",json);
+        if ([To_String(json[@"code"]) isEqualToString:@"SUCCESS"]) {
+            //用户信息存入字典
+//            NSLog(@"data---  %@",json[@"data"]);
+//            NSLog(@"prepayid----- %@",[json[@"data"] objectForKey:@"prepayid"]);
+            PayReq *req = [[PayReq alloc] init];
+            req.partnerId = @"1532313091";
+            req.prepayId = [json[@"data"] objectForKey:@"prepayid"];
+            req.nonceStr = [json[@"data"] objectForKey:@"noncestr"];
+            req.timeStamp = [[json[@"data"] objectForKey:@"timestamp"] intValue];
+            req.package = @"Sign=WXPay";
+            req.sign = [json[@"data"] objectForKey:@"sign"];
+//
+            if ([WXApi sendReq:req]) {
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(suc) name:@"weixinPayResultSuccess" object:nil];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fail) name:@"weixinPayResultFailed" object:nil];
+            }
+        }
+        
+    } Failure:^(NSError *error) {
+        
+    }];
+}
+
+
+- (void)suc {
+    NSLog(@"成功");
+}
+
+- (void)fail {
+    NSLog(@"失败");
 }
 
 - (void)setupNav {
-    //导航栏不透明时要不要延伸到bar的下面
-//    self.extendedLayoutIncludesOpaqueBars = YES;
-    //根视图延展
-//    self.edgesForExtendedLayout = UIRectEdgeAll;
-    
-    self.nav.titleLabel.text = @"我的";
-    self.nav.backBtn.hidden = YES;
-    self.nav.titleLabel.textColor = [UIColor whiteColor];
-    self.nav.backgroundColor = [UIColor clearColor];
-    self.nav.bottomLine.hidden = YES;
-    [self.nav.rightBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.nav.rightBtn setTitle:@"设置" forState:UIControlStateNormal];
-    [self.nav.rightBtn addTarget:self action:@selector(jumpToSeting) forControlEvents:UIControlEventTouchUpInside];
-    
+    [self addRightBarButtonItemWithTitle:@"设置" titleColor:UIColor.whiteColor action:@selector(jumpToSeting)];
+    [self vhl_setNavBarTitleColor:UIColor.whiteColor];
+    [self vhl_setNavBarBackgroundAlpha:0.0];
+    [self vhl_setNavBarBackgroundColor:UIColor.clearColor];
+    [self vhl_setNavBarShadowImageHidden:YES];
 }
 
 - (void)jumpToSeting {
@@ -97,23 +191,32 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+//注册通知
+-(void)registerNoti {
+    NSString *notiName = @"refreshAllDataWithThis";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:notiName object:nil];
+    
+    //修改头像监听
+    NSString *notiName1 = @"changeHeader";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeHeader:) name:notiName1 object:nil];
+    
+    //修改密码后重新登录
+    NSString *notiName2 = @"notifiReLogin";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reLogin) name:notiName2 object:@"login"];
+}
+
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         CGRect rect = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT);
         _collectionView = [[UICollectionView alloc]initWithFrame:rect collectionViewLayout:layout];
-//        _collectionView.scrollEnabled = NO; //禁止滚动
-//        _collectionView.showsHorizontalScrollIndicator = NO;
-//        _collectionView.showsVerticalScrollIndicator = NO;//垂直
         _collectionView.backgroundColor = HEXColor(@"#EDEDED", 1);
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         if (@available(iOS 11.0, *)) {
             _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
-        [_collectionView addSubview:[self addHeaderView]];
+        } 
+        [_collectionView addSubview:self.headerView];
         //设置滚动范围偏移200
 //        _collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(NAV_HEIGHT + 106 + 35, 0, 0, 0);
         //设置内容范围偏移200
@@ -126,34 +229,32 @@
 }
 
 //创建自定义的tableView headerView
-- (MineHeaderView *)addHeaderView {
-    CGFloat headerHeight = NAV_HEIGHT + 106 + 35;
-    MineHeaderView *headerView = [[MineHeaderView alloc] init];
-    headerView.frame = CGRectMake(0, -headerHeight, SCREEN_WIDTH, headerHeight);
-//    [headerView.switchBtn addTarget:self action:@selector(jumpToSwitchVC) forControlEvents:UIControlEventTouchUpInside];
-    [headerView.buyerBtn addTarget:self action:@selector(switchIdentity:) forControlEvents:UIControlEventTouchUpInside];
-    [headerView.sellerBtn addTarget:self action:@selector(switchIdentity:) forControlEvents:UIControlEventTouchUpInside];
-    [HelperTool addTapGesture:headerView.userHeader withTarget:self andSEL:@selector(jumpToMyInfo)];
-    self.selectedBtn = headerView.buyerBtn;
-    _headerView = headerView;
-    return headerView;
+- (MineHeaderView *)headerView {
+    if (!_headerView) {
+        CGFloat headerHeight = NAV_HEIGHT + 106 + 35;
+        _headerView = [[MineHeaderView alloc] init];
+        _headerView.frame = CGRectMake(0, -headerHeight, SCREEN_WIDTH, headerHeight);
+        [_headerView.buyerBtn addTarget:self action:@selector(switchIdentity:) forControlEvents:UIControlEventTouchUpInside];
+        [_headerView.sellerBtn addTarget:self action:@selector(switchIdentity:) forControlEvents:UIControlEventTouchUpInside];
+        [HelperTool addTapGesture:_headerView.userHeader withTarget:self andSEL:@selector(jumpToMyInfo)];
+        self.selectedBtn = _headerView.buyerBtn;
+    }
+    
+    return _headerView;
 }
+
 //判断选择的按钮
 - (void)btnClickSelected:(UIButton *)sender {
-    //其他按钮
-    self.selectedBtn.selected = NO;
-    self.selectedBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    //当前选中按钮
     //如果按下的按钮是之前已经按下的
     if (sender == self.selectedBtn ) {
         sender.selected = YES;
-//        sender.titleLabel.font = [UIFont systemFontOfSize:14];
     } else {
         sender.selected = !sender.selected;
-        sender.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+        self.selectedBtn.selected = NO;
     }
     self.selectedBtn = sender;
 }
+
 #pragma mark - 网络请求
 //获取被采纳的数量
 - (void)getNumber {
@@ -165,17 +266,43 @@
 //            NSLog(@"----  %@",json[@"data"]);
             //买家的数组
             if (isRightData(model.isEnquiryCount) && isRightData(model.waitSureCount) && isRightData(model.myExpireCount)) {
-                weakself.sectionOneData_buyArr = @[model.isEnquiryCount,model.waitSureCount,model.myExpireCount];
+                NSMutableArray *mArr = weakself.dataSource_buyer[0];
+                NSArray *array = @[model.isEnquiryCount,model.waitSureCount,model.myExpireCount];
+                for (NSInteger i = 0; i < mArr.count; i++) {
+                    MineCellModel *m = mArr[i];
+                    m.iconNum = array[i];
+                }
             }
+            if (isRightData(model.zhujiDiyingCount)) {
+                NSMutableArray *mArr_1 = weakself.dataSource_buyer[1];
+                NSArray *array = @[model.zhujiDiyingCount];
+                for (NSInteger i = 0; i < mArr_1.count; i++) {
+                    MineCellModel *m = mArr_1[i];
+                    m.iconNum = array[i];
+                }
+            }
+            
             //卖家的数组
             if isRightData(model.myAcceptOfferCount) {
-                weakself.sectionOneData_sellerArr = @[model.myAcceptOfferCount];
+                NSMutableArray *mArr = weakself.dataSource_seller[0];
+                NSArray *array = @[model.myAcceptOfferCount];
+                for (NSInteger i = 0; i < mArr.count; i++) {
+                    MineCellModel *m = mArr[i];
+                    m.iconNum = array[i];
+                }
+            }
+            if (isRightData(model.zhujiDiyingCount)) {
+                NSMutableArray *mArr_1 = weakself.dataSource_seller[1];
+                NSArray *array = @[model.zhujiSolutionAcceptCount];
+                for (NSInteger i = 0; i < mArr_1.count; i++) {
+                    MineCellModel *m = mArr_1[i];
+                    m.iconNum = array[i];
+                }
             }
             //我的历史求购和历史报价的数目
             if (isRightData(model.enquiryTimes) && isRightData(model.offerTimes)) {
                 [weakself.headerView configData:model.enquiryTimes offer:model.offerTimes];
             }
-            
             
             [weakself.collectionView reloadData];
         }
@@ -190,21 +317,13 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     //重用cell
     MineCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"iconCell" forIndexPath:indexPath];
-    NSArray *titleArr = [NSArray array];
-    NSArray *imageArr = [NSArray array];
-    if (indexPath.section == 0) {
-        if (_switchID == 0) {
-            titleArr = @[@"询盘中",@"待确认报价",@"即将过期"];
-            imageArr = @[@"message_light",@"needOffer_light",@"willOutDate_light"];
-            [cell configData:_sectionOneData_buyArr[indexPath.row]];
-        } else {
-            titleArr = @[@"买家已接受"];
-            imageArr = @[@"buyer_accept"];
-            [cell configData:_sectionOneData_sellerArr[indexPath.row]];
-        }
-        
-        [cell.iconBtn setTitle:titleArr[indexPath.row] forState:UIControlStateNormal];
-        [cell.iconBtn setImage:[UIImage imageNamed:imageArr[indexPath.row]] forState:UIControlStateNormal];
+    //买家
+    if (_switchID == 0) {
+        cell.model = self.dataSource_buyer[indexPath.section][indexPath.row];
+    }
+    //卖家
+    else {
+        cell.model = self.dataSource_seller[indexPath.section][indexPath.row];
     }
     
     return cell;
@@ -213,12 +332,16 @@
 
 /** 总共多少组*/
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
+    return 2;
 }
 /** 每组几个cell*/
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (_switchID == 0) {
-        return 3;
+        if (section == 0) {
+            return 3;
+        } else {
+            return 1;
+        }
     } else {
         return 1;
     }
@@ -227,7 +350,11 @@
 //cell的大小
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (_switchID == 0) {
-        return CGSizeMake(SCREEN_WIDTH / 3, 60);
+        if (indexPath.section == 0) {
+            return CGSizeMake(SCREEN_WIDTH / 3, 60);
+        } else {
+            return CGSizeMake(SCREEN_WIDTH, 60);
+        }
     } else {
         return CGSizeMake(SCREEN_WIDTH , 60);
     }
@@ -251,6 +378,7 @@
     return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
+
 // 选中cell后操作
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
@@ -260,6 +388,16 @@
             [self.navigationController pushViewController:vc animated:YES];
         } else {
             MyAcceptedOfferListVC *vc = [[MyAcceptedOfferListVC alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    } else if (indexPath.section == 1) {
+        if (_switchID == 0) {
+            MyZhuJiDiyListVC *vc = [[MyZhuJiDiyListVC alloc] init];
+            vc.selectedIndex = 1;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            MyZhuJiDiySolveListVC *vc = [[MyZhuJiDiySolveListVC alloc] init];
+            vc.selectedIndex = 2;
             [self.navigationController pushViewController:vc animated:YES];
         }
     }
@@ -277,46 +415,65 @@
 }
 
 //设置头部
--(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    UICollectionReusableView *reusableView = nil;
-    
-    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {  //header
+-(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+//    UICollectionReusableView *reusableView = nil;
+    //header
+    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        NSArray *imageArr_buyer = @[@"my_ask_buy",@"section_ZhujiDiy"];
+        NSArray *imageArr_seller = @[@"ask_buy_price_icon",@"section_ZhujiDiy"];
+        NSArray *titleArr_buyer = @[@"我的求购",@"助剂定制"];
+        NSArray *titleArr_seller = @[@"我的报价",@"助剂定制方案"];
+        
         MineHeaderReusableView *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
         [header.rightBtn setTitle:@"查看全部" forState:UIControlStateNormal];
         [header.rightBtn setImage:[UIImage imageNamed:@"btn_right"] forState:UIControlStateNormal];
-        [self refreshSection:header];
-        reusableView = header;
+        DDWeakSelf;
+        //买家中心
+        if (_switchID == 0) {
+            header.leftImageView.image = [UIImage imageNamed:imageArr_buyer[indexPath.section]];
+            header.leftLabel.text = titleArr_buyer[indexPath.section];
+            if (indexPath.section == 0) {
+                //我的求购
+                header.rightBtnClickBlock = ^{
+                    [weakself jumpToAskAll];
+                };
+            } else if (indexPath.section == 1) {
+                header.rightBtnClickBlock = ^{
+                    MyZhuJiDiyListVC *vc = [[MyZhuJiDiyListVC alloc] init];
+                    vc.selectedIndex = 0;
+                    [weakself.navigationController pushViewController:vc animated:YES];
+                };
+            }
+        }
+        //卖家中心
+        else {
+            header.leftImageView.image = [UIImage imageNamed:imageArr_seller[indexPath.section]];
+            header.leftLabel.text = titleArr_seller[indexPath.section];
+            if (indexPath.section == 0) {
+                //我的报价
+                header.rightBtnClickBlock = ^{
+                    [weakself jumpToOfferAll];
+                };
+            } else if (indexPath.section == 1) {
+                header.rightBtnClickBlock = ^{
+                    MyZhuJiDiySolveListVC *vc = [[MyZhuJiDiySolveListVC alloc] init];
+                    vc.selectedIndex = 0;
+                    [weakself.navigationController pushViewController:vc animated:YES];
+                };
+            }
+        }
         
-        return reusableView;
+        return header;
     }
-//    else if([kind isEqualToString:UICollectionElementKindSectionFooter]){  //footer
-//        TYHeaderFooterView *footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer" forIndexPath:indexPath];
-//        footer.backgroundColor = [UIColor blueColor];
-//        return footer;
-//    }
-    return reusableView;
+
+    return nil;
 }
 
 
 - (void)jumpTo {
-    
     MyAskToBuyVC *vc = [[MyAskToBuyVC alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
-
-//弹出切换身份的页面
-//- (void)jumpToSwitchVC {
-//    SwitchVC *vc = [[SwitchVC alloc] init];
-//    vc.sID = _switchID;
-//    DDWeakSelf;
-//    vc.switchBlock = ^(NSInteger tag) {
-//        weakself.switchID = tag;
-//        [weakself getNumber];
-//        [weakself refreshType];
-//        [weakself.collectionView reloadData];
-//    };
-//    [self presentViewController:vc animated:YES completion:nil];
-//}
 
 - (void)switchIdentity:(UIButton *)sender {
     if (sender.tag == 100) {    //买家
@@ -325,16 +482,8 @@
         _switchID = 1;
     }
     [self getNumber];
-    [self refreshType];
     [self.collectionView reloadData];
     [self btnClickSelected:sender];
-}
-
-//获取全部报价列表
-- (void)jumpToOfferAll {
-    MyOfferPriceVC *vc = [[MyOfferPriceVC alloc] init];
-    vc.selectedIndex = 0;
-    [self.navigationController pushViewController:vc animated:YES];
 }
 
 //获取全部求购列表
@@ -344,61 +493,22 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+//获取全部报价列表
+- (void)jumpToOfferAll {
+    MyOfferPriceVC *vc = [[MyOfferPriceVC alloc] init];
+    vc.selectedIndex = 0;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+
+
 - (void)jumpToMyInfo {
     MyInfoCenterVC *vc = [[MyInfoCenterVC alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-//切换身份，刷新按钮状态,用全局变量实现
-- (void)refreshType {
-//    if (_switchID == 0) {
-//        [_headerView.idBtn setTitle:@"买家中心" forState:UIControlStateNormal];
-//        [_headerView.idBtn setImage:[UIImage imageNamed:@"buyer_icon"] forState:UIControlStateNormal];
-//    } else {
-//        [_headerView.idBtn setTitle:@"卖家中心" forState:UIControlStateNormal];
-//        [_headerView.idBtn setImage:[UIImage imageNamed:@"seller_icon"] forState:UIControlStateNormal];
-//    }
-}
-
-//刷新section
-- (void)refreshSection:(MineHeaderReusableView *)header {
-    
-    NSString *sectionTitleOne = [NSString string];
-    NSString *secctionImageOne = [NSString string];
-    
-    if (_switchID == 0) {
-        sectionTitleOne = @"我的求购";
-        secctionImageOne = @"my_ask_buy";
-        [header.rightBtn removeTarget:self action:@selector(jumpToOfferAll) forControlEvents:UIControlEventTouchUpInside];
-        [header.rightBtn addTarget:self action:@selector(jumpToAskAll) forControlEvents:UIControlEventTouchUpInside];
-    } else {
-        sectionTitleOne = @"我的报价";
-        secctionImageOne = @"ask_buy_price_icon";
-        [header.rightBtn removeTarget:self action:@selector(jumpToAskAll) forControlEvents:UIControlEventTouchUpInside];
-        [header.rightBtn addTarget:self action:@selector(jumpToOfferAll) forControlEvents:UIControlEventTouchUpInside];
-    }
-    header.leftImageView.image = [UIImage imageNamed:secctionImageOne];
-    header.leftLabel.text = sectionTitleOne;
-}
-
-
-//注册通知
--(void)registerNoti {
-    NSString *notiName = @"refreshAllDataWithThis";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:notiName object:nil];
-    
-    //修改头像监听
-    NSString *notiName1 = @"changeHeader";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeHeader:) name:notiName1 object:nil];
-    
-    //修改密码后重新登录
-    NSString *notiName2 = @"notifiReLogin";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reLogin) name:notiName2 object:@"login"];
-}
-
 //改变整个页面的数据显示
 - (void)refreshData {
-    
     [self getNumber];
     //头像
     if (Get_Header) {
@@ -411,7 +521,7 @@
     //名字和用户类型
     NSString *name = [[UserDefault objectForKey:@"userInfo"] objectForKey:@"userName"];
     NSString *userType = [NSString string];
-    if ([isCompany boolValue] == YES) {
+    if (isCompanyUser) {
         userType = @"企业用户";
     } else {
         userType = @"个人用户";

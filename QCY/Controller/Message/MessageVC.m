@@ -7,156 +7,157 @@
 //
 
 #import "MessageVC.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "MsgChildVC.h"
 #import "MsgSystemVC.h"
+#import "ClassTool.h"
+#import "UIView+Border.h"
+#import <UMAnalytics/MobClick.h>
+#import "MsgCountBtn.h"
 
 
-#define Child_Height SCREEN_HEIGHT - NAV_HEIGHT - 86 - TABBAR_HEIGHT
+#define Child_Height SCREEN_HEIGHT - NAV_HEIGHT - 80 - TABBAR_HEIGHT
 #define Child_Count 3
 @interface MessageVC ()<UIScrollViewDelegate>
 @property (nonatomic, strong)UIScrollView *scrollView;
-@property (nonatomic, strong)UIButton *buyerMsg_btn;
-@property (nonatomic, strong)UIButton *sellerMsg_btn;
-@property (nonatomic, strong)UIButton *systemMsg_btn;
+@property (nonatomic, strong)MsgCountBtn *buyerMsg_btn;
+@property (nonatomic, strong)MsgCountBtn *sellerMsg_btn;
+@property (nonatomic, strong)MsgCountBtn *systemMsg_btn;
 @property (nonatomic, strong)UIButton *selectedBtn; //选中按钮
 @property (nonatomic, assign)NSInteger currentSelectBtnTag;
+@property (nonatomic, copy) NSArray *vcArray;
 @end
 
 @implementation MessageVC
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.view.backgroundColor = View_Color;
-    
-    [self setNavBar];
-    [self setupUI];
-    
-    [self.view addSubview:self.scrollView];
-    [self addVCs];
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _index = 0;
+    }
+    return self;
 }
 
-- (void)setNavBar {
-    self.nav.titleLabel.text = @"消息";
-    self.nav.backgroundColor = [UIColor clearColor];
-    self.nav.bottomLine.hidden = YES;
-    self.nav.backBtn.hidden = YES;
-    self.nav.titleLabel.textColor = [UIColor whiteColor];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    MsgChildVC *vc_1 = [[MsgChildVC alloc]init];
+    vc_1.userType = @"buyer";
+    
+    MsgChildVC *vc_2 = [[MsgChildVC alloc]init];
+    vc_2.userType = @"seller";
+    
+    MsgSystemVC *vc_3 = [[MsgSystemVC alloc]init];
+    
+    self.vcArray = @[vc_1,vc_2,vc_3];
+    self.view.backgroundColor = View_Color;
+    [self setupUI];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(msgCountApns) name:App_Notification_Change_MsgCount object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setUnStartIndex) name:@"msgtab_item_selected" object:nil];
+    
+    [self.view addSubview:self.scrollView];
+    [self changeScrolPageWithIndex:_index];
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:self.navigationItem.title];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:self.navigationItem.title];
+}
+
 
 - (UIScrollView *)scrollView
 {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc]init];
-        _scrollView.frame = CGRectMake(0, NAV_HEIGHT + 86, SCREEN_WIDTH, Child_Height);
+        _scrollView.frame = CGRectMake(0, NAV_HEIGHT + 80, SCREEN_WIDTH, Child_Height);
         _scrollView.pagingEnabled = YES;
+        _scrollView.scrollEnabled = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.contentSize = CGSizeMake(SCREEN_WIDTH * Child_Count,Child_Height);
         _scrollView.backgroundColor = [UIColor whiteColor];
-        _scrollView.delegate = self;
     }
     return _scrollView;
 }
 
 
-- (void)addVCs {
-    MsgChildVC *vc_1 = [[MsgChildVC alloc]init];
-    vc_1.type = @"buyer";
-    [self addChildViewController:vc_1];
-    
-    MsgChildVC *vc_2 = [[MsgChildVC alloc]init];
-    vc_2.type = @"seller";
-    [self addChildViewController:vc_2];
-    MsgSystemVC *vc_3 = [[MsgSystemVC alloc]init];
-    [self addChildViewController:vc_3];
-    
-    [self scrollViewDidEndDecelerating:self.scrollView];
+- (void)setUnStartIndex {
+    [self changeScrolPageWithIndex:_index];
+    //默认选择第一个
+    [self btnClickSelected:[self.view viewWithTag:_index + 1000]];
 }
 
-
-//滑动减速时调用
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    //获取contentOffset
-    CGPoint currentOffset = scrollView.contentOffset;
-    NSInteger page = currentOffset.x / SCREEN_WIDTH;
-    
-    //取出对应控制器
-    UIViewController *viewController = self.childViewControllers[page];
+//手动翻页
+- (void)changeScrolPageWithIndex:(NSInteger)index {
+    [SingleShareManger shareInstance].msgIndex = index;
+    [self.scrollView setContentOffset:CGPointMake(index * SCREEN_WIDTH, 0) animated:YES];
+    UIViewController *viewController = self.vcArray[index];
+    [viewController viewWillAppear:YES];
     [self.scrollView addSubview:viewController.view];
-    viewController.view.frame = CGRectMake(page * SCREEN_WIDTH, 0, SCREEN_WIDTH, Child_Height);
-    //之前的按钮
-    UIButton *btn = (UIButton *)[self.view viewWithTag:_currentSelectBtnTag];
-    btn.selected = NO;
-    //即将选中的按钮
-    NSInteger cur_tag = page + 1000;
-    UIButton *btn_sel = (UIButton *)[self.view viewWithTag:cur_tag];
-    btn_sel.selected = YES;
-    self.selectedBtn = btn_sel;
-    _currentSelectBtnTag = cur_tag;
+    [self addChildViewController:viewController];
+    viewController.view.frame = CGRectMake(index * SCREEN_WIDTH, 0, SCREEN_WIDTH, Child_Height);
 }
 
+//用来设置或重新设置三个按钮上数字显示
+- (void)msgCountApns {
+    _buyerMsg_btn.badgeValue = Msg_Buyer_Count_Get;
+    _sellerMsg_btn.badgeValue = Msg_Seller_Count_Get;
+    _systemMsg_btn.badgeValue = Msg_Sys_Count_Get;
+}
 
 - (void)setupUI {
-    UIView *topBg = [[UIView alloc] init];
-    topBg.frame = CGRectMake(0, 0, SCREEN_WIDTH, NAV_HEIGHT + 46);
-    UIImage *image = [UIImage imageNamed:@"msg_bg"];
-    topBg.layer.contents = (id)image.CGImage;
-    [self.view insertSubview:topBg belowSubview:self.nav];
-    
-    CGFloat leftGap = 8;
-    CGFloat centergap = 18;
+    CGFloat leftGap = 0;
+    CGFloat centergap = 0;
     CGFloat width = (SCREEN_WIDTH - leftGap * 2 - centergap * (Child_Count - 1)) / Child_Count;
-    
     for (NSInteger i = 0; i < Child_Count; i++) {
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.layer.cornerRadius = 10;
-        btn.clipsToBounds = YES;
+        MsgCountBtn *btn = [MsgCountBtn buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(leftGap + (width + centergap) * i, NAV_HEIGHT, width, 80);
         btn.tag = 1000 + i;
-        btn.layer.borderColor = [UIColor whiteColor].CGColor;
-        btn.layer.borderWidth = 1.f;
-        btn.backgroundColor = [UIColor whiteColor];
-        [btn setBackgroundImage:[UIImage imageWithColor:MainColor] forState:UIControlStateSelected];
-        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+        btn.imagePosition = SCCustomButtonImagePositionTop;
+        btn.backgroundColor = HEXColor(@"#F3F3F3", 1);
+        [btn setBackgroundImage:[UIImage imageWithColor:UIColor.whiteColor] forState:UIControlStateSelected];
+        [btn setTitleColor:HEXColor(@"#868686", 1) forState:UIControlStateNormal];
+        [btn setTitleColor:HEXColor(@"#ED3851", 1) forState:UIControlStateSelected];
         btn.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, -2);
         btn.imageEdgeInsets = UIEdgeInsetsMake(0, -2, 0, 2);
         btn.adjustsImageWhenHighlighted = NO;
         [btn addTarget:self action:@selector(btnClickSelected:) forControlEvents:UIControlEventTouchUpInside];
         btn.titleLabel.font = [UIFont systemFontOfSize:14];
         [self.view addSubview:btn];
-        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(topBg.mas_bottom).offset(-5);
-            make.left.mas_equalTo(leftGap + (width + centergap) * i);
-            make.height.mas_equalTo(65);
-            make.width.mas_equalTo(width);
-        }];
-        
+        [btn addBorderView:HEXColor(@"E5E5E5", 1) width:0.6f direction:BorderDirectionTop | BorderDirectionBottom];
         if (i == 0) {
             _buyerMsg_btn = btn;
             [_buyerMsg_btn setTitle:@"我是买家" forState:UIControlStateNormal];
-            [_buyerMsg_btn setImage:[UIImage imageNamed:@"msg_buyer_black"] forState:UIControlStateNormal];
-            [_buyerMsg_btn setImage:[UIImage imageNamed:@"msg_buyer_white"] forState:UIControlStateSelected];
-            //默认选择第一个
-            _buyerMsg_btn.selected = YES;
-            self.selectedBtn = _buyerMsg_btn;
-            _currentSelectBtnTag = _buyerMsg_btn.tag;
+            [_buyerMsg_btn setImage:[UIImage imageNamed:@"msg_buyer_normal"] forState:UIControlStateNormal];
+            [_buyerMsg_btn setImage:[UIImage imageNamed:@"msg_buyer_select"] forState:UIControlStateSelected];
         } else if (i == 1) {
+            [btn addBorderView:HEXColor(@"E5E5E5", 1) width:0.6f direction:BorderDirectionLeft | BorderDirectionRight];
             _sellerMsg_btn = btn;
             [_sellerMsg_btn setTitle:@"我是卖家" forState:UIControlStateNormal];
-            [_sellerMsg_btn setImage:[UIImage imageNamed:@"msg_seller_black"] forState:UIControlStateNormal];
-            [_sellerMsg_btn setImage:[UIImage imageNamed:@"msg_seller_white"] forState:UIControlStateSelected];
+            [_sellerMsg_btn setImage:[UIImage imageNamed:@"msg_seller_normal"] forState:UIControlStateNormal];
+            [_sellerMsg_btn setImage:[UIImage imageNamed:@"msg_seller_select"] forState:UIControlStateSelected];
         } else {
             _systemMsg_btn = btn;
             [_systemMsg_btn setTitle:@"系统消息" forState:UIControlStateNormal];
-            [_systemMsg_btn setImage:[UIImage imageNamed:@"msg_sys_black"] forState:UIControlStateNormal];
-            [_systemMsg_btn setImage:[UIImage imageNamed:@"msg_sys_white"] forState:UIControlStateSelected];
+            [_systemMsg_btn setImage:[UIImage imageNamed:@"msg_sys_normal"] forState:UIControlStateNormal];
+            [_systemMsg_btn setImage:[UIImage imageNamed:@"msg_sys_select"] forState:UIControlStateSelected];
         }
     }
+    
+    [self msgCountApns];
+    UIButton *selectedBtn = (UIButton *)[self.view viewWithTag:1000 + _index];
+    //默认选择第一个
+    selectedBtn.selected = YES;
+    self.selectedBtn = selectedBtn;
+    _currentSelectBtnTag = selectedBtn.tag;
 }
-
 
 //判断选择的按钮
 - (void)btnClickSelected:(UIButton *)sender {
@@ -171,17 +172,9 @@
         _currentSelectBtnTag = sender.tag;
         //点击按钮翻页
         NSInteger page = _currentSelectBtnTag - 1000;
-        [self.scrollView setContentOffset:CGPointMake(page * SCREEN_WIDTH, 0) animated:YES];
-        //取出对应控制器
-        UIViewController *viewController = self.childViewControllers[page];
-        [self.scrollView addSubview:viewController.view];
-        viewController.view.frame = CGRectMake(page * SCREEN_WIDTH, 0, SCREEN_WIDTH, Child_Height);
+        [self changeScrolPageWithIndex:page];
     }
     self.selectedBtn = sender;
 }
 
-//修改statesBar 颜色
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return UIStatusBarStyleLightContent;  //白色，默认的值是黑色的
-}
 @end

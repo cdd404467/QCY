@@ -19,12 +19,27 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>FLAnimatedImage.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>FMDB.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>HXPhotoPicker.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>IQKeyboardManager.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>JXCategoryView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -59,6 +74,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Reachability.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>SAMKeychain.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -84,12 +104,27 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SVProgressHUD.xcscheme</key>
+		<key>SJBaseVideoPlayer.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>SJUIKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>SJVideoPlayer.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>TZImagePickerController.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>XHLaunchAd.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

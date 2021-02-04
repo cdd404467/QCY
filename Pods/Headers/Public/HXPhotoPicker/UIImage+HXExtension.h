@@ -1,1 +1,1 @@
-../../../HXPhotoPicker/照片选择器/HXPhotoPicker/UIImage+HXExtension.h
+../../../HXPhotoPicker/照片选择器/HXPhotoPicker/Category/UIImage+HXExtension.h

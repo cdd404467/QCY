@@ -7,7 +7,6 @@
 //
 
 #import "HomePageSearchVC.h"
-#import "MacroHeader.h"
 #import "ClassTool.h"
 #import "NetWorkingPort.h"
 #import "CddHUD.h"
@@ -26,10 +25,9 @@
 #import "AskToBuyVC.h"
 #import "OpenMallVC.h"
 #import "NoDataView.h"
-#import "UIView+Geometry.h"
 #import <UIScrollView+EmptyDataSet.h>
 #import "SearchResultPageVC.h"
-
+#import "UITextField+Limit.h"
 
 
 @interface HomePageSearchVC ()<UITableViewDataSource, UITableViewDelegate,UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
@@ -59,6 +57,7 @@
     [self setupUI];
 }
 
+
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
@@ -66,14 +65,13 @@
         _tableView.dataSource = self;
         _tableView.emptyDataSetSource = self;
         _tableView.emptyDataSetDelegate = self;
+        _tableView.backgroundColor = Cell_BGColor;
         if (@available(iOS 11.0, *)) {
             //            _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
-        }
+        } 
         _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -109,13 +107,13 @@
     titleView.py_width = self.view.py_width - 64 - titleView.py_x * 2;
     
     titleView.py_height = 30;
-    titleView.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1];
-    
+//    titleView.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1];
+    titleView.backgroundColor = UIColor.whiteColor;
     titleView.layer.cornerRadius = 13;
     titleView.clipsToBounds = YES;
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
     searchBar.py_width -= PYMargin * 1.5;
-    searchBar.placeholder = @"搜索商品标题";
+    searchBar.placeholder = @"输入关键词搜索";
     searchBar.text = _searchKeyWord;
     //    searchBar.placeholder = PYSearchPlaceholderText;
     //iOS 10 searchBarBackground
@@ -129,18 +127,24 @@
     //            break;
     //        }
     //    }
+    
+    
     UITextField * searchTextField = [[[searchBar.subviews firstObject] subviews] lastObject];
+    if (@available(iOS 13.0, *)) {
+        searchTextField = searchBar.searchTextField;
+    }
+    
     [searchTextField setClearButtonMode:UITextFieldViewModeNever];
     [searchTextField addTarget:self action:@selector(textFieldChange:) forControlEvents:UIControlEventEditingChanged];
     searchTextField.tintColor = UIColor.blackColor;
     //限制字数
-//    [searchTextField lengthLimit:^{
-//        if (searchTextField.text.length > 10) {
-//            searchTextField.text = [searchTextField.text substringToIndex:10];
-//        }
-//    }];
-    [searchTextField setBackgroundColor:[UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1]];
-    
+    [searchTextField lengthLimit:^{
+        if (searchTextField.text.length > 20) {
+            searchTextField.text = [searchTextField.text substringToIndex:20];
+        }
+    }];
+//    [searchTextField setBackgroundColor:[UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1]];
+    [searchTextField setBackgroundColor:UIColor.whiteColor];
     [titleView addSubview:searchBar];
     self.searchBar = searchBar;
     self.navigationItem.titleView = titleView;
@@ -246,8 +250,13 @@
 
 //section footer高度
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    
-    return 0.00001;
+    if (section == 0) {
+        if (_dataSource.productList.count > 0)
+            return 6;
+        return 0.00001;
+    } else {
+        return 0.00001;
+    }
 }
 
 //分区数

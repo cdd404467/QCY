@@ -7,7 +7,6 @@
 //
 
 #import "ManiFestChildVC.h"
-#import "MacroHeader.h"
 #import "NetWorkingPort.h"
 #import "ClassTool.h"
 #import "CddHUD.h"
@@ -68,8 +67,6 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         
 //        DDWeakSelf;

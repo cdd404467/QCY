@@ -7,8 +7,6 @@
 //
 
 #import "StandardView.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
 
 @interface StandardView()
 

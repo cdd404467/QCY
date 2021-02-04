@@ -6,11 +6,12 @@
 //  Copyright © 2018 Shanghai i7colors Ecommerce Co., Ltd. All rights reserved.
 //
 
-#import "BaseViewControllerNav.h"
+#import "BaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MessageVC : BaseViewControllerNav
+@interface MessageVC : BaseViewController
+@property (nonatomic, assign)NSInteger index;
 
 @end
 

@@ -29,8 +29,23 @@
              };
 }
 
+@end
+
+@implementation ProductClassifyModel
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"classifyID" : @"id",
+             };
+}
+
 
 @end
+
+@implementation OpenMallClassifyModel
+
+
+@end
+
 
 @implementation ProductInfoModel
 

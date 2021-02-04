@@ -7,8 +7,6 @@
 //
 
 #import "AskToBuyDetailsVC.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import "AskToBuyDetailsHeaderView.h"
 #import "AskToBuyInfoCell.h"
 #import "AskToBuySectionHeader.h"
@@ -24,19 +22,24 @@
 #import "CddHUD.h"
 #import "Alert.h"
 #import <YYLabel.h>
-#import "UIView+Geometry.h"
 #import <WXApi.h>
 #import "NavControllerSet.h"
-
+#import "QCYAlertView.h"
+#import "JudgeTools.h"
+#import "UpgradeVIPVC.h"
+#import "MyInfoCenterVC.h"
 
 @interface AskToBuyDetailsVC ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
-@property (nonatomic, strong)AskToBuyDetailModel *firstDateSource;
+@property (nonatomic, strong)AskToBuyModel *firstDateSource;
 @property (nonatomic, strong)NSMutableArray *secondDateSource;
-@property (nonatomic, strong)NSMutableArray *dataSource;
-@property (nonatomic, strong)NSMutableArray *infoArr;
-@property (nonatomic, strong)UIButton *btBtn;
 @property (nonatomic, strong)AskToBuyDetailsHeaderView *headerView;
+@property (nonatomic, strong)NSMutableArray<AskDetailInfoModel *> *infoDataSource;
+//关闭或报价按钮
+@property (nonatomic, strong) UIButton *closeOrPriceBtn;
+//查看联系方式按钮
+@property (nonatomic, strong) UIButton *lookOverBtn;
+
 @end
 
 @implementation AskToBuyDetailsVC
@@ -58,15 +61,8 @@
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView.backgroundColor = UIColor.whiteColor;
-        if ([_firstDateSource.status isEqualToString:@"1"]) {
-            _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - TABBAR_HEIGHT) style:UITableViewStyleGrouped];
-            _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
-            
-        } else {
-            _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
-            _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
-        }
-        
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
+        _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, 0, 0);
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -78,49 +74,37 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
-        _tableView.scrollIndicatorInsets = _tableView.contentInset;
+//        _tableView.scrollIndicatorInsets = _tableView.contentInset;
         AskToBuyDetailsHeaderView *headerView = [[AskToBuyDetailsHeaderView alloc] init];
         headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 110);
         [headerView setupUIWithStarNumber:[_firstDateSource.creditLevel integerValue]];
         headerView.model = _firstDateSource;
         _headerView = headerView;
         _tableView.tableHeaderView = headerView;
-        
         UIView *footer = [[UIView alloc] init];
         footer.backgroundColor = RGBA(0, 0, 0, 0.08);
-        footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 20);
+        footer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
         _tableView.tableFooterView = footer;
         
     }
     return _tableView;
 }
 
-- (void)share{
+- (void)share {
     NSMutableArray *imageArray = [NSMutableArray arrayWithCapacity:0];
     [imageArray addObject:Logo];
     NSString *shareStr = [NSString stringWithFormat:@"http://%@.i7colors.com/groupBuyMobile/openApp/industryChain.html?enquiryId=%@",ShareString,_buyID];
     NSString *text = [NSString stringWithFormat:@"地区:%@ %@ 求购重量:%@KG",_firstDateSource.locationProvince,_firstDateSource.locationCity,_firstDateSource.num];
-    
     [ClassTool shareSomething:imageArray urlStr:shareStr title:_firstDateSource.productName text:text];
 }
 
-- (NSMutableArray *)infoArr {
-    if (!_infoArr) {
+- (NSMutableArray *)infoDataSource {
+    if (!_infoDataSource) {
         NSMutableArray *mArr = [NSMutableArray arrayWithCapacity:0];
-        _infoArr = mArr;
+        _infoDataSource = mArr;
     }
-    return _infoArr;
-}
-
-- (NSMutableArray *)dataSource {
-    if (!_dataSource) {
-        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:0];
-        _dataSource = arr;
-    }
-    return _dataSource;
+    return _infoDataSource;
 }
 
 - (NSMutableArray *)secondDateSource {
@@ -134,62 +118,81 @@
 
 - (void)setupUI {
     [self.view addSubview:self.tableView];
-    AskToBuyDetailModel *model = _firstDateSource;
-    if (GET_USER_TOKEN) {
-        //是我自己发布的
-        if ([model.isCharger isEqualToString:@"1"]) {
-            //并且在进行中，显示关闭求购
-            if ([model.status isEqualToString:@"1"]) {
-                _btBtn = [self addBottonBtn];
-                [_btBtn setTitle:@"关闭求购" forState:UIControlStateNormal];
-                [_btBtn addTarget:self action:@selector(closeBuy) forControlEvents:UIControlEventTouchUpInside];
-            }
-            //不是自己发布，在进行中
+    /*** 创建按钮 **/
+    //进行中
+    if (_firstDateSource.status.integerValue == 1) {
+        _tableView.height = SCREEN_HEIGHT - TABBAR_HEIGHT;
+        //并且是直通车
+        if (_firstDateSource.showInfo.integerValue == 1) {
+            [self.view addSubview:self.lookOverBtn];
+            self.lookOverBtn.width = SCREEN_WIDTH / 2;
+            [self.view addSubview:self.closeOrPriceBtn];
+            self.closeOrPriceBtn.width = SCREEN_WIDTH / 2;
+            self.closeOrPriceBtn.left = SCREEN_WIDTH / 2;
         } else {
-            //参与报价
-            if ([model.status isEqualToString:@"1"]) {
-                _btBtn = [self addBottonBtn];
-                [_btBtn setTitle:@"参与报价" forState:UIControlStateNormal];
-                [_btBtn addTarget:self action:@selector(jumpToJoinPrice) forControlEvents:UIControlEventTouchUpInside];
-            }
+            [self.view addSubview:self.closeOrPriceBtn];
+            self.closeOrPriceBtn.width = SCREEN_WIDTH;
+        }
+    } else {
+        //并且是直通车
+        if (_firstDateSource.showInfo.integerValue == 1) {
+            [self.view addSubview:self.lookOverBtn];
+            self.lookOverBtn.width = SCREEN_WIDTH;
+            _tableView.height = SCREEN_HEIGHT - TABBAR_HEIGHT;
+        } else {
+            _tableView.height = SCREEN_HEIGHT;
         }
     }
-    //用户未登录,还在进行中的就显示报价按钮
-    else {
-        if ([model.status isEqualToString:@"1"]) {
-            UIButton *btn = [self addBottonBtn];
-            [btn setTitle:@"参与报价" forState:UIControlStateNormal];
-            [btn addTarget:self action:@selector(jumpToJoinPrice) forControlEvents:UIControlEventTouchUpInside];
-        } 
-    }
+    [ClassTool addLayerAutoSize:_closeOrPriceBtn];
     
+    [self bindEvent];
 }
 
-- (UIButton *)addBottonBtn {
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    btn.titleLabel.font = [UIFont systemFontOfSize:18];
-    [ClassTool addLayer:btn];
-    [self.view addSubview:btn];
-    [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(0);
-        make.bottom.mas_equalTo(-Bottom_Height_Dif);
-        make.height.mas_equalTo(49);
-    }];
-    
-    return btn;
+- (void)bindEvent {
+    [_closeOrPriceBtn removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    //是我自己发布的
+    if ([_firstDateSource.isCharger isEqualToString:@"1"]) {
+        //并且在进行中，显示关闭求购
+        if ([_firstDateSource.status isEqualToString:@"1"]) {
+            [_closeOrPriceBtn setTitle:@"关闭求购" forState:UIControlStateNormal];
+            [_closeOrPriceBtn addTarget:self action:@selector(closeBuy) forControlEvents:UIControlEventTouchUpInside];
+        }
+        //不是自己发布，在进行中
+    } else {
+        //参与报价
+        if ([_firstDateSource.status isEqualToString:@"1"]) {
+            [_closeOrPriceBtn setTitle:@"参与报价" forState:UIControlStateNormal];
+            [_closeOrPriceBtn addTarget:self action:@selector(jumpToJoinPrice) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+}
+
+- (UIButton *)closeOrPriceBtn {
+    if (!_closeOrPriceBtn) {
+        _closeOrPriceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _closeOrPriceBtn.frame = CGRectMake(0, SCREEN_HEIGHT - TABBAR_HEIGHT, 0, 49);
+        [_closeOrPriceBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _closeOrPriceBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+    }
+    return _closeOrPriceBtn;
+}
+
+- (UIButton *)lookOverBtn {
+    if (!_lookOverBtn) {
+        _lookOverBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_lookOverBtn setTitle:@"查看联系方式" forState:UIControlStateNormal];
+        _lookOverBtn.frame = CGRectMake(0, SCREEN_HEIGHT - TABBAR_HEIGHT, 0, 49);
+        [_lookOverBtn setTitleColor:MainColor forState:UIControlStateNormal];
+        _lookOverBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+        _lookOverBtn.backgroundColor = Like_Color;
+        [_lookOverBtn addTarget:self action:@selector(lookForContact) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _lookOverBtn;
 }
 
 #pragma mark - 获取列表数据
 - (void)requestMultiData {
     DDWeakSelf;
-    
-    NSString *token;
-    if (GET_USER_TOKEN) {
-        token = GET_USER_TOKEN;
-    } else {
-        token = @"";
-    }
     
     [CddHUD show:self.view];
     dispatch_group_t group = dispatch_group_create();
@@ -198,11 +201,11 @@
     dispatch_group_enter(group);
     //多线程耗时操作
     dispatch_group_async(group, globalQueue, ^{
-        NSString *urlString = [NSString stringWithFormat:URL_ASKTOBUY_DETAIL,token,weakself.buyID];
+        NSString *urlString = [NSString stringWithFormat:URL_ASKTOBUY_DETAIL,User_Token,weakself.buyID];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //            NSLog(@"---- %@",json);
             [weakself addInfo:json];
-            weakself.firstDateSource = [AskToBuyDetailModel mj_objectWithKeyValues:json[@"data"]];
+            weakself.firstDateSource = [AskToBuyModel mj_objectWithKeyValues:json[@"data"]];
             dispatch_group_leave(group);
         } Failure:^(NSError *error) {
             NSLog(@" Error : %@",error);
@@ -211,10 +214,8 @@
     });
     //已报价供应商
     dispatch_group_enter(group);
-    //多线程耗时操作
-    
     dispatch_group_async(group, globalQueue, ^{
-        NSString *urlString = [NSString stringWithFormat:URL_OFFERLIST_SUPPLIER,token,weakself.buyID];
+        NSString *urlString = [NSString stringWithFormat:URL_OFFERLIST_SUPPLIER,User_Token,weakself.buyID];
         [ClassTool getRequest:urlString Params:nil Success:^(id json) {
 //            NSLog(@"----  %@",json);
             weakself.secondDateSource = [supOrrerModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
@@ -228,7 +229,12 @@
     //全部任务完成后，就可以在这吊了
     dispatch_group_notify(group, globalQueue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakself setupUI];
+            if (weakself.isFirstLoadData == YES) {
+                [weakself setupUI];
+            } else {
+                [weakself.tableView reloadData];
+                [weakself bindEvent];
+            }
             [CddHUD hideHUD:weakself.view];
         });
     });
@@ -237,13 +243,7 @@
 //刷新时获取的数据
 - (void)getOffrtList {
     DDWeakSelf;
-    NSString *token;
-    if (GET_USER_TOKEN) {
-        token = GET_USER_TOKEN;
-    } else {
-        token = @"";
-    }
-    NSString *urlString = [NSString stringWithFormat:URL_OFFERLIST_SUPPLIER,token,_buyID];
+    NSString *urlString = [NSString stringWithFormat:URL_OFFERLIST_SUPPLIER,User_Token,_buyID];
     [ClassTool getRequest:urlString Params:nil Success:^(id json) {
         weakself.secondDateSource = [supOrrerModel mj_objectArrayWithKeyValuesArray:json[@"data"]];
         //section刷新
@@ -254,9 +254,88 @@
     }];
 }
 
+//查看联系方式
+- (void)lookForContact {
+    DDWeakSelf;
+    if (!GET_USER_TOKEN) {
+        [self jumpToLoginWithComplete:^{
+            [weakself requestMultiData];
+        }];
+        return;
+    }
+    
+    if (User_Type == 3) {
+        //如果本次查看是要消耗次数的
+        if (self.firstDateSource.loginUserIsShowInfo.integerValue == 1 || self.firstDateSource.isCharger.intValue == 1) {
+            [self requestZTCInfo];
+        } else {
+            NSString *text = @"本次查看将会消耗一次机会，是否确定查看?";
+            [QCYAlertView showWithTitle:@"提示" text:text btnTitle:@"确定" handler:^{
+                [self requestZTCInfo];
+            } cancel:nil];
+        }
+    } else {
+        NSString *title = @"提示";
+        NSString *text = @"您还不是付费会员,无法查看。如果您已是付费会员无法查看,请联系客服!";
+        [QCYAlertView showWithTitle:title text:text leftBtnTitle:@"联系客服" rightBtnTitle:@"付费会员" leftHandler:^{
+            [JudgeTools callService];
+        } rightHandler:^{
+            [weakself clickUpgrade];
+            UpgradeVIPVC *vc = [[UpgradeVIPVC alloc] init];
+            [weakself.navigationController pushViewController:vc animated:YES];
+        } cancel:nil];
+    }
+}
+
+
+//点击了付费账户按钮
+- (void)clickUpgrade {
+    NSDictionary *dict = @{@"token":User_Token};
+    [ClassTool postRequest:URLPost_Click_UpgradeVIP Params:[dict mutableCopy] Success:^(id json) {
+        
+    } Failure:^(NSError *error) {
+    }];
+}
+
+
+//查看直通车信息
+- (void)requestZTCInfo {
+    [CddHUD show:self.view];
+    NSString *urlString = [NSString stringWithFormat:URLGet_AskZTC_Info,User_Token,_buyID];
+    [ClassTool getRequest:urlString Params:nil Success:^(id json) {
+        [CddHUD hideHUD:self.view];
+//        NSLog(@"==== %@",json);
+        if ([json[@"code"] isEqualToString:@"SUCCESS"]) {
+            if ([json[@"data"] objectForKey:@"phone"] && [json[@"data"] objectForKey:@"remainCount"]) {
+                NSString *title;
+                if (self.firstDateSource.loginUserIsShowInfo.integerValue == 1 || self.firstDateSource.isCharger.intValue == 1) {
+                    title = @"本次查看信息不扣除剩余次数";
+                } else {
+                    title = @"提示";
+                }
+                self.firstDateSource.loginUserIsShowInfo = @"1";
+                
+                if ([json[@"data"] objectForKey:@"remainCount"]) {
+                    NSInteger count = [json[@"data"][@"remainCount"] integerValue];
+                    if (count < 0) {
+                        count = 0;
+                    }
+                    NSString *text = [NSString stringWithFormat:@"查看成功,您本月剩余%ld次查看采购商联系方式的机会!",(long)count];
+                    [QCYAlertView showWithTitle:title text:text btnTitle:@"一键呼叫" handler:^{
+                        [JudgeTools callWithPhoneNumber:json[@"data"][@"phone"]];
+                    } cancel:nil];
+                }
+            }
+        }
+    } Failure:^(NSError *error) {
+        NSLog(@" Error : %@",error);
+    }];
+}
+
+
 //关闭求购
 - (void)closeBuy {
-    NSDictionary *dict = @{@"token":GET_USER_TOKEN,
+    NSDictionary *dict = @{@"token":User_Token,
                            @"id":_buyID
                            };
     DDWeakSelf;
@@ -268,8 +347,12 @@
                 BOOL isSuc = [json[@"data"] boolValue];
                 if (isSuc == YES) {
                     [CddHUD showTextOnlyDelay:@"关闭成功" view:weakself.view];
-                    [weakself.btBtn removeFromSuperview];
-                    weakself.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                    [weakself.closeOrPriceBtn removeFromSuperview];
+                    if (self.firstDateSource.showInfo.integerValue == 1) {
+                        self.lookOverBtn.width = SCREEN_WIDTH;
+                    } else {
+                        weakself.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                    }
                     [ClassTool addLayer:weakself.headerView.stateLabel frame:weakself.headerView.stateLabel.frame];
                     weakself.headerView.sLabel.hidden = NO;
                 } else if (isSuc == NO){
@@ -286,7 +369,7 @@
 //采纳报价
 - (void)acceptOffer:(NSString *)offerID {
 
-    NSDictionary *dict = @{@"token":GET_USER_TOKEN,
+    NSDictionary *dict = @{@"token":User_Token,
                            @"enquiryOfferId":offerID
                            };
     DDWeakSelf;
@@ -299,8 +382,12 @@
                 if (isSuc == YES) {
                     [weakself getOffrtList];
                     //去掉关闭求购按钮
-                    [weakself.btBtn removeFromSuperview];
-                    weakself.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                    [weakself.closeOrPriceBtn removeFromSuperview];
+                    if (self.firstDateSource.showInfo.integerValue == 1) {
+                        self.lookOverBtn.width = SCREEN_WIDTH;
+                    } else {
+                        weakself.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                    }
                     [ClassTool addLayer:weakself.headerView.stateLabel frame:weakself.headerView.stateLabel.frame];
                     weakself.headerView.sLabel.hidden = NO;
                     
@@ -320,17 +407,50 @@
 
 #pragma mark - 点击按钮事件
 - (void)jumpToJoinPrice {
+    DDWeakSelf;
     if (!GET_USER_TOKEN) {
-        [self jumpToLogin];
+        [self jumpToLoginWithComplete:^{
+            [weakself requestMultiData];
+        }];
         return;
     }
     
-    DDWeakSelf;
+    NSInteger count = _firstDateSource.loginUserRemainOfferCount.integerValue;
+    //个人
+    if (User_Type == 1) {
+        if (count <= 0) {
+            NSString *text = @"您的报价次数不足，请升级为企业用户!";
+            [QCYAlertView showWithTitle:@"提示" text:text btnTitle:@"认证企业账户" handler:^{
+                MyInfoCenterVC *vc = [[MyInfoCenterVC alloc] init];
+                [weakself.navigationController pushViewController:vc animated:YES];
+            } cancel:nil];
+            return;
+        }
+    }
+    //普通企业
+    else if (User_Type == 2) {
+        if (count <= 0) {
+            NSString *text = @"您本月剩余报价次数0次，请先成为付费企业账户获取更多权益。";
+            [QCYAlertView showWithTitle:@"提示" text:text btnTitle:@"付费企业账户" handler:^{
+                [weakself clickUpgrade];
+                UpgradeVIPVC *vc = [[UpgradeVIPVC alloc] init];
+                [weakself.navigationController pushViewController:vc animated:YES];
+            } cancel:nil];
+            return;
+        }
+    }
+    //付费企业
+    else if (User_Type == 3) {
+        //暂时无限制，为所欲为
+    }
+    
     JoinPriceVC *vc = [[JoinPriceVC alloc] init];
     vc.productID = _buyID;
     vc.productName = _firstDateSource.productName;
     vc.refreshDataBlock = ^{
         [weakself getOffrtList];
+        NSInteger newCount = weakself.firstDateSource.loginUserRemainOfferCount.integerValue - 1;
+        weakself.firstDateSource.loginUserRemainOfferCount = @(newCount).stringValue;
     };
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -346,7 +466,7 @@
 //每组的cell个数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
-        return _infoArr.count;
+        return _infoDataSource.count;
     } else if (section == 1) {
         return 1;
     } else {
@@ -361,15 +481,19 @@
 //cell的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return 35;
+        return [self.infoDataSource[indexPath.row] cellHeight];
     } else if (indexPath.section == 1){
-        return 80;
-       
-
+        return self.firstDateSource.cellHeight;
     } else {
-        return 105;
-        
+        if (self.secondDateSource.count == 0)
+            return 105;
+        return [self.secondDateSource[indexPath.row] cellHeight];
     }
+}
+
+//给出cell的估计高度，主要目的是优化cell高度的计算次数
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 105;
 }
 
 //section header的高度
@@ -396,11 +520,8 @@
 //数据源
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        NSArray *arrLeft = @[@"发布时间",@"产品名称",@"包装规格",@"采购数量",@"产品分类",@"交货日期",@"付款方式",@"所在地区",@"付款期限"];
-//        NSArray *arrRight = @[@"2017-12-20 15:17:57",@"分散黑EBT 300%",@"纸箱 打托",@"15000",@"染料",@"2017-12-24",@"现款",@"上海市",@"2017-12-23"];
         AskToBuyInfoCell *cell = [AskToBuyInfoCell cellWithTableView:tableView];
-        cell.productExplain.text = arrLeft[indexPath.row];
-        cell.detailLabel.text = _infoArr[indexPath.row];
+        cell.model = self.infoDataSource[indexPath.row];
         return cell;
     } else if (indexPath.section == 1){
         ExplainCell *cell = [ExplainCell cellWithTableView:tableView];
@@ -428,32 +549,37 @@
 
 //求购信息添加数组
 - (void)addInfo:(id)json {
+    NSMutableArray *infoArr = [NSMutableArray arrayWithCapacity:0];
     //发布时间
-    [self.infoArr addObject:[self judgeStr:json[@"data"][@"createAtString"]]];
+    [infoArr addObject:[self judgeStr:json[@"data"][@"createAtString"]]];
     //产品名称
-    [self.infoArr addObject:[self judgeStr:json[@"data"][@"productName"]]];
+    [infoArr addObject:[self judgeStr:json[@"data"][@"productName"]]];
     //包装规格
-    [self.infoArr addObject:[self judgeStr:json[@"data"][@"pack"]]];
+    [infoArr addObject:[self judgeStr:json[@"data"][@"pack"]]];
     //采购数量
-    [self.infoArr addObject:[self judgeStr:[NSString stringWithFormat:@"%@KG",To_String(json[@"data"][@"num"])]]];
+    [infoArr addObject:[self judgeStr:[NSString stringWithFormat:@"%@KG",To_String(json[@"data"][@"num"])]]];
     //产品分类
     NSString *s1 = json[@"data"][@"productCli1Name"];
     NSString *s2 = json[@"data"][@"productCli2Name"];
-//    if (![s2 isEqualToString:@""]) {
-    [self.infoArr addObject:[self judgeStr:[NSString stringWithFormat:@"%@ %@",s1,s2]]];
-//    } else {
-//        [self.infoArr addObject:[self judgeStr:[NSString stringWithFormat:@"%@ %@",s1,s2]]];
-//    }
+    [infoArr addObject:[self judgeStr:[NSString stringWithFormat:@"%@ %@",s1,s2]]];
     //交货日期
-    [self.infoArr addObject:[self judgeStr:json[@"data"][@"deliveryDateString"]]];
+    [infoArr addObject:[self judgeStr:json[@"data"][@"deliveryDateString"]]];
     //付款方式
-    [self.infoArr addObject:[self judgeStr:json[@"data"][@"paymentType"]]];
+    [infoArr addObject:[self judgeStr:json[@"data"][@"paymentType"]]];
     //所在地区
     NSString *sheng = json[@"data"][@"locationProvince"];
     NSString *shi = json[@"data"][@"locationCity"];
-    [self.infoArr addObject:[self judgeStr:[NSString stringWithFormat:@"%@ %@",sheng,shi]]];
+    [infoArr addObject:[self judgeStr:[NSString stringWithFormat:@"%@ %@",sheng,shi]]];
     //付款期限
-    [self.infoArr addObject:[self judgeStr:json[@"data"][@"paymentPeriodString"]]];
+    [infoArr addObject:[self judgeStr:json[@"data"][@"paymentPeriodString"]]];
+    
+    NSArray *arrLeft = @[@"发布时间",@"产品名称",@"包装规格",@"采购数量",@"产品分类",@"交货日期",@"付款方式",@"所在地区",@"付款期限"];
+    for (NSInteger i = 0; i < arrLeft.count; i++) {
+        AskDetailInfoModel *model = [[AskDetailInfoModel alloc] init];
+        model.leftText = arrLeft[i];
+        model.rightText = infoArr[i];
+        [self.infoDataSource addObject:model];
+    }
 }
 
 

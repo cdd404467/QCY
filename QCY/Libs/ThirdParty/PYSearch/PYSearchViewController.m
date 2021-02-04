@@ -300,7 +300,8 @@
     titleView.py_width = self.view.py_width - 64 - titleView.py_x * 2;
   
     titleView.py_height = 30;
-    titleView.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1];
+//    titleView.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1];
+    titleView.backgroundColor = UIColor.whiteColor;
     
     titleView.layer.cornerRadius = 13;
     titleView.clipsToBounds = YES;
@@ -319,13 +320,17 @@
 //        }
 //    }
     UITextField * searchTextField = [[[searchBar.subviews firstObject] subviews] lastObject];
+    if (@available(iOS 13.0, *)) {
+        searchTextField = searchBar.searchTextField;
+    }
     [searchTextField setClearButtonMode:UITextFieldViewModeNever];
     searchTextField.tintColor = UIColor.blackColor;
-    [searchTextField setBackgroundColor:[UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1]];
+//    [searchTextField setBackgroundColor:[UIColor colorWithRed:239/255.0 green:239/255.0 blue:239/255.0 alpha:1]];
+    [searchTextField setBackgroundColor:UIColor.whiteColor];
     //限制字数
     [searchTextField lengthLimit:^{
-        if (searchTextField.text.length > 10) {
-            searchTextField.text = [searchTextField.text substringToIndex:10];
+        if (searchTextField.text.length > 20) {
+            searchTextField.text = [searchTextField.text substringToIndex:20];
         }
     }];
     

@@ -7,12 +7,13 @@
 //
 
 #import "BaseViewController.h"
-
+@class InfomationModel;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface InfomationDetailVC : BaseViewController
 
 @property (nonatomic, copy)NSString *infoID;
+
 @end
 
 NS_ASSUME_NONNULL_END

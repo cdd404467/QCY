@@ -7,7 +7,6 @@
 //
 
 #import "ContestantsSearchVC.h"
-#import "MacroHeader.h"
 #import <UIScrollView+EmptyDataSet.h>
 #import "PYSearchConst.h"
 #import "PYSearchSuggestionViewController.h"

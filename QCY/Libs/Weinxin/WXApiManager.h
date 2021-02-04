@@ -9,21 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "WXApi.h"
 
+#define WeixinPayResultSuccess @"WeixinPayResultSuccess"
+#define WeixinPayResultFailed @"WeixinPayResultFailed"
+
 @protocol WXApiManagerDelegate <NSObject>
 
 @optional
 
-- (void)managerDidRecvGetMessageReq:(GetMessageFromWXReq *)request;
-
-- (void)managerDidRecvShowMessageReq:(ShowMessageFromWXReq *)request;
-
-- (void)managerDidRecvLaunchFromWXReq:(LaunchFromWXReq *)request;
-
-- (void)managerDidRecvMessageResponse:(SendMessageToWXResp *)response;
-
-- (void)managerDidRecvAuthResponse:(SendAuthResp *)response;
-
-- (void)managerDidRecvAddCardResponse:(AddCardToWXCardPackageResp *)response;
 
 @end
 

@@ -7,7 +7,6 @@
 //
 
 #import "DiscountSalesVC.h"
-#import "MacroHeader.h"
 #import "PromotionsHeaderView.h"
 #import "DiscountSalesCell.h"
 #import "CddHUD.h"
@@ -16,6 +15,7 @@
 #import "DiscountSalesModel.h"
 #import <MJRefresh.h>
 #import "DiscountSalesDetailVC.h"
+#import <UMAnalytics/MobClick.h>
 
 
 @interface DiscountSalesVC ()<UITableViewDelegate, UITableViewDataSource>
@@ -45,7 +45,17 @@
     [self loadData];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:self.title];
+}
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:self.title];
+}
 
 //初始化数据源
 - (NSMutableArray *)dataSource {
@@ -78,8 +88,6 @@
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = NO;
         }
         _tableView.contentInset = UIEdgeInsetsMake(NAV_HEIGHT, 0, Bottom_Height_Dif, 0);
         _tableView.scrollIndicatorInsets = _tableView.contentInset;
@@ -208,6 +216,7 @@
     DiscountSalesDetailVC *vc = [[DiscountSalesDetailVC alloc] init];
     DiscountSalesModel *model = _dataSource[indexPath.row];
     vc.productID = model.productID;
+    vc.productName = model.productName;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

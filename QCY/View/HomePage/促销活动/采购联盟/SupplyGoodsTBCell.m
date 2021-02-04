@@ -7,12 +7,9 @@
 //
 #import "SupplyGoodsTBCell.h"
 #import "BEMCheckBox.h"
-#import "MacroHeader.h"
-#import "UIView+Geometry.h"
-#import <Masonry.h>
 #import "PrchaseLeagueModel.h"
 #import "SelectedView.h"
-#import <BRPickerView.h>
+#import "BRPickerView.h"
 #import "HelperTool.h"
 #import "SelectStandardView.h"
 #import "TimeAbout.h"
@@ -109,14 +106,14 @@
     _tipLab = tipLab;
     
     //预定量文字
-    UILabel *orderTxt = [[UILabel alloc] initWithFrame:CGRectMake(checkBox.left, checkBox.bottom + 20, 100, 14)];
+    UILabel *orderTxt = [[UILabel alloc] initWithFrame:CGRectMake(checkBox.left, checkBox.bottom + 20, 120, 14)];
     orderTxt.text = @"供货量:";
     orderTxt.font = [UIFont systemFontOfSize:12];
     orderTxt.textColor = HEXColor(@"#868686", 1);
     [self.contentView addSubview:orderTxt];
     [orderTxt sizeToFit];
     
-    //预定量TF
+    //供货量量TF
     UITextField *orderTF = [[UITextField alloc] init];
     orderTF.delegate = self;
     orderTF.backgroundColor = HEXColor(@"#F7F7F7", 1);
@@ -128,7 +125,7 @@
     [orderTF addTarget:self action:@selector(textFieldTextDidChange:) forControlEvents:UIControlEventEditingChanged];
     orderTF.textColor = HEXColor(@"#F10215", 1);
     orderTF.font = [UIFont systemFontOfSize:16];
-    orderTF.frame = CGRectMake(orderTxt.right + 30, 0, SCREEN_WIDTH - orderTxt.right - 140, 24);
+    orderTF.frame = CGRectMake(orderTxt.right + 36, 0, SCREEN_WIDTH - orderTxt.right - 140, 24);
     orderTF.centerY = orderTxt.centerY;
     orderTF.keyboardType = UIKeyboardTypeDecimalPad;
     [self.contentView addSubview:orderTF];
@@ -180,19 +177,25 @@
     
     //参考标准文字
     UILabel *standardTxt = [[UILabel alloc] initWithFrame:CGRectMake(priceTxt.left, priceTxt.bottom + 22, 100, 14)];
-    standardTxt.text = @"参考标准:";
+    standardTxt.text = @"接受供应商:";
     standardTxt.font = [UIFont systemFontOfSize:12];
     standardTxt.textColor = HEXColor(@"#868686", 1);
     [self.contentView addSubview:standardTxt];
     [standardTxt sizeToFit];
     
     //选择参考标准
-    SelectedView *standardSelect = [[SelectedView alloc] initWithFrame:CGRectMake(priceTF.left, 0, priceTF.width + 100, 24)];
+    SelectedView *standardSelect = [[SelectedView alloc] init];
     standardSelect.centerY = standardTxt.centerY;
     standardSelect.textLabel.text = @"请选择";
     [HelperTool addTapGesture:standardSelect withTarget:self andSEL:@selector(selectStandard)];
     standardSelect.layer.cornerRadius = 3.f;
     [self.contentView addSubview:standardSelect];
+    [standardSelect mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(priceTF);
+        make.centerY.mas_equalTo(standardTxt);
+        make.right.mas_equalTo(-15);
+        make.height.mas_equalTo(24);
+    }];
     _standardSelect = standardSelect;
     
     //报价有效期
@@ -209,6 +212,10 @@
     dateSelectedView.textLabel.text = @"请选择时间";
     [HelperTool addTapGesture:dateSelectedView withTarget:self andSEL:@selector(showPickView_seleTime)];
     [self addSubview:dateSelectedView];
+    [dateSelectedView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.height.mas_equalTo(standardSelect);
+        make.centerY.mas_equalTo(dateTxt);
+    }];
     _dateSelectedView = dateSelectedView;
     
 }

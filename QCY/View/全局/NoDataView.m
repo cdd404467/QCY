@@ -7,8 +7,7 @@
 //
 
 #import "NoDataView.h"
-#import <Masonry.h>
-#import "MacroHeader.h"
+
 
 @implementation NoDataView
 

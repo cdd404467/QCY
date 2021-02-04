@@ -9,36 +9,26 @@
 
 #import "BaseNavigationController.h"
 #import "UIImage+Color.h"
-#import <Masonry.h>
-
 
 @interface BaseNavigationController ()<UIGestureRecognizerDelegate>
-@property (nonatomic, strong)UIButton *expBtn;
-@property (nonatomic, strong)UIButton *backBtn;
+
+
 @end
 
 @implementation BaseNavigationController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = UIColor.whiteColor;
     // 重新响应侧滑返回手势
     self.interactivePopGestureRecognizer.delegate = self;
     
-
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.interactivePopGestureRecognizer.enabled = YES;
 }
-
-//+ (void)initialize
-//{
-//    UINavigationBar *navigationBar = [UINavigationBar appearance];
-//    navigationBar.tintColor = [UIColor blackColor];
-//
-//}
 
 #pragma mark - 侧滑手势 - UIGestureRecognizerDelegate
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
@@ -68,26 +58,19 @@
 {
     if (self.childViewControllers.count > 0) {
         viewController.hidesBottomBarWhenPushed = YES;
-        
         //返回按钮自定义
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 38, 38)];
         _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _backBtn.layer.cornerRadius = 4.f;
+        _backBtn.clipsToBounds = YES;
         _backBtn.frame = CGRectMake(0, 0, 38, 38);
         [_backBtn setImage:[UIImage imageNamed:@"back_black"] forState:UIControlStateNormal];
         [_backBtn addTarget:self action:@selector(popBack) forControlEvents:UIControlEventTouchUpInside];
-//        _backBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        CGFloat space = 38 * [UIScreen mainScreen].bounds.size.width / 375.0 / 2 - 38 / 2;
-        [_backBtn setImageEdgeInsets:UIEdgeInsetsMake(0, space, 0, -space)];
-        UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_backBtn];
+        [view addSubview:_backBtn];
+        UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
         viewController.navigationItem.leftBarButtonItem = leftBarButtonItem;
     }
     [super pushViewController:viewController animated:animated];
-}
-
-- (void)setBackBtnTintColor:(UIColor *)backBtnTintColor {
-    _backBtnTintColor = backBtnTintColor;
-    UIImage *image = [UIImage imageNamed:@"back_black"];
-    [_backBtn setImage:[image imageWithTintColor:backBtnTintColor] forState:UIControlStateNormal];
-    _backBtn.tintColor = backBtnTintColor;
 }
 
 - (void)popBack {

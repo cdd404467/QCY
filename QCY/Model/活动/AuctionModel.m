@@ -15,6 +15,13 @@
              };
 }
 
+- (CGFloat)cellHeight {
+    if (!_cellHeight) {
+        _cellHeight = 210.f;
+    }
+    
+    return _cellHeight;
+}
 
 @end
 

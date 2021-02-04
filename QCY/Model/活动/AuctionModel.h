@@ -25,6 +25,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *startTime;                 //开始时间
 @property (nonatomic, copy)NSString *endTime;                   //结束时间
 @property (nonatomic, copy)NSString *jpID;                      //竞拍ID
+//总量
+@property (nonatomic, copy)NSString *num;
+//单位
+@property (nonatomic, copy)NSString *numUnit;
+//公司名字
+@property (nonatomic, copy)NSString *companyName;
+//货源地 - an
+@property (nonatomic, copy)NSString *sourceOfSupply;
+//来自PC还是系统发起-(system表示管理系统添加，pc表示用户自己发起的抢购)
+@property (nonatomic, copy)NSString *from;
+//cell的高
+@property (nonatomic, assign)CGFloat cellHeight;
+//电话
+@property (nonatomic, copy)NSString *phone;
+//是否包含运费
+@property (nonatomic, copy)NSString *isFreight;
+//抢购须知-第一条备注
+@property (nonatomic, copy)NSString *remark;
 
 
 //竞拍详情

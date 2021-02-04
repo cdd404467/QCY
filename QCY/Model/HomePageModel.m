@@ -10,7 +10,11 @@
 
 
 @implementation HomePageModel
-
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    return @{
+             @"isCompany_User" : @"isCompany",//前边的是你想用的key，后边的是返回的key
+             };
+}
 @end
 
 @implementation AskToBuyModel
@@ -18,8 +22,16 @@
 //求购id转换
 + (NSDictionary *)mj_replacedKeyFromPropertyName{
     return @{
-             @"buyID" : @"id"//前边的是你想用的key，后边的是返回的key
+             @"buyID" : @"id",//前边的是你想用的key，后边的是返回的key
+             @"descriptionStr" : @"description"
              };
+}
+
+- (CGFloat)cellHeight {
+    if (!_cellHeight) {
+        _cellHeight = 80;
+    }
+    return _cellHeight;
 }
 @end
 
@@ -28,23 +40,34 @@
 
 @end
 
-@implementation AskToBuyDetailModel
-//description转换
-+ (NSDictionary *)mj_replacedKeyFromPropertyName{
-    return @{
-             @"descriptionStr" : @"description"//前边的是你想用的key，后边的是返回的key
-             };
+@implementation AskDetailInfoModel
+
+- (CGFloat)cellHeight {
+    if (!_cellHeight) {
+        _cellHeight = 34;
+    }
+    return _cellHeight;
 }
+
 @end
 
 @implementation supOrrerModel
 
 + (NSDictionary *)mj_replacedKeyFromPropertyName{
     return @{
-             @"offerID" : @"id"//前边的是你想用的key，后边的是返回的key
+             @"offerID" : @"id",//前边的是你想用的key，后边的是返回的key
+             @"descriptionStr" : @"description"//前边的是你想用的key，后边的是返回的key
              };
 }
-@end
+
+- (CGFloat)cellHeight {
+    if (!_cellHeight) {
+        _cellHeight = 200;
+    }
+    
+    return _cellHeight;
+}
+ @end
 
 @implementation PostBuyingModel
 
@@ -56,6 +79,3 @@
 
 @end
 
-@implementation BannerModel
-
-@end

@@ -8,9 +8,7 @@
 
 #import "ManifestScetionHeader.h"
 #import "PrchaseLeagueModel.h"
-#import "MacroHeader.h"
 #import "UIView+Border.h"
-#import "UIView+Geometry.h"
 
 @implementation ManifestScetionHeader {
     UILabel *_nameLabel;

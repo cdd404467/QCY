@@ -7,8 +7,6 @@
 //
 
 #import "MyAskToBuyCell.h"
-#import "MacroHeader.h"
-#import <Masonry.h>
 #import <YYText.h>
 #import "ClassTool.h"
 #import "MinePageModel.h"
@@ -399,11 +397,13 @@
             _stateLabel.text = @"已关闭";
         } else if ([model.status isEqualToString:@"3"]) {
             _stateLabel.text = @"已采纳";
+        } else if ([model.status isEqualToString:@"4"]) {
+            _stateLabel.text = @"已失效";
         } else {
             _stateLabel.text = @"";
         }
     }
-
+    
     //右侧Btn
     NSString *offerCount = model.offerNum;
     NSString *btnTitle = [NSString stringWithFormat:@"查看\n已有%@家报价",offerCount];

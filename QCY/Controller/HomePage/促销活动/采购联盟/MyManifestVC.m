@@ -8,7 +8,6 @@
 
 #import "MyManifestVC.h"
 #import <SGPagingView.h>
-#import "MacroHeader.h"
 #import "ManiFestChildVC.h"
 
 

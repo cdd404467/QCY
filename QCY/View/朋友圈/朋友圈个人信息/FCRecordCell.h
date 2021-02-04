@@ -10,9 +10,7 @@
 @class FriendCricleModel;
 
 NS_ASSUME_NONNULL_BEGIN
-
 @interface FCRecordCell : UITableViewCell
-
 + (instancetype)cellWithTableView:(UITableView *)tableVie;
 @property (nonatomic, strong)FriendCricleModel *model;
 @end
